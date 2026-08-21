@@ -28,13 +28,13 @@
   opacity: 0;
 }
 
-/* In Light Theme: maintain strong visibility of glowing tubes over light surface */
+/* In Light Theme: invert canvas so empty black space becomes pure white (100% white multiplication = 100% pure white background) */
 html.light-theme .cosmic-canvas,
 body.light-theme .cosmic-canvas,
 :root[data-theme="light"] .cosmic-canvas {
-  opacity: 0.75;
+  opacity: 0.85;
   mix-blend-mode: multiply;
-  filter: contrast(1.15) saturate(1.2);
+  filter: invert(1) hue-rotate(180deg) contrast(1.1) brightness(1.02);
 }
 
 /* Ambient Radial Aurora Gradients for subtle depth */
@@ -57,8 +57,8 @@ body.light-theme .cosmic-canvas,
 html.light-theme .aurora-mesh,
 body.light-theme .aurora-mesh,
 :root[data-theme="light"] .aurora-mesh {
-  filter: blur(70px);
-  opacity: 0.35;
+  filter: blur(80px);
+  opacity: 0.45;
 }
 
 @keyframes aurora-drift {
