@@ -1,0 +1,64 @@
+.cosmic-background-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-canvas, -1);
+  pointer-events: auto;
+  overflow: hidden;
+  background-color: var(--bg-canvas, #050214);
+  transition: background-color var(--transition-color-swap);
+}
+
+.cosmic-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.cosmic-canvas.ready {
+  opacity: 0.85;
+}
+
+.cosmic-canvas.hidden {
+  opacity: 0;
+}
+
+/* Ambient Radial Aurora Gradients for depth and fallback */
+.aurora-mesh {
+  position: absolute;
+  inset: -20%;
+  width: 140%;
+  height: 140%;
+  background: 
+    radial-gradient(ellipse at 20% 15%, var(--aurora-1) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 30%, var(--aurora-2) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 85%, var(--aurora-3) 0%, transparent 65%);
+  filter: blur(60px);
+  opacity: 0.9;
+  animation: aurora-drift 22s ease-in-out infinite alternate;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-3%, 4%) scale(1.05);
+  }
+  100% {
+    transform: translate(3%, -3%) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-mesh {
+    animation: none;
+  }
+}

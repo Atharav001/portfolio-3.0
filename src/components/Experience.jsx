@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import { ExternalLink, Award, Sparkles, X } from 'lucide-react';
 import MomentsStrip from './MomentsStrip/MomentsStrip';
 import './Experience.css';
 
@@ -7,7 +8,7 @@ const Experience = () => {
   const timelineRef = useRef(null);
   const { scrollYProgress: timelineScroll } = useScroll({
     target: timelineRef,
-    offset: ["start center", "end center"]
+    offset: ['start center', 'end center'],
   });
 
   const [showJavaCert, setShowJavaCert] = useState(false);
@@ -17,15 +18,15 @@ const Experience = () => {
   const skillGroups = [
     {
       label: 'Languages',
-      skills: ['Python', 'Java', 'C/C++', 'JavaScript', 'SQL'],
+      skills: ['Python', 'Java', 'C/C++', 'JavaScript', 'SQL', 'Kotlin', 'Swift'],
     },
     {
-      label: 'AI / ML / Workflows',
-      skills: ['Machine Learning', 'RAG', 'Prompt Engineering', 'Local LLMs & Ollama', 'n8n Automation'],
+      label: 'AI / ML / Vector Systems',
+      skills: ['Agentic RAG', 'Ollama & Local LLMs', 'FAISS', 'BM25', 'Reciprocal Rank Fusion', 'Multimodal VLM', 'Prompt Engineering', 'n8n Automation'],
     },
     {
       label: 'Developer Tools & Platforms',
-      skills: ['Git/GitHub', 'Docker', 'Linux', 'Android SDK', 'Data Visualization'],
+      skills: ['Git / GitHub', 'Docker', 'Linux', 'Vercel', 'Supabase Vector', 'Android SDK', 'Room DB', 'AppKit / SwiftUI'],
     },
   ];
 
@@ -34,32 +35,41 @@ const Experience = () => {
       period: 'Summer 2026',
       role: 'Space Science & Systems Intern',
       company: 'India Space Lab',
-      desc: 'Completed hands-on projects and training in Advanced Drone Technology, CanSat & CubeSat Satellite Programs, Rocketry Science, and Remote Sensing & GIS.',
+      desc: 'Completed hands-on engineering training in Advanced Drone Technology, CanSat & CubeSat Satellite Programs, Rocketry Science, Remote Sensing & GIS, and Disaster Management systems.',
     },
     {
       period: '2025 — Present',
-      role: 'B.Tech CSE',
+      role: 'B.Tech in Computer Science',
       company: 'Manipal Institute of Technology (MAHE), Bengaluru',
-      desc: 'Specialising in AI-driven solutions, autonomous systems, and full-stack development.',
+      desc: 'Focusing on AI-driven architectures, local inference systems, algorithms, and full-stack software development.',
     },
   ];
 
   return (
     <section id="experience" className="experience-section">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 35 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="section-header">
-          <span className="section-number-inline">02</span>
-          <h2 className="section-title">BACKGROUND</h2>
+        <div className="section-heading">
+          <div className="section-heading-label">
+            <span className="section-number-inline">02</span>
+            <span className="about-label-text">Experience & Skills</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight">
+            Background & <span className="text-accent">Capabilities</span>.
+          </h2>
+          <p className="text-secondary text-sm font-mono uppercase tracking-wider max-w-2xl">
+            My academic journey, space tech training, core skill matrix, and verified technical credentials.
+          </p>
         </div>
 
         <div className="experience-grid">
+          {/* Left Column: Timeline Journey */}
           <div className="experience-column">
-            <h3 className="column-title">Journey</h3>
+            <h3 className="column-title">Journey & Education</h3>
             <div className="timeline" ref={timelineRef}>
               <div className="timeline-line-container">
                 <div className="timeline-line-track" />
@@ -84,6 +94,7 @@ const Experience = () => {
             </div>
           </div>
 
+          {/* Right Column: Skills & Certifications */}
           <div className="experience-column">
             <h3 className="column-title">Core Capabilities</h3>
             <div className="skills-groups">
@@ -101,12 +112,13 @@ const Experience = () => {
               ))}
             </div>
 
+            {/* Certifications Sidebar */}
             <div className="certifications-section-sidebar">
               <span className="skill-group-label certifications-label">
-                Certifications
+                Verified Certifications
               </span>
               <div className="certifications-list">
-
+                {/* Space Lab */}
                 <div
                   className="cert-card space-lab interactive-tag"
                   onClick={() => setShowSpaceLabCert(true)}
@@ -115,10 +127,11 @@ const Experience = () => {
                   <div className="cert-badge space-tech">Space Tech</div>
                   <div className="cert-info">
                     <h4 className="cert-name">India Space Lab Summer Internship</h4>
-                    <span className="cert-action-hint">Click to view certificate</span>
+                    <span className="cert-action-hint">Click to view certificate →</span>
                   </div>
                 </div>
 
+                {/* IBM Java */}
                 <div
                   className="cert-card ibm-java interactive-tag"
                   onClick={() => setShowJavaCert(true)}
@@ -127,10 +140,11 @@ const Experience = () => {
                   <div className="cert-badge">IBM</div>
                   <div className="cert-info">
                     <h4 className="cert-name">IBM SkillBuilder JAVA</h4>
-                    <span className="cert-action-hint">Click to view certificate</span>
+                    <span className="cert-action-hint">Click to view certificate →</span>
                   </div>
                 </div>
 
+                {/* DeepLearning.ai ML */}
                 <div
                   className="cert-card ml-specialization interactive-tag"
                   onClick={() => setShowMlNotice(true)}
@@ -139,23 +153,24 @@ const Experience = () => {
                   <div className="cert-badge deeplearning">deeplearning.ai</div>
                   <div className="cert-info">
                     <h4 className="cert-name">Machine Learning Specialisation</h4>
-                    <span className="cert-action-hint">Click for certificate details</span>
+                    <span className="cert-action-hint">Click for details →</span>
                     <div className="cert-subcourses">
-                      <span className="subcourse">Supervised Machine Learning</span>
-                      <span className="subcourse">Advanced Learning Algorithms</span>
-                      <span className="subcourse">Unsupervised, Recommenders, RL</span>
+                      <span className="subcourse">Supervised ML</span>
+                      <span className="subcourse">Advanced Algorithms</span>
+                      <span className="subcourse">Unsupervised & RL</span>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
 
+        {/* Moments Scrapbook Gallery */}
         <MomentsStrip />
       </motion.div>
 
+      {/* Modal Dialogs */}
       <AnimatePresence>
         {showSpaceLabCert && (
           <motion.div
@@ -167,13 +182,15 @@ const Experience = () => {
           >
             <motion.div
               className="cert-modal-content"
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="cert-modal-close" onClick={() => setShowSpaceLabCert(false)}>×</button>
+              <button className="cert-modal-close" onClick={() => setShowSpaceLabCert(false)}>
+                <X size={20} />
+              </button>
               <picture>
                 <source
                   srcSet="/assets/optimized/india_space_lab_certificate-mobile.webp 800w, /assets/optimized/india_space_lab_certificate.webp 1600w"
@@ -196,10 +213,10 @@ const Experience = () => {
                     rel="noopener noreferrer"
                     className="view-pdf-btn"
                   >
-                    View Original PDF
+                    View Original PDF <ExternalLink size={14} />
                   </a>
                 </div>
-                <p>Summer Internship & Technical Training Program 2026. Specialised in Advanced Drone Technology, CanSat & CubeSat Satellite Programs, Rocketry Science, Remote Sensing & GIS, and Disaster Management.</p>
+                <p>Summer Internship & Technical Training Program 2026. Specialised in Advanced Drone Technology, CanSat & CubeSat Satellite Programs, Rocketry Science, and Remote Sensing & GIS.</p>
               </div>
             </motion.div>
           </motion.div>
@@ -215,13 +232,15 @@ const Experience = () => {
           >
             <motion.div
               className="cert-modal-content"
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="cert-modal-close" onClick={() => setShowJavaCert(false)}>×</button>
+              <button className="cert-modal-close" onClick={() => setShowJavaCert(false)}>
+                <X size={20} />
+              </button>
               <picture>
                 <source
                   srcSet="/assets/optimized/ibm_java_certificate-mobile.webp 800w, /assets/optimized/ibm_java_certificate.webp 1600w"
@@ -253,20 +272,22 @@ const Experience = () => {
           >
             <motion.div
               className="cert-modal-content cert-notice-modal"
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="cert-modal-close" onClick={() => setShowMlNotice(false)}>×</button>
+              <button className="cert-modal-close" onClick={() => setShowMlNotice(false)}>
+                <X size={20} />
+              </button>
               <div className="cert-modal-footer cert-notice-body">
                 <h3>Machine Learning Specialisation</h3>
                 <p>
-                  Coursework completed across all three modules in Andrew Ng&apos;s Machine Learning Specialisation on Coursera / deeplearning.ai.
+                  Coursework completed across all three modules in Andrew Ng's Machine Learning Specialisation on Coursera / deeplearning.ai.
                 </p>
                 <p className="cert-notice-message">
-                  Individual course certificates may not be available here because Coursera&apos;s subscription or membership plan is required to unlock graded assignments and official certificate downloads after completion.
+                  Individual course certificates may not be available here because Coursera's subscription or membership plan is required to unlock graded assignments and official certificate downloads after completion.
                 </p>
                 <a
                   href="https://www.coursera.org/specializations/machine-learning-introduction"
@@ -274,7 +295,7 @@ const Experience = () => {
                   rel="noopener noreferrer"
                   className="view-pdf-btn"
                 >
-                  View specialisation on Coursera
+                  View specialisation on Coursera <ExternalLink size={14} />
                 </a>
               </div>
             </motion.div>

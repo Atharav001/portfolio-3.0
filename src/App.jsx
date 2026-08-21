@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { motion, useScroll, useSpring, useReducedMotion } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
@@ -12,26 +12,52 @@ import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
-import AnimatedBackground from './components/AnimatedBackground';
+import CosmicBackground from './components/CosmicBackground';
 import GrainOverlay from './components/GrainOverlay';
+import RotatingWindmill from './components/RotatingWindmill';
 
-// Reusable animated section divider
+// Reusable cinematic animated section divider with rotating windmill badge
 const SectionDivider = () => (
-  <motion.div
-    initial={{ scaleX: 0 }}
-    whileInView={{ scaleX: 1 }}
-    transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-    viewport={{ once: true, margin: '-60px' }}
+  <div
     style={{
-      originX: 0,
-      height: '1px',
-      background: 'linear-gradient(90deg, var(--accent-blue) 0%, rgba(138,43,226,0.6) 50%, transparent 100%)',
       maxWidth: 'var(--max-width)',
       margin: '0 auto',
-      padding: '0 4rem',
-      width: 'calc(100% - 8rem)',
+      padding: '0 2rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      zIndex: 'var(--z-base)',
     }}
-  />
+  >
+    <motion.div
+      initial={{ scaleX: 0 }}
+      whileInView={{ scaleX: 1 }}
+      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: '-40px' }}
+      style={{
+        flex: 1,
+        originX: 1,
+        height: '1px',
+        background: 'linear-gradient(90deg, transparent 0%, var(--border-light) 100%)',
+      }}
+    />
+    <div style={{ padding: '0 1rem' }}>
+      <RotatingWindmill size={28} />
+    </div>
+    <motion.div
+      initial={{ scaleX: 0 }}
+      whileInView={{ scaleX: 1 }}
+      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: '-40px' }}
+      style={{
+        flex: 1,
+        originX: 0,
+        height: '1px',
+        background: 'linear-gradient(90deg, var(--border-light) 0%, transparent 100%)',
+      }}
+    />
+  </div>
 );
 
 function App() {
@@ -39,7 +65,14 @@ function App() {
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
+  });
+
+  const [theme, setTheme] = useState(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.dataset.theme || 'dark';
+    }
+    return 'dark';
   });
 
   const shouldReduceMotion = useReducedMotion();
@@ -51,13 +84,13 @@ function App() {
     }
 
     const lenis = new Lenis({
-      duration: 0.8,
+      duration: 0.85,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
       smoothTouch: false,
-      touchMultiplier: 2,
+      touchMultiplier: 1.8,
       anchors: true,
     });
 
@@ -88,52 +121,44 @@ function App() {
     };
   }, [shouldReduceMotion]);
 
-  // IntersectionObserver fallback for .scroll-reveal in Firefox
-  // (native scroll-driven animations not yet supported there)
-  useEffect(() => {
-    if (CSS.supports('(animation-timeline: view()) and (animation-range: entry)')) return;
-
-    const els = document.querySelectorAll('.scroll-reveal');
-    if (!els.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            observer.unobserve(entry.target); // only trigger once
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <>
       <a href="#main-content" className="skip-link">Skip to main content</a>
-      <motion.div 
-        style={{ scaleX, transformOrigin: '0%', backgroundColor: 'var(--text-primary)', height: '2px', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 'var(--z-max)' }} 
+      
+      {/* Top Scroll Progress Indicator */}
+      <motion.div
+        style={{
+          scaleX,
+          transformOrigin: '0%',
+          background: 'var(--hero-gradient)',
+          height: '3px',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 'var(--z-max)',
+          boxShadow: '0 0 10px var(--accent-lime)',
+        }}
       />
-      <AnimatedBackground />
+
+      {/* Cosmic Procedural Rays & Aurora Background */}
+      <CosmicBackground theme={theme} />
       <GrainOverlay />
       <CustomCursor />
-      <Navbar />
+      <Navbar activeTheme={theme} onThemeChange={setTheme} />
 
       <main id="main-content">
-          <Hero />
-          <SectionDivider />
-          <About />
-          <SectionDivider />
-          <Experience />
-          <SectionDivider />
-          <Projects />
-          <SectionDivider />
-          <Contact />
+        <Hero />
+        <SectionDivider />
+        <About />
+        <SectionDivider />
+        <Experience />
+        <SectionDivider />
+        <Projects />
+        <SectionDivider />
+        <Contact />
       </main>
+
       <Analytics />
     </>
   );

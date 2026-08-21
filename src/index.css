@@ -1,56 +1,29 @@
 @import './tokens.css';
 
 :root {
-  /* Semantic Color System - OLED Black Base */
-  --bg-base: #050505;
-  --bg-surface: #0a0a0a;
-  --bg-surface-elevated: #111111;
+  /* Dynamic Aliases mapped to theme tokens */
+  --bg-base: var(--bg-primary);
+  --bg-surface: var(--bg-secondary);
+  --bg-surface-elevated: var(--bg-tertiary);
 
-  --bg-accent-1: var(--bg-accent-1-dark);
-  --bg-accent-2: var(--bg-accent-2-dark);
-  --bg-accent-3: var(--bg-accent-3-dark);
-
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-
-  --accent-primary: #ffffff;
-  --accent-secondary: #3f3f46;
-  --accent-glow: rgba(255, 255, 255, 0.08);
-  --accent-blue: #00c8ff;
+  --accent-primary: var(--text-primary);
+  --accent-secondary: var(--text-secondary);
+  --accent-glow: var(--shadow-glow);
 
   /* Subtle Glassmorphism */
-  --glass-bg: rgba(10, 10, 10, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: var(--bg-card);
+  --glass-border: var(--border-light);
 
   /* Cursor Theme Colors */
-  --cursor-color: #ffffff;
+  --cursor-color: var(--accent-lime);
   --cursor-blend: difference;
-  --cursor-ring-color: rgba(255, 255, 255, 0.9);
+  --cursor-ring-color: var(--accent-lime);
 
   /* Typography - Fluid & Variable Fonts */
-  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
-  --font-heading: 'Inter Variable', 'Inter', system-ui, sans-serif;
-  --font-display: 'Inter Variable', 'Inter', system-ui, sans-serif;
-
-  /* Layout & Spacing (8pt Grid System) */
-  --max-width: 1400px;
-  --border-radius: 24px;
-  --transition-smooth: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-
-  --space-1: 0.25rem;  /* 4px */
-  --space-2: 0.5rem;   /* 8px */
-  --space-3: 0.75rem;  /* 12px */
-  --space-4: 1rem;     /* 16px */
-  --space-5: 1.25rem;  /* 20px */
-  --space-6: 1.5rem;   /* 24px */
-  --space-8: 2rem;     /* 32px */
-  --space-10: 2.5rem;  /* 40px */
-  --space-12: 3rem;    /* 48px */
-  --space-16: 4rem;    /* 64px */
-  --space-20: 5rem;    /* 80px */
-  --space-24: 6rem;    /* 96px */
-  --space-32: 8rem;    /* 128px */
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Inter Variable', 'Inter', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
 
   /* Typography Hierarchy */
   --font-size-xs: 0.75rem;    /* 12px */
@@ -74,64 +47,17 @@
 }
 
 html {
-  font-size: clamp(14px, 1vw + 10px, 18px);
+  font-size: clamp(14px, 0.9vw + 10px, 17px);
   scroll-behavior: auto;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
 }
 
-.light-theme {
-  --bg-base: #F7F7F9;
-  --bg-surface: #ffffff;
-  --bg-surface-elevated: #f0f0f0;
-
-  --bg-accent-1: var(--bg-accent-1-light);
-  --bg-accent-2: var(--bg-accent-2-light);
-  --bg-accent-3: var(--bg-accent-3-light);
-
-  --text-primary: #121212;
-  --text-secondary: #334155;
-  --text-muted: #444444;
-
-  --accent-primary: #121212;
-  --accent-secondary: #444444;
-  --accent-glow: rgba(0, 0, 0, 0.1);
-  --accent-blue: #005fa3;
-
-  --glass-bg: rgba(255, 255, 255, 0.3);
-  /* Translucent so blur shows */
-  --glass-border: rgba(0, 0, 0, 0.08);
-
-  --grid-dot-color: rgba(0, 0, 0, 0.1);
-  --grid-spotlight: rgba(0, 0, 0, 0.04);
-
-  /* Cursor Theme Colors */
-  --cursor-color: #000000;
-  --cursor-blend: normal;
-  --cursor-ring-color: rgba(0, 0, 0, 0.9);
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body, header, nav, section, .glass-panel, .project-card, .timeline-item, .cert-card, .skill-pill, .action-btn, .theme-toggle-btn, .mobile-menu-overlay, .social-pill, .btn-primary, .btn-secondary, .nav-link, .mobile-nav-link, .timeline-item *, .project-card *, .cert-card * {
-  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-}
-
-
-/* Custom Selection */
-::selection {
-  background: var(--text-primary);
-  color: var(--bg-base);
-}
-
-html {
-  /* Handled by lenis, but good practice */
-  scroll-behavior: auto;
 }
 
 body {
@@ -144,61 +70,57 @@ body {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+  overflow-x: hidden;
+  position: relative;
 }
 
 #root {
   overflow-x: hidden;
   position: relative;
+  width: 100%;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* Custom Selection */
+::selection {
+  background: var(--accent-lime);
+  color: #000000;
+}
+
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
 }
 
-a,
-button {
+a, button {
   color: inherit;
   text-decoration: none;
-  font-family: var(--font-display);
+  font-family: inherit;
 }
 
 /* Base Utilities */
 .glass-panel {
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--border-radius);
+  background: var(--bg-card);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
 }
 
-/* ---- Global section number label utilities ---- */
-.section-number-inline {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-  flex-shrink: 0;
-}
-
-.about-label-text {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+.glass-nav {
+  background: var(--bg-nav);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
 }
 
 /* Section styling */
 section {
-  padding: 8rem 4rem;
+  padding: 7rem 3rem;
   max-width: var(--max-width);
   margin: 0 auto;
   position: relative;
@@ -207,148 +129,136 @@ section {
 
 @media (max-width: 768px) {
   section {
-    padding: 5rem 1.5rem;
+    padding: 4.5rem 1.25rem;
   }
+}
+
+/* Global section headers and badge labels */
+.section-heading {
+  margin-bottom: 3.5rem;
+}
+
+.section-heading-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  background: var(--bg-pill);
+  border: 1px solid var(--border-light);
+  width: fit-content;
+}
+
+.section-number-inline {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-lime);
+  letter-spacing: 0.08em;
+}
+
+.about-label-text {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.text-accent {
+  background: var(--hero-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: var(--text-primary);
+  color: var(--text-contrast);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+  background: var(--accent-lime);
+  color: #000000;
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--text-primary);
+  transform: translateY(-2px);
 }
 
 /* Minimal Scrollbar */
 ::-webkit-scrollbar {
   width: 0px;
-  /* Hidden for pure awwwards feel, handled by lenis */
   background: transparent;
 }
 
-/* ================================================================
-   Scroll-Driven Section Reveal (.scroll-reveal)
-   ================================================================
-   Apply this class to any heading / element you want to wipe in
-   from the bottom as it enters the viewport.
-
-   Strategy (per modern-web-guidance):
-   1. Native CSS scroll-driven animations (Chrome 115+, Edge 115+, Safari 26+)
-   2. IntersectionObserver JS fallback (handles Firefox)
-   3. prefers-reduced-motion: show immediately, no animation
-   ================================================================ */
-
-/* --- Base state: visible by default (progressive enhancement) --- */
-.scroll-reveal {
-  opacity: 1;
-  translate: 0 0;
-}
-
-/* --- Native scroll-driven animation (Baseline Newly Available) --- */
-@supports ((animation-timeline: view()) and (animation-range: entry)) {
-  @media (prefers-reduced-motion: no-preference) {
-    .scroll-reveal {
-      animation: scroll-reveal-wipe linear both;
-      /* Declare timeline AFTER shorthand to prevent reset */
-      animation-timeline: view();
-      animation-range: entry 0% entry 28%;
-    }
-
-    @keyframes scroll-reveal-wipe {
-      from {
-        opacity: 0;
-        translate: 0 48px;
-      }
-      to {
-        opacity: 1;
-        translate: 0 0;
-      }
-    }
-  }
-}
-
-/* --- JS Fallback state: hidden until IntersectionObserver fires --- */
-@supports not ((animation-timeline: view()) and (animation-range: entry)) {
-  @media (prefers-reduced-motion: no-preference) {
-    .scroll-reveal {
-      opacity: 0;
-      translate: 0 48px;
-      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-                  translate 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .scroll-reveal.in-view {
-      opacity: 1;
-      translate: 0 0;
-    }
-  }
-}
-
-/* =================================================================
-   Theme Transition (View Transitions API Support) & Global A11y Rules
-   ================================================================= */
-
-/* Smooth cross-fade between themes (2026 pattern) */
+/* View Transitions Theme circular burst */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 300ms;
-  animation-timing-function: ease-in-out;
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Transition color properties on theme change (fallback for browsers without View Transitions) */
-:root {
-  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
-}
-
-/* Respect reduced motion — instant swap, no animation */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-  
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Keyboard Navigation visible focus outline (WCAG 2.4.7) */
+/* Accessibility Focus States */
 :focus {
   outline: none;
 }
 :focus-visible {
-  outline: 3px solid var(--accent-blue, #00c8ff);
+  outline: 2px solid var(--accent-lime);
   outline-offset: 3px;
-  box-shadow: 0 0 0 5px rgba(0, 200, 255, 0.25);
-  border-radius: 4px;
+  box-shadow: 0 0 0 5px rgba(197, 255, 65, 0.25);
+  border-radius: var(--radius-sm);
 }
 
-/* Skip link styling for keyboard navigation */
+/* Skip link styling */
 .skip-link {
   position: fixed;
   top: -100px;
   left: 2rem;
-  background: var(--bg-surface-elevated, #111);
-  color: var(--text-primary, #fff);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   z-index: var(--z-max);
-  font-family: var(--font-display);
   font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-md);
   transition: top 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .skip-link:focus-visible {
   top: 2rem;
 }
 
-/* Tactile button press feedback */
-.btn:active, .action-btn:active, .theme-toggle-btn:active, .mobile-menu-btn:active {
-  transform: scale(0.98);
-}
-.btn:disabled, .action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* Hide native cursor when custom cursor class is active on HTML */
+/* Native cursor suppression on fine pointer */
 .hide-native-cursor,
 .hide-native-cursor * {
   cursor: none !important;

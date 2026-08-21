@@ -1,0 +1,101 @@
+/* 
+  =============================================================================
+  HUMAN-CRAFTED DESIGN SYSTEM & COLOR PALETTES
+  Extracted from Reference Portfolios:
+  1. Light Theme: AyoolaDev (https://ayooladev.vercel.app/)
+  2. Dark Theme & Aesthetics: Sawad (https://sawad.framer.website/), Parthh (https://parthh.in/), Aelradi (https://aelradi.engineer/)
+  =============================================================================
+*/
+
+/* --- LIGHT THEME (AyoolaDev Inspired Palette) --- */
+:root[data-theme="light"],
+.theme-light {
+  /* Surface & Background Colors */
+  --bg-primary: #f3f3f3;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e5e7eb;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: #ffffff;
+  --bg-nav: rgba(243, 243, 243, 0.8);
+  --bg-input: #ffffff;
+  --bg-pill: rgba(0, 0, 0, 0.05);
+
+  /* Text & Typography Colors */
+  --text-primary: #111827;     /* Slate Dark 900 */
+  --text-secondary: #374151;   /* Gray 700 */
+  --text-muted: #6b7280;       /* Gray 500 */
+  --text-contrast: #ffffff;
+
+  /* Borders & Shadows */
+  --border-light: rgba(0, 0, 0, 0.08);
+  --border-subtle: #e5e7eb;
+  --border-active: #3b82f6;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.15);
+
+  /* Accents & Dynamic Hero Gradients (AyoolaDev signature) */
+  --accent-purple: #a855f7;
+  --accent-rose: #f472b6;
+  --accent-orange: #f97316;
+  --accent-blue: #2563eb;
+  --accent-emerald: #10b981;
+  --accent-cyan: #06b6d4;
+
+  --hero-gradient: linear-gradient(135deg, #c084fc 0%, #ef4444 50%, #f97316 100%);
+  --card-border-glow: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(249, 115, 22, 0.3));
+}
+
+/* --- DARK THEME (Sawad + Parthh + Aelradi Premium Dark Palette) --- */
+:root[data-theme="dark"],
+.theme-dark {
+  /* Surface & Background Colors */
+  --bg-primary: #0a0a0a;       /* Deep obsidian black */
+  --bg-canvas: #030014;        /* Cosmic background base */
+  --bg-secondary: #111111;     /* Rich dark card container */
+  --bg-tertiary: #161616;      /* Elevated surface */
+  --bg-card: rgba(17, 17, 17, 0.65);
+  --bg-card-hover: rgba(22, 22, 22, 0.85);
+  --bg-nav: rgba(18, 18, 18, 0.75);
+  --bg-input: rgba(255, 255, 255, 0.04);
+  --bg-pill: rgba(255, 255, 255, 0.06);
+
+  /* Text & Typography Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #998f8f;   /* Warm muted gray (Sawad signature) */
+  --text-muted: #6a6b6e;       /* Deep slate gray */
+  --text-contrast: #050505;
+
+  /* Borders & Shadows */
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-active: #c5ff41;    /* Vibrant Sawad Lime */
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 45px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 0 35px rgba(197, 255, 65, 0.2);
+
+  /* Accents & Energy Ray Palette (Aelradi & Sawad signature) */
+  --accent-lime: #c5ff41;      /* Ultra modern energetic neon lime */
+  --accent-emerald: #10b981;   /* Cosmic energy emerald */
+  --accent-teal: #34d399;      /* Light emerald ray */
+  --accent-orange: #f46c38;    /* Coral flame */
+  --accent-deep-green: #065f46;
+
+  --hero-gradient: linear-gradient(135deg, #c5ff41 0%, #10b981 50%, #f46c38 100%);
+  --card-border-glow: linear-gradient(135deg, rgba(197, 255, 65, 0.3), rgba(16, 185, 129, 0.15));
+}
+
+/* Glassmorphism & Micro-Interactions */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-light);
+}
+
+.glass-nav {
+  background: var(--bg-nav);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-light);
+}

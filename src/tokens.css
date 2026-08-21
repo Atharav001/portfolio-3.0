@@ -1,3 +1,12 @@
+/* 
+  =============================================================================
+  UNIFIED DESIGN TOKENS & COLOR SYSTEM
+  Combining references:
+  - Dark Theme: Sawad (Obsidian/Lime/Coral) + Aelradi (Cosmic Emerald) + Parthh (Glass/Zinc)
+  - Light Theme: AyoolaDev (Clean/Contrasting/Multi-stop Gradients)
+  =============================================================================
+*/
+
 :root {
   /* --- 8pt Grid Spacing System --- */
   --space-1: 0.25rem;  /* 4px */
@@ -13,38 +22,144 @@
   --space-20: 5rem;    /* 80px */
   --space-24: 6rem;    /* 96px */
   --space-32: 8rem;    /* 128px */
+  --max-width: 1200px;
 
-  /* --- Animation Delays (Tokenized) --- */
+  /* --- Animation & Transitions --- */
   --delay-stagger: 100ms;
   --delay-short: 150ms;
   --delay-medium: 300ms;
   --delay-long: 500ms;
 
-  /* --- Transitions --- */
-  --transition-smooth: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-color-swap: 0.4s ease;
 
   /* --- Border Radius --- */
+  --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
+  --radius-pill: 9999px;
   --radius-full: 9999px;
 
-  /* --- Aurora UI Color Tokens --- */
-  --bg-accent-1-dark: rgba(79, 70, 229, 0.25);   /* Indigo/Violet */
-  --bg-accent-2-dark: rgba(6, 182, 212, 0.22);   /* Cyan/Teal */
-  --bg-accent-3-dark: rgba(0, 200, 255, 0.06);   
-  --bg-accent-1-light: rgba(99, 102, 241, 0.45); /* Rich Indigo */
-  --bg-accent-2-light: rgba(244, 63, 94, 0.40);  /* Rich Rose */
-  --bg-accent-3-light: rgba(0, 95, 163, 0.04);
-
-  /* --- Z-Index Tokens --- */
+  /* --- Z-Index Layer Stack --- */
   --z-background: -10;
+  --z-canvas: -1;
   --z-base: 1;
   --z-content: 10;
+  --z-sticky: 50;
   --z-overlay: 100;
   --z-modal: 1000;
   --z-cursor: 9999;
   --z-max: 100000;
+}
+
+/* =============================================================================
+   DARK THEME (Default: Obsidian + Sawad Neon Lime + Coral Flame + Emerald)
+   ============================================================================= */
+:root,
+:root[data-theme="dark"],
+.dark {
+  /* Surface & Canvas Colors */
+  --bg-primary: #0a0a0a;         /* Deep obsidian pitch black */
+  --bg-canvas: #050214;          /* Cosmic deep WebGL base */
+  --bg-secondary: #121214;       /* Card surface */
+  --bg-tertiary: #1a1a1e;        /* Elevated elements */
+  --bg-card: rgba(18, 18, 20, 0.72);
+  --bg-card-hover: rgba(26, 26, 30, 0.88);
+  --bg-nav: rgba(14, 14, 16, 0.78);
+  --bg-input: rgba(255, 255, 255, 0.05);
+  --bg-pill: rgba(255, 255, 255, 0.07);
+  --bg-code: rgba(0, 0, 0, 0.45);
+
+  /* Text & Typography */
+  --text-primary: #ffffff;
+  --text-secondary: #9ea3ae;     /* Warm muted gray (Sawad signature) */
+  --text-muted: #656a76;         /* Subtle slate */
+  --text-contrast: #000000;
+
+  /* Borders & Dividers */
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-card: rgba(255, 255, 255, 0.1);
+  --border-active: #c5ff41;      /* Sawad vibrant neon lime */
+
+  /* Shadows & Glows */
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 35px rgba(197, 255, 65, 0.22);
+  --shadow-emerald-glow: 0 0 30px rgba(16, 185, 129, 0.25);
+  --inset-card-glow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  /* Accents & Signatures */
+  --accent-lime: #c5ff41;        /* Sawad signature Neon Lime */
+  --accent-coral: #f46c38;       /* Coral Flame */
+  --accent-emerald: #10b981;     /* Aelradi Cosmic Emerald */
+  --accent-teal: #34d399;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #a855f7;
+  --accent-blue: #3b82f6;
+
+  /* Gradients */
+  --hero-gradient: linear-gradient(135deg, #c5ff41 0%, #10b981 50%, #f46c38 100%);
+  --accent-gradient: linear-gradient(135deg, #c5ff41 0%, #10b981 100%);
+  --card-border-glow: linear-gradient(135deg, rgba(197, 255, 65, 0.35), rgba(16, 185, 129, 0.2));
+  --aurora-1: rgba(197, 255, 65, 0.12);
+  --aurora-2: rgba(16, 185, 129, 0.15);
+  --aurora-3: rgba(244, 108, 56, 0.08);
+}
+
+/* =============================================================================
+   LIGHT THEME (AyoolaDev Inspired Crisp Palette)
+   ============================================================================= */
+:root[data-theme="light"],
+.light-theme {
+  /* Surface & Canvas Colors */
+  --bg-primary: #f5f5f7;         /* Clean modern Apple-like canvas */
+  --bg-canvas: #f0f0f4;
+  --bg-secondary: #ffffff;       /* Pure white card container */
+  --bg-tertiary: #e9eaee;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: #ffffff;
+  --bg-nav: rgba(245, 245, 247, 0.82);
+  --bg-input: #ffffff;
+  --bg-pill: rgba(0, 0, 0, 0.06);
+  --bg-code: rgba(0, 0, 0, 0.06);
+
+  /* Text & Typography */
+  --text-primary: #111827;       /* Slate 900 */
+  --text-secondary: #4b5563;     /* Gray 700 */
+  --text-muted: #6b7280;         /* Gray 500 */
+  --text-contrast: #ffffff;
+
+  /* Borders & Dividers */
+  --border-light: rgba(0, 0, 0, 0.07);
+  --border-subtle: #e5e7eb;
+  --border-card: rgba(0, 0, 0, 0.08);
+  --border-active: #2563eb;
+
+  /* Shadows & Glows */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 25px rgba(37, 99, 235, 0.15);
+  --shadow-emerald-glow: 0 0 25px rgba(16, 185, 129, 0.18);
+  --inset-card-glow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  /* Accents & Signatures (Ayoola Multi-Stop Palette) */
+  --accent-lime: #059669;        /* Deep crisp emerald */
+  --accent-coral: #ea580c;       /* Rich warm orange */
+  --accent-emerald: #10b981;
+  --accent-teal: #0d9488;
+  --accent-cyan: #0284c7;
+  --accent-purple: #9333ea;
+  --accent-blue: #2563eb;
+
+  /* Gradients */
+  --hero-gradient: linear-gradient(135deg, #9333ea 0%, #ef4444 50%, #f97316 100%);
+  --accent-gradient: linear-gradient(135deg, #2563eb 0%, #9333ea 100%);
+  --card-border-glow: linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(239, 68, 68, 0.2));
+  --aurora-1: rgba(147, 51, 234, 0.08);
+  --aurora-2: rgba(37, 99, 235, 0.1);
+  --aurora-3: rgba(249, 115, 22, 0.06);
 }

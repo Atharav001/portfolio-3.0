@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Moon, Sun } from 'lucide-react';
+import LiveLocationClock from './LiveLocationClock';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ onThemeChange }) => {
   const [activeTab, setActiveTab] = useState('Home');
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState(() => {
@@ -22,19 +23,21 @@ const Navbar = () => {
         document.documentElement.classList.toggle('light-theme', next === 'light');
         document.documentElement.dataset.theme = next;
         setTheme(next);
+        if (onThemeChange) onThemeChange(next);
       }
     };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
-  }, []);
+  }, [onThemeChange]);
 
-  const toggleTheme = (e) => {
+  const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     const applyTheme = () => {
       document.documentElement.classList.toggle('light-theme', next === 'light');
       document.documentElement.dataset.theme = next;
       localStorage.setItem('theme', next);
       setTheme(next);
+      if (onThemeChange) onThemeChange(next);
     };
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -44,11 +47,9 @@ const Navbar = () => {
       return;
     }
 
-    // Option 4: Corner Burst
+    // Corner Burst Transition
     const x = window.innerWidth;
     const y = 0;
-
-    // Radius to cover the farthest corner of the viewport
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
@@ -57,7 +58,6 @@ const Navbar = () => {
     const transition = document.startViewTransition(applyTheme);
 
     transition.ready.then(() => {
-      const isDarkToLight = next === 'light';
       document.documentElement.animate(
         {
           clipPath: [
@@ -66,10 +66,8 @@ const Navbar = () => {
           ],
         },
         {
-          duration: 600,
-          easing: isDarkToLight
-            ? 'cubic-bezier(0.4, 0, 0.2, 1)'
-            : 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+          duration: 500,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
           pseudoElement: '::view-transition-new(root)',
         }
       );
@@ -78,7 +76,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 25);
 
       const sections = ['home', 'about', 'experience', 'projects', 'contact'];
       let maxVisible = 0;
@@ -101,7 +99,6 @@ const Navbar = () => {
       }
     };
 
-    // Use Lenis scroll if available, otherwise window scroll
     const lenis = window.__lenis;
     if (lenis) {
       lenis.on('scroll', handleScroll);
@@ -133,26 +130,22 @@ const Navbar = () => {
     };
   }, [isMobileMenuOpen]);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   const links = ['Home', 'About', 'Experience', 'Projects', 'Contact'];
 
   const scrollToSection = (e, link) => {
     e.preventDefault();
     setActiveTab(link);
-    setIsMobileMenuOpen(false); // Close menu on click
+    setIsMobileMenuOpen(false);
     const targetId = link === 'Home' ? 'home' : link.toLowerCase();
     const element = document.getElementById(targetId);
     if (element) {
       const lenis = window.__lenis;
       if (lenis) {
-        lenis.scrollTo(`#${targetId}`);
+        lenis.scrollTo(`#${targetId}`, { offset: -40 });
       } else {
         window.scrollTo({
-          top: element.getBoundingClientRect().top + window.scrollY - 80,
-          behavior: 'smooth'
+          top: element.getBoundingClientRect().top + window.scrollY - 70,
+          behavior: 'smooth',
         });
       }
     }
@@ -161,90 +154,113 @@ const Navbar = () => {
   return (
     <header className="navbar-container">
       <a href="#about" className="skip-link">Skip to main content</a>
-      <motion.div 
+      
+      <motion.div
         className="navbar-animator"
-        initial={{ top: -100, opacity: 0 }}
-        animate={{ top: 0, opacity: 1 }}
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        style={{ position: 'relative', width: '100%' }}
       >
-        <div className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-
-        {/* Left Side: Logo */}
-        <div className="navbar-logo-section">
-          <a href="#home" className="navbar-logo interactive-tag" onClick={(e) => scrollToSection(e, 'Home')}>
-            <span className="logo-full">Atharav Narang</span>
-            <span className="logo-short">Atharav</span>
-          </a>
-        </div>
-
-        {/* Center: Navigation Links */}
-        <nav className="navbar-links-section" aria-label="Primary navigation">
-          {links.map((link) => (
-            <a
-              key={link}
-              href={`#${link === 'Home' ? 'home' : link.toLowerCase()}`}
-              className={`nav-link interactive-tag ${activeTab === link ? 'active' : ''}`}
-              onClick={(e) => scrollToSection(e, link)}
-            >
-              {link}
+        <div className={`navbar-capsule ${scrolled ? 'scrolled' : ''}`}>
+          {/* Logo / Brand */}
+          <div className="navbar-brand-section">
+            <a href="#home" className="navbar-logo interactive-tag" onClick={(e) => scrollToSection(e, 'Home')}>
+              <span className="logo-indicator" />
+              <span className="logo-full">Atharav Narang</span>
+              <span className="logo-short">AN</span>
             </a>
-          ))}
-        </nav>
+          </div>
 
-        {/* Right Side: Actions (Theme Toggle & Mobile Burger) */}
-        <div className="navbar-actions-section">
-          {/* Target for the cursor to fly back to when it exits the window screen */}
-          <div id="cursor-dock" className="cursor-dock"></div>
+          {/* Desktop Navigation Links */}
+          <nav className="navbar-links-section" aria-label="Primary navigation">
+            {links.map((link) => (
+              <a
+                key={link}
+                href={`#${link === 'Home' ? 'home' : link.toLowerCase()}`}
+                className={`nav-link interactive-tag ${activeTab === link ? 'active' : ''}`}
+                onClick={(e) => scrollToSection(e, link)}
+              >
+                {link}
+                {activeTab === link && (
+                  <motion.div
+                    className="nav-active-pill"
+                    layoutId="activeNavIndicator"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </a>
+            ))}
+          </nav>
 
-          <button
-            className="theme-toggle-btn interactive-tag"
-            onClick={toggleTheme}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            aria-pressed={theme === 'light'}
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-
-          {/* Hamburger Menu Button */}
-          <button
-            className="mobile-menu-btn interactive-tag"
-            onClick={toggleMobileMenu}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu-nav"
-          >
-            <div className={`burger-icon ${isMobileMenuOpen ? 'open' : ''}`}>
-              <span></span>
-              <span></span>
-              <span></span>
+          {/* Actions: Live Clock, Theme Toggle & Mobile Menu */}
+          <div className="navbar-actions-section">
+            <div className="clock-wrapper-desktop">
+              <LiveLocationClock locationLabel="BLR, IN" />
             </div>
-          </button>
-        </div>
-        </div>
 
+            {/* Target for custom cursor docking on leave */}
+            <div id="cursor-dock" className="cursor-dock" aria-hidden="true" />
+
+            <button
+              className="theme-toggle-btn interactive-tag"
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-pressed={theme === 'light'}
+            >
+              {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
+            </button>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              className="mobile-menu-btn interactive-tag"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu-nav"
+            >
+              <div className={`burger-icon ${isMobileMenuOpen ? 'open' : ''}`}>
+                <span />
+                <span />
+                <span />
+              </div>
+            </button>
+          </div>
+        </div>
       </motion.div>
 
-      {/* Mobile Overlay Menu */}
-      <div 
-        id="mobile-menu-nav" 
-        className={`mobile-menu-overlay ${isMobileMenuOpen ? 'open' : ''}`}
-        aria-label="Mobile navigation"
-      >
-        <nav className="mobile-nav-links">
-          {links.map((link, index) => (
-            <a
-              key={link}
-              href={`#${link === 'Home' ? 'home' : link.toLowerCase()}`}
-              className={`mobile-nav-link ${activeTab === link ? 'active' : ''} ${isMobileMenuOpen ? 'fade-in' : ''}`}
-              onClick={(e) => scrollToSection(e, link)}
-              style={{ '--stagger-index': index }}
-            >
-              {link}
-            </a>
-          ))}
-        </nav>
-      </div>
+      {/* Mobile Drawer Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            id="mobile-menu-nav"
+            className="mobile-menu-overlay"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="mobile-menu-content">
+              <div className="mobile-clock-row">
+                <LiveLocationClock locationLabel="MANIPAL / BLR, IN" />
+              </div>
+              <nav className="mobile-nav-links">
+                {links.map((link, index) => (
+                  <a
+                    key={link}
+                    href={`#${link === 'Home' ? 'home' : link.toLowerCase()}`}
+                    className={`mobile-nav-link ${activeTab === link ? 'active' : ''}`}
+                    onClick={(e) => scrollToSection(e, link)}
+                    style={{ '--stagger-index': index }}
+                  >
+                    <span className="mobile-nav-num">0{index + 1}</span>
+                    <span className="mobile-nav-text">{link}</span>
+                  </a>
+                ))}
+              </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

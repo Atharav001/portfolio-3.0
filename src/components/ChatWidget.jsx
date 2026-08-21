@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Send, Bot, User, Sparkles, X, MessageSquareText, RotateCcw, Copy, Check } from 'lucide-react';
-import { ThinkingOrb } from 'thinking-orbs';
+import { ThinkingOrb } from './ThinkingOrb';
 import './ChatWidget.css';
 
 const SUGGESTED_QUESTIONS = [
   "What are the projects he has built?",
-  "Tell me about his education."
+  "Tell me about his education & background.",
+  "What are his core technical skills?",
+  "How can I contact or hire Atharav?"
 ];
 
 const getOrCreateSessionId = () => {
@@ -147,7 +149,6 @@ const ChatWidget = () => {
 
       container.scrollTop += delta;
 
-      // Prevent scroll chaining to the outer page
       if (
         (isScrollingDown && scrollTop + clientHeight >= scrollHeight - 1) ||
         (isScrollingUp && scrollTop <= 0) ||
@@ -164,7 +165,7 @@ const ChatWidget = () => {
     };
   }, []);
 
-  const handleSend = async (textToSend) => {
+  const handleSend = useCallback(async (textToSend) => {
     const query = (textToSend || input).trim();
     if (!query || isLoading) return;
 
@@ -219,7 +220,21 @@ const ChatWidget = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, isLoading, sessionId]);
+
+  // URL query parameter auto-trigger (aaabadcode.com style URL sync: ?query=... or ?q=...)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const queryParam = params.get('query') || params.get('q');
+      if (queryParam) {
+        const timer = setTimeout(() => {
+          handleSend(queryParam);
+        }, 250);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [handleSend]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -341,8 +356,8 @@ const ChatWidget = () => {
               </div>
               <div className="chat-bubble-container">
                 <div className="chat-bubble thinking-bubble-orb">
-                  <ThinkingOrb state="composing" size={64} speed={1.50} theme="dark" />
-                  <span className="thinking-text">Composing response...</span>
+                  <ThinkingOrb size={28} speed={1.5} />
+                  <span className="thinking-text">Composing grounded answer...</span>
                 </div>
               </div>
             </div>
@@ -352,7 +367,7 @@ const ChatWidget = () => {
         {messages.length <= 2 && !isLoading && (
           <div className="chat-chips-container">
             <div className="chat-chips-label">
-              <Sparkles size={11} /> Example Questions
+              <Sparkles size={11} /> Suggested Inquiries
             </div>
             <div className="chat-chips">
               {SUGGESTED_QUESTIONS.map((q, idx) => (
@@ -380,7 +395,7 @@ const ChatWidget = () => {
             ref={inputRef}
             type="text"
             className="chat-input"
-            placeholder="Ask anything about Atharav..."
+            placeholder="Ask anything about Atharav's projects, stack, or experience..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
