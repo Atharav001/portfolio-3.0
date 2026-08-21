@@ -1,6 +1,6 @@
-## Portfolio website (portfolio-2.0)
+## Portfolio website (portfolio-3.0)
 
-Atharav's own personal portfolio site — a React/Vite site he designed and built from scratch, including a live "Ask About Atharav" RAG-powered chatbot embedded directly in the hero section that answers visitor questions about him in real time, grounded only in his own data. The repository is at github.com/Atharav001/portfolio-2.0.
+Atharav's own flagship personal portfolio site — a React/Vite site he designed and built from scratch, featuring Three.js procedural cosmic energy rays, Framer Motion parallax transitions, and a live "Ask About Atharav" Scope-Locked RAG-powered chatbot embedded in the hero section that answers visitor questions grounded in his verified data. The repository is at github.com/Atharav001/portfolio-3.0.
 
 ## RAG-Agentic-Deep-Research (Deep Research Agent)
 

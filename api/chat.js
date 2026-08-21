@@ -47,6 +47,10 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
   * Two-pass AI pipeline: Pass 1 is an intelligent Topic Classifier guarding scope lock while allowing portfolio & tech stack questions. Pass 2 is an LLM synthesis engine grounded in vector context.
 
 3. KEY PROJECTS & REPOSITORIES:
+- Portfolio 3.0 (Interactive Developer Experience):
+  * Description: Flagship personal developer portfolio engineered with React 19, Vite, Framer Motion, Lenis Smooth Scroll, Three.js WebGL procedural cosmic background, and a Scope-Locked RAG AI assistant.
+  * Repository: https://github.com/Atharav001/portfolio-3.0
+
 - RAG-Agentic-Deep-Research (Deep Research Agent):
   * Description: Modular agentic RAG framework for autonomous research over ~400 arXiv papers (cs.CL, cs.AI, cs.LG, 2024-2026).
   * Architecture: Sub-question decomposition, hybrid retrieval (BM25 + FAISS dense search fused with Reciprocal Rank Fusion), cross-encoder reranking, context compression, sufficiency reflection loops, and NLI verification stripping unfaithful citations.
