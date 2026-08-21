@@ -3,7 +3,7 @@
   UNIFIED DESIGN TOKENS & COLOR SYSTEM
   Dual Themes:
   - Dark Theme: Obsidian (#0a0a0a) + Sawad Neon Lime (#c5ff41) + Coral Flame (#f46c38)
-  - Light Theme: Crisp AyoolaDev Canvas (#f8f9fa / #ffffff) + Saturated Vibrant Gradients
+  - Light Theme: Pristine Pure White (#ffffff) Canvas + High-Contrast Typography
   =============================================================================
 */
 
@@ -113,7 +113,7 @@
 }
 
 /* =============================================================================
-   LIGHT THEME (AyoolaDev Inspired Crisp Palette with Deep Contrast)
+   LIGHT THEME (Pristine Pure White Canvas + Deep High-Contrast Typography)
    ============================================================================= */
 :root[data-theme="light"],
 html.light-theme,
@@ -121,36 +121,36 @@ body.light-theme,
 .light-theme {
   color-scheme: light;
 
-  /* Surface & Canvas Colors */
-  --bg-primary: #f8f9fa;         /* Clean modern canvas */
-  --bg-canvas: #f0f2f5;          /* Ambient backdrop */
+  /* Surface & Canvas Colors - Pristine Pure White */
+  --bg-primary: #ffffff;         /* Pure crisp white canvas */
+  --bg-canvas: #ffffff;          /* Pure white WebGL backdrop */
   --bg-secondary: #ffffff;       /* Pure white card surface */
-  --bg-tertiary: #edf0f5;        /* Elevated headers & pills */
-  --bg-card: rgba(255, 255, 255, 0.9);
+  --bg-tertiary: #f8fafc;        /* Ultra-soft off-white for headers & chips */
+  --bg-card: rgba(255, 255, 255, 0.95);
   --bg-card-hover: #ffffff;
-  --bg-nav: rgba(255, 255, 255, 0.9);
-  --bg-input: #ffffff;
-  --bg-pill: rgba(0, 0, 0, 0.05);
-  --bg-code: rgba(0, 0, 0, 0.06);
+  --bg-nav: rgba(255, 255, 255, 0.92);
+  --bg-input: #f8fafc;
+  --bg-pill: rgba(0, 0, 0, 0.04);
+  --bg-code: rgba(0, 0, 0, 0.05);
 
-  /* Text & Typography - High Contrast */
+  /* Text & Typography - Deep High Contrast */
   --text-primary: #0f172a;       /* Slate 900 */
-  --text-secondary: #334155;     /* Slate 700 - crisp, easy to read */
+  --text-secondary: #334155;     /* Slate 700 - razor sharp & easy to read */
   --text-muted: #64748b;         /* Slate 500 */
   --text-contrast: #ffffff;
 
   /* Borders & Dividers */
-  --border-light: rgba(0, 0, 0, 0.08);
-  --border-subtle: rgba(0, 0, 0, 0.14);
-  --border-card: rgba(0, 0, 0, 0.08);
+  --border-light: rgba(0, 0, 0, 0.06);
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --border-card: rgba(0, 0, 0, 0.07);
   --border-active: #7c3aed;
 
   /* Shadows & Glows */
-  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 12px 36px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 14px 44px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
   --shadow-glow: 0 0 25px rgba(124, 58, 237, 0.18);
   --shadow-emerald-glow: 0 0 25px rgba(16, 185, 129, 0.2);
-  --inset-card-glow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --inset-card-glow: inset 0 1px 0 rgba(255, 255, 255, 1);
 
   /* Accents & Signatures (Saturated & High Contrast) */
   --accent-lime: #059669;        /* Deep crisp emerald */
@@ -164,8 +164,8 @@ body.light-theme,
   /* Gradients (Vibrant, Saturated, Non-bleaching) */
   --hero-gradient: linear-gradient(135deg, #7c3aed 0%, #dc2626 50%, #ea580c 100%);
   --accent-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-  --card-border-glow: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(220, 38, 38, 0.2));
-  --aurora-1: rgba(124, 58, 237, 0.08);
-  --aurora-2: rgba(37, 99, 235, 0.09);
-  --aurora-3: rgba(234, 88, 12, 0.06);
+  --card-border-glow: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(220, 38, 38, 0.15));
+  --aurora-1: rgba(124, 58, 237, 0.05);
+  --aurora-2: rgba(37, 99, 235, 0.05);
+  --aurora-3: rgba(234, 88, 12, 0.03);
 }
