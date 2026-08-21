@@ -7,22 +7,6 @@
 .contact-container {
   width: 100%;
   position: relative;
-  isolation: isolate;
-}
-
-/* Feathered boundary-less backdrop blur across Contact section */
-.contact-container::before {
-  content: '';
-  position: absolute;
-  inset: -3rem -3rem;
-  background: radial-gradient(ellipse at 50% 30%, var(--text-halo-bg) 0%, transparent 75%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  mask-image: radial-gradient(ellipse at 50% 30%, black 40%, transparent 85%);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 40%, transparent 85%);
-  pointer-events: none;
-  z-index: -1;
-  border-radius: var(--radius-xl);
 }
 
 .contact-huge-title {
@@ -35,7 +19,6 @@
   margin-bottom: 4rem;
   color: var(--text-primary);
   user-select: none;
-  text-shadow: var(--text-shadow-contrast);
 }
 
 .outline-text {
@@ -89,6 +72,11 @@
   box-shadow: var(--shadow-glow);
 }
 
+html.light-theme .contact-email-cta:hover {
+  border-color: var(--accent-purple);
+  box-shadow: var(--shadow-glow);
+}
+
 .email-cta-icon-wrapper {
   width: 48px;
   height: 48px;
@@ -100,6 +88,12 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+html.light-theme .email-cta-icon-wrapper {
+  background: rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.25);
+  color: var(--accent-purple);
 }
 
 .email-cta-text-wrapper {
@@ -137,6 +131,10 @@
   transform: translate(3px, -3px);
 }
 
+html.light-theme .contact-email-cta:hover .contact-email-icon {
+  color: var(--accent-purple);
+}
+
 .contact-meta {
   display: flex;
   flex-direction: column;
@@ -147,7 +145,6 @@
   font-size: 1.05rem;
   color: var(--text-secondary);
   line-height: 1.65;
-  text-shadow: var(--text-shadow-contrast);
 }
 
 .contact-socials {
@@ -179,6 +176,11 @@
   border-color: var(--accent-lime);
   color: var(--text-primary);
   transform: translateY(-2px);
+}
+
+html.light-theme .social-pill:hover {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
 }
 
 .footer-copyright {

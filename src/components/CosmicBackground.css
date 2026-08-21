@@ -4,7 +4,7 @@
   width: 100vw;
   height: 100vh;
   z-index: var(--z-canvas, -1);
-  pointer-events: auto;
+  pointer-events: none;
   overflow: hidden;
   background-color: var(--bg-canvas, #06050a);
   transition: background-color var(--transition-color-swap);
@@ -15,29 +15,29 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.85;
+  opacity: 0.9;
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 
 .cosmic-canvas.ready {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .cosmic-canvas.hidden {
   opacity: 0;
 }
 
-/* In Light Theme: soft subtle blend so the Three.js WebGL canvas never blackens the light canvas */
+/* In Light Theme: maintain strong visibility of glowing tubes over light surface */
 html.light-theme .cosmic-canvas,
 body.light-theme .cosmic-canvas,
 :root[data-theme="light"] .cosmic-canvas {
-  opacity: 0.12;
+  opacity: 0.75;
   mix-blend-mode: multiply;
-  filter: contrast(1.2) brightness(0.9);
+  filter: contrast(1.15) saturate(1.2);
 }
 
-/* Ambient Radial Aurora Gradients for depth and atmosphere */
+/* Ambient Radial Aurora Gradients for subtle depth */
 .aurora-mesh {
   position: absolute;
   inset: -20%;
@@ -48,7 +48,7 @@ body.light-theme .cosmic-canvas,
     radial-gradient(ellipse at 80% 30%, var(--aurora-2) 0%, transparent 60%),
     radial-gradient(ellipse at 50% 85%, var(--aurora-3) 0%, transparent 65%);
   filter: blur(60px);
-  opacity: 0.9;
+  opacity: 0.85;
   animation: aurora-drift 22s ease-in-out infinite alternate;
   pointer-events: none;
   transform: translateZ(0);
@@ -57,8 +57,8 @@ body.light-theme .cosmic-canvas,
 html.light-theme .aurora-mesh,
 body.light-theme .aurora-mesh,
 :root[data-theme="light"] .aurora-mesh {
-  filter: blur(80px);
-  opacity: 0.85;
+  filter: blur(70px);
+  opacity: 0.35;
 }
 
 @keyframes aurora-drift {

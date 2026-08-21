@@ -1,6 +1,6 @@
 /* =============================================================================
    HERO SECTION STYLES
-   Multi-layered Parallax, Cybernetic Typography & Boundary-less Readability Halos
+   Multi-layered Parallax, Cybernetic Typography & Clean Canvas Representation
    ============================================================================= */
 
 .hero-section {
@@ -40,22 +40,6 @@
   flex-direction: column;
   width: 100%;
   position: relative;
-  isolation: isolate;
-}
-
-/* Subtle, organic feathered halo behind hero content */
-.hero-content::before {
-  content: '';
-  position: absolute;
-  inset: -3rem -3rem;
-  background: radial-gradient(ellipse at 40% 45%, var(--text-halo-bg) 0%, transparent 75%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  mask-image: radial-gradient(ellipse at 40% 45%, black 40%, transparent 85%);
-  -webkit-mask-image: radial-gradient(ellipse at 40% 45%, black 40%, transparent 85%);
-  pointer-events: none;
-  z-index: -1;
-  border-radius: var(--radius-xl);
 }
 
 .hero-badge {
@@ -118,7 +102,6 @@ html.light-theme .status-dot,
   margin-bottom: 1.5rem;
   color: var(--text-primary);
   user-select: none;
-  text-shadow: var(--text-shadow-contrast);
 }
 
 .hero-title-line {
@@ -135,12 +118,13 @@ html.light-theme .status-dot,
   background: var(--hero-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: none !important;
 }
 
 .role-subheading {
   font-family: var(--font-mono);
   font-size: clamp(0.85rem, 1.8vw, 1.25rem);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--text-secondary);
   -webkit-text-fill-color: var(--text-secondary);
@@ -157,7 +141,6 @@ html.light-theme .status-dot,
   font-size: clamp(1rem, 1.3vw, 1.15rem);
   color: var(--text-secondary);
   line-height: 1.65;
-  text-shadow: var(--text-shadow-contrast);
 }
 
 .hero-actions {

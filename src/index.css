@@ -10,7 +10,7 @@
   --accent-secondary: var(--text-secondary);
   --accent-glow: var(--shadow-glow);
 
-  /* Subtle Glassmorphism */
+  /* Glassmorphism */
   --glass-bg: var(--bg-card);
   --glass-border: var(--border-light);
 
@@ -67,7 +67,6 @@ body {
   min-height: 100dvh;
   overflow-x: hidden;
   position: relative;
-  /* Restore normal OS cursor */
   cursor: default;
 }
 
@@ -81,6 +80,11 @@ body {
 ::selection {
   background: var(--accent-lime);
   color: #000000;
+}
+
+html.light-theme ::selection {
+  background: #7c3aed;
+  color: #ffffff;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -115,31 +119,6 @@ a, button {
   box-shadow: var(--shadow-md);
 }
 
-/* =============================================================================
-   FEATHERED BOUNDARY-LESS TEXT BACKDROP BLUR & READABILITY ISOLATION
-   Ensures exposed text remains ultra-sharp and legible when glowing rays pass behind,
-   without drawing an artificial box or visible panel boundary.
-   ============================================================================= */
-
-.feathered-text-halo {
-  position: relative;
-  isolation: isolate;
-}
-
-.feathered-text-halo::before {
-  content: '';
-  position: absolute;
-  inset: -1.5rem -2rem;
-  background: radial-gradient(ellipse at center, var(--text-halo-bg) 0%, transparent 72%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
-  pointer-events: none;
-  z-index: -1;
-  border-radius: var(--radius-xl);
-}
-
 /* Section styling */
 section {
   padding: 7rem 3rem;
@@ -155,25 +134,10 @@ section {
   }
 }
 
-/* Global section headers and badge labels */
+/* Clean section headings without fake panel boxes */
 .section-heading {
   margin-bottom: 3.5rem;
   position: relative;
-  isolation: isolate;
-}
-
-.section-heading::before {
-  content: '';
-  position: absolute;
-  inset: -2rem -3rem;
-  background: radial-gradient(ellipse at 30% 50%, var(--text-halo-bg) 0%, transparent 75%);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  mask-image: radial-gradient(ellipse at 30% 50%, black 45%, transparent 90%);
-  -webkit-mask-image: radial-gradient(ellipse at 30% 50%, black 45%, transparent 90%);
-  pointer-events: none;
-  z-index: -1;
-  border-radius: var(--radius-xl);
 }
 
 .section-heading-label {
@@ -198,6 +162,10 @@ section {
   letter-spacing: 0.08em;
 }
 
+html.light-theme .section-number-inline {
+  color: var(--accent-purple);
+}
+
 .about-label-text {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -212,6 +180,7 @@ section {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+  text-shadow: none !important;
 }
 
 /* Buttons */
@@ -231,7 +200,7 @@ section {
 .btn-primary {
   background: var(--text-primary);
   color: var(--text-contrast);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:hover {
@@ -239,6 +208,11 @@ section {
   box-shadow: var(--shadow-glow);
   background: var(--accent-lime);
   color: #000000;
+}
+
+html.light-theme .btn-primary:hover {
+  background: var(--accent-purple);
+  color: #ffffff;
 }
 
 .btn-secondary {
@@ -277,6 +251,11 @@ section {
   outline-offset: 3px;
   box-shadow: 0 0 0 5px rgba(197, 255, 65, 0.25);
   border-radius: var(--radius-sm);
+}
+
+html.light-theme :focus-visible {
+  outline-color: var(--accent-purple);
+  box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.2);
 }
 
 /* Skip link styling */

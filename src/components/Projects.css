@@ -69,6 +69,10 @@
   border-color: var(--accent-lime);
 }
 
+html.light-theme .project-image-container:hover {
+  border-color: var(--accent-purple);
+}
+
 .browser-header {
   height: 38px;
   background: rgba(20, 20, 24, 0.95);
@@ -123,6 +127,10 @@
   padding: 0.15rem 0.5rem;
   border-radius: var(--radius-xs);
   white-space: nowrap;
+}
+
+html.light-theme .browser-tab {
+  color: #c5ff41;
 }
 
 .browser-content {
@@ -190,7 +198,6 @@
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin-bottom: 0.4rem;
-  text-shadow: var(--text-shadow-contrast);
 }
 
 .project-meta-row {
@@ -222,7 +229,6 @@
   color: var(--text-secondary);
   line-height: 1.65;
   margin-bottom: 1.5rem;
-  text-shadow: var(--text-shadow-contrast);
 }
 
 /* Technologies */
@@ -265,6 +271,10 @@
   background: var(--bg-card-hover);
 }
 
+html.light-theme .tech-badge:hover {
+  border-color: var(--accent-purple);
+}
+
 /* Actions */
 .project-actions {
   display: flex;
@@ -297,6 +307,11 @@
   color: #000000;
   box-shadow: var(--shadow-glow);
   transform: translateY(-2px);
+}
+
+html.light-theme .action-btn.primary:hover {
+  background: var(--accent-purple);
+  color: #ffffff;
 }
 
 .action-btn.secondary {
