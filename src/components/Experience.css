@@ -23,6 +23,7 @@
   color: var(--text-primary);
   margin-bottom: 1.75rem;
   letter-spacing: -0.01em;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 /* Timeline */
@@ -70,9 +71,10 @@
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
 
 .timeline-item:hover {
@@ -171,7 +173,9 @@
   font-size: 0.8rem;
   font-weight: 500;
   padding: 0.4rem 0.85rem;
-  background: var(--bg-pill);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
@@ -207,6 +211,8 @@
   gap: 1rem;
   padding: 0.9rem 1.2rem;
   background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
   cursor: pointer;

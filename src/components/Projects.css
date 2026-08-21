@@ -30,8 +30,8 @@
   flex-direction: row;
   align-items: stretch;
   background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-xl);
   padding: 2.25rem;
@@ -190,6 +190,7 @@
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin-bottom: 0.4rem;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 .project-meta-row {
@@ -221,6 +222,7 @@
   color: var(--text-secondary);
   line-height: 1.65;
   margin-bottom: 1.5rem;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 /* Technologies */
@@ -248,7 +250,9 @@
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.3rem 0.75rem;
-  background: var(--bg-pill);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
@@ -296,8 +300,10 @@
 }
 
 .action-btn.secondary {
-  background: var(--bg-pill);
-  border-color: var(--border-light);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
   color: var(--text-primary);
 }
 

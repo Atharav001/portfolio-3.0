@@ -6,6 +6,23 @@
 
 .contact-container {
   width: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Feathered boundary-less backdrop blur across Contact section */
+.contact-container::before {
+  content: '';
+  position: absolute;
+  inset: -3rem -3rem;
+  background: radial-gradient(ellipse at 50% 30%, var(--text-halo-bg) 0%, transparent 75%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  mask-image: radial-gradient(ellipse at 50% 30%, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 40%, transparent 85%);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: var(--radius-xl);
 }
 
 .contact-huge-title {
@@ -18,6 +35,7 @@
   margin-bottom: 4rem;
   color: var(--text-primary);
   user-select: none;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 .outline-text {
@@ -57,8 +75,8 @@
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-xl);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   text-decoration: none;
   transition: all var(--transition-smooth);
   box-shadow: var(--shadow-sm);
@@ -129,6 +147,7 @@
   font-size: 1.05rem;
   color: var(--text-secondary);
   line-height: 1.65;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 .contact-socials {
@@ -143,7 +162,9 @@
   gap: 0.4rem;
   padding: 0.55rem 1.1rem;
   border-radius: var(--radius-pill);
-  background: var(--bg-pill);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-light);
   color: var(--text-secondary);
   font-family: var(--font-mono);

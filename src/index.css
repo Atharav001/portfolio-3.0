@@ -14,11 +14,6 @@
   --glass-bg: var(--bg-card);
   --glass-border: var(--border-light);
 
-  /* Cursor Theme Colors */
-  --cursor-color: var(--accent-lime);
-  --cursor-blend: difference;
-  --cursor-ring-color: var(--accent-lime);
-
   /* Typography - Fluid & Variable Fonts */
   --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -41,7 +36,7 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --line-height-tight: 1.1;
+  --line-height-tight: 1.15;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.7;
 }
@@ -72,6 +67,8 @@ body {
   min-height: 100dvh;
   overflow-x: hidden;
   position: relative;
+  /* Restore normal OS cursor */
+  cursor: default;
 }
 
 #root {
@@ -103,8 +100,8 @@ a, button {
 /* Base Utilities */
 .glass-panel {
   background: var(--bg-card);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
@@ -116,6 +113,31 @@ a, button {
   backdrop-filter: blur(24px);
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-md);
+}
+
+/* =============================================================================
+   FEATHERED BOUNDARY-LESS TEXT BACKDROP BLUR & READABILITY ISOLATION
+   Ensures exposed text remains ultra-sharp and legible when glowing rays pass behind,
+   without drawing an artificial box or visible panel boundary.
+   ============================================================================= */
+
+.feathered-text-halo {
+  position: relative;
+  isolation: isolate;
+}
+
+.feathered-text-halo::before {
+  content: '';
+  position: absolute;
+  inset: -1.5rem -2rem;
+  background: radial-gradient(ellipse at center, var(--text-halo-bg) 0%, transparent 72%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: var(--radius-xl);
 }
 
 /* Section styling */
@@ -136,6 +158,22 @@ section {
 /* Global section headers and badge labels */
 .section-heading {
   margin-bottom: 3.5rem;
+  position: relative;
+  isolation: isolate;
+}
+
+.section-heading::before {
+  content: '';
+  position: absolute;
+  inset: -2rem -3rem;
+  background: radial-gradient(ellipse at 30% 50%, var(--text-halo-bg) 0%, transparent 75%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  mask-image: radial-gradient(ellipse at 30% 50%, black 45%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse at 30% 50%, black 45%, transparent 90%);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: var(--radius-xl);
 }
 
 .section-heading-label {
@@ -147,6 +185,8 @@ section {
   border-radius: var(--radius-pill);
   background: var(--bg-pill);
   border: 1px solid var(--border-light);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   width: fit-content;
 }
 
@@ -205,8 +245,8 @@ section {
   background: var(--bg-card);
   color: var(--text-primary);
   border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .btn-secondary:hover {
@@ -256,10 +296,4 @@ section {
 }
 .skip-link:focus-visible {
   top: 2rem;
-}
-
-/* Native cursor suppression on fine pointer */
-.hide-native-cursor,
-.hide-native-cursor * {
-  cursor: none !important;
 }

@@ -1,6 +1,6 @@
 /* =============================================================================
    HERO SECTION STYLES
-   Multi-layered Parallax & Cybernetic Typography
+   Multi-layered Parallax, Cybernetic Typography & Boundary-less Readability Halos
    ============================================================================= */
 
 .hero-section {
@@ -39,6 +39,23 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Subtle, organic feathered halo behind hero content without hard panel boundary */
+.hero-content::before {
+  content: '';
+  position: absolute;
+  inset: -3rem -3rem;
+  background: radial-gradient(ellipse at 40% 45%, var(--text-halo-bg) 0%, transparent 75%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  mask-image: radial-gradient(ellipse at 40% 45%, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse at 40% 45%, black 40%, transparent 85%);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: var(--radius-xl);
 }
 
 .hero-badge {
@@ -55,9 +72,9 @@
   width: fit-content;
   margin-bottom: 1.75rem;
   color: var(--text-secondary);
-  background: var(--bg-pill);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   box-shadow: var(--shadow-sm);
 }
 
@@ -95,6 +112,7 @@
   margin-bottom: 1.5rem;
   color: var(--text-primary);
   user-select: none;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 .hero-title-line {
@@ -126,12 +144,14 @@
 .hero-description-container {
   margin-bottom: 2.25rem;
   max-width: 580px;
+  position: relative;
 }
 
 .hero-description {
   font-size: clamp(1rem, 1.3vw, 1.15rem);
   color: var(--text-secondary);
   line-height: 1.65;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 .hero-actions {

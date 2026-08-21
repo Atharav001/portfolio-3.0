@@ -11,6 +11,23 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Feathered boundary-less backdrop blur across About content */
+.about-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -3rem -3rem;
+  background: radial-gradient(ellipse at 50% 40%, var(--text-halo-bg) 0%, transparent 75%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  mask-image: radial-gradient(ellipse at 50% 40%, black 45%, transparent 88%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 45%, transparent 88%);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: var(--radius-xl);
 }
 
 .about-content-layout {
@@ -25,6 +42,7 @@
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--text-primary);
+  text-shadow: var(--text-shadow-contrast);
 }
 
 .about-statement-accent {
@@ -41,6 +59,7 @@
   font-size: clamp(1.05rem, 1.6vw, 1.2rem);
   color: var(--text-secondary);
   line-height: 1.7;
+  text-shadow: var(--text-shadow-contrast);
 }
 
 .about-body strong {
@@ -77,7 +96,9 @@
   font-size: 0.82rem;
   font-weight: 500;
   padding: 0.45rem 1rem;
-  background: var(--bg-pill);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
