@@ -159,5 +159,5 @@ npm run build
 ## 📜 License & Credits
 
 - Designed & engineered by **[Atharav Narang](https://github.com/Atharav001)**.
-- Thinking Orb design inspired by **[Jakub Antalík](https://github.com/antalik/thinking-orbs)**.
+- Thinking Orb animation & design powered by **[thinking-orbs](https://github.com/antalik/thinking-orbs)** by **[Jakub Antalík](https://github.com/antalik)**.
 - Code released under the **MIT License**.

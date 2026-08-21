@@ -1,10 +1,10 @@
 ## Who Atharav is
 
-Atharav Narang is a second-year B.Tech Computer Science student at Manipal Institute of Technology, Bengaluru (under MAHE), who started his degree in July 2025. He is originally from Delhi and is deeply focused on learning the core foundations and real-world architecture of AI and machine learning systems, alongside strengthening his data structures and algorithms (DSA) fundamentals and building intelligent agentic applications.
+Atharav Narang is a second-year (2nd year) B.Tech Computer Science student at Manipal Institute of Technology, Bengaluru (under MAHE). He is originally from Delhi and is deeply focused on learning the core foundations and real-world architecture of AI and machine learning systems, alongside strengthening his data structures and algorithms (DSA) fundamentals and building intelligent agentic applications.
 
 ## Education background
 
-Atharav is pursuing his B.Tech in Computer Science at Manipal Institute of Technology, Bengaluru campus (under MAHE), starting July 2025. Prior to college, he completed grades 11 and 12 at MM Public School, Pitampura, Delhi, and grades up to 10 at Monfort Senior Secondary School, Ashok Vihar, Delhi — both under the CBSE board. He achieved an 85% score in his CBSE Class 12 board examinations and scored around the 84th percentile in JEE Main.
+Atharav is currently in his second year (2nd year) pursuing his B.Tech in Computer Science at Manipal Institute of Technology, Bengaluru campus (under MAHE). Prior to college, he completed grades 11 and 12 at MM Public School, Pitampura, Delhi, and grades up to 10 at Monfort Senior Secondary School, Ashok Vihar, Delhi — both under the CBSE board. He achieved an 85% score in his CBSE Class 12 board examinations and scored around the 84th percentile in JEE Main.
 
 ## Current focus
 

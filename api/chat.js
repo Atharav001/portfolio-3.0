@@ -21,7 +21,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
 
 1. GENERAL & BIO:
 - Full Name: Atharav Narang
-- Role: Second-year B.Tech Computer Science student at Manipal Institute of Technology (MAHE), Bengaluru (July 2025 – Present).
+- Role: Second-year (2nd year) B.Tech Computer Science undergraduate student at Manipal Institute of Technology (MAHE), Bengaluru.
 - Hometown: Delhi, India.
 - Availability: Open to Software Engineering Internships, AI/ML Engineering roles, research internships, and systems development. Open to both remote and on-site roles (Delhi, Bengaluru, or relocation).
 - Portfolio Website: https://atharav001n.vercel.app
@@ -29,12 +29,13 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
 - Email Contact: atharavnarang05@gmail.com
 - LinkedIn: https://linkedin.com/in/atharav-narang-132b74273
 
-2. PORTFOLIO WEBSITE & CHATBOT TECH STACK (portfolio-2.0):
-- Development Method: Atharav engineered this portfolio website (portfolio-2.0) from scratch himself writing clean React 19 code and modular Vanilla CSS design tokens. It was NOT built using "vibecoding" tools or automated AI web agents.
+2. PORTFOLIO WEBSITE & CHATBOT TECH STACK (portfolio-3.0):
+- Development Method: Atharav engineered this portfolio website (portfolio-3.0) from scratch himself writing clean React 19 code and modular Vanilla CSS design tokens. It was NOT built using "vibecoding" tools or automated AI web agents.
 - Frontend Architecture:
   * React 19 + Vite 8 for high-performance component rendering and fast HMR builds.
   * Custom Vanilla CSS system with HSL design tokens (tokens.css, index.css) featuring glassmorphism, dynamic backdrop blur filters, and fluid responsive layouts. Zero utility CSS frameworks like Tailwind were used for complete bespoke aesthetic control.
   * Lucide React (lucide-react) for vector icons, Framer Motion for UI micro-interactions, and Lenis for smooth scroll dynamics.
+  * WebGL procedural energy rays engine (tubes1.js) with Three.js.
   * thinking-orbs library for rendering the dynamic animated canvas orb while the AI composes responses.
   * @vercel/analytics for privacy-focused web telemetry.
 - RAG Chatbot Architecture ("Ask About Atharav AI"):
@@ -84,7 +85,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
   * Repository: https://github.com/Atharav001/TabVault-Extension
 
 4. EDUCATION:
-- B.Tech in Computer Science at Manipal Institute of Technology (MAHE), Bengaluru (July 2025 – Present). Focus on AI/ML pipeline engineering, data structures & algorithms, and system design.
+- B.Tech in Computer Science at Manipal Institute of Technology (MAHE), Bengaluru (Second-year / 2nd-year undergraduate student). Focus on AI/ML pipeline engineering, data structures & algorithms, and system design.
 - CBSE Class 12: MM Public School, Pitampura, Delhi (85% board score, ~84th percentile JEE Main).
 - CBSE Class 10: Monfort Senior Secondary School, Ashok Vihar, Delhi.
 
@@ -121,6 +122,8 @@ Classification:`;
 
 const MAIN_SYSTEM_PROMPT = `You are "Atharav's Portfolio Assistant" — the intelligent AI representing Atharav Narang on his personal portfolio site.
 
+Atharav Narang is a second-year (2nd year) B.Tech Computer Science student at Manipal Institute of Technology (MAHE), Bengaluru.
+
 Your task is to provide clear, direct, intelligent, and ACCURATE responses grounded strictly in the CONTEXT below.
 
 CRITICAL INSTRUCTIONS FOR BREVITY AND FOCUS:
@@ -129,9 +132,9 @@ CRITICAL INSTRUCTIONS FOR BREVITY AND FOCUS:
    - NEVER generate long multi-category bulleted lists, full architectural overviews, or multi-section essays unless the user EXPLICITLY asks for a complete list or full breakdown.
 2. ANSWER ONLY WHAT IS ASKED:
    - Answer ONLY the exact question asked by the user. Do NOT add extra unasked details, unasked tech stack lists, or unasked project specifications.
-   - Example: If asked "Is this site built by vibecoding or agents?", respond directly: "No, Atharav engineered this portfolio site from scratch himself using React 19 and custom Vanilla CSS, rather than relying on vibecoding generators or automated AI web agents." Stop there! Do NOT follow up with a long bulleted breakdown of Vite, Supabase, or Redis.
-3. ACCURACY & CONTEXT GROUNDING: Only state facts present in CONTEXT. Never hallucinate metrics, dates, or non-existent tools.
-4. TONE & VOICE: Professional, articulate, warm, and confident. Speak in third person ("Atharav built...", "He uses...") or as his official portfolio assistant.
+   - Example: If asked "who is atharav narang?", answer: "Atharav Narang is a second-year (2nd year) B.Tech Computer Science student at Manipal Institute of Technology (MAHE), Bengaluru. Originally from Delhi, he specializes in AI/ML pipeline engineering, RAG architectures, and full-stack software development, and is actively seeking software engineering internships."
+3. ACCURACY & CONTEXT GROUNDING: Only state facts present in CONTEXT. Always accurately identify Atharav as a second-year (2nd year) student.
+4. TONE & VOICE: Professional, articulate, warm, and confident. Speak in third person ("Atharav built...", "He is a 2nd-year student...") or as his official portfolio assistant.
 5. SCOPE LOCK & OFF-TOPIC REFUSAL: If the question is completely off-topic or unrelated to Atharav, his portfolio, his projects, or his skills, respond with EXACTLY:
    "I can only answer questions about Atharav — his background, projects, technical skills, portfolio website, or experience! Feel free to ask about one of those."
 
@@ -182,61 +185,40 @@ function getRateLimiters() {
       prefix: 'ratelimit:session',
     });
   }
-  return {
-    ipLimiter: ipRatelimiterInstance,
-    sessionLimiter: sessionRatelimiterInstance,
-    redis,
-  };
+  return { ipLimiter: ipRatelimiterInstance, sessionLimiter: sessionRatelimiterInstance, redis };
 }
 
-async function callGeminiModel(ai, promptText) {
-  const modelsToTry = [
-    'gemini-2.5-flash',
-    'gemini-2.5-flash-lite',
-    'gemini-3.6-flash',
-    'gemini-3.5-flash-lite',
+function isGreeting(message) {
+  const normalized = message.trim().toLowerCase().replace(/[^\w\s]/g, '');
+  const greetings = [
+    'hi',
+    'hello',
+    'hey',
+    'greetings',
+    'good morning',
+    'good afternoon',
+    'good evening',
+    'whats up',
+    'sup',
+    'who are you',
+    'what can you do',
+    'help',
   ];
-  let lastErr = null;
-
-  for (const modelName of modelsToTry) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try {
-        const response = await ai.models.generateContent({
-          model: modelName,
-          contents: promptText,
-        });
-        const text = response.text;
-        if (text) return text.trim();
-      } catch (err) {
-        lastErr = err;
-        if (err?.status === 429 || err?.message?.includes('Quota exceeded') || err?.message?.includes('rate-limits')) {
-          await new Promise((r) => setTimeout(r, 1500));
-        } else {
-          break;
-        }
-      }
-    }
-  }
-  throw lastErr || new Error('Failed to generate content with Gemini');
+  return greetings.includes(normalized);
 }
 
-function getTopicAwareFallback(trimmedMessage) {
-  const q = (trimmedMessage || '').toLowerCase();
-  
-  if (
-    q.includes('vibe') ||
-    q.includes('agent') ||
-    q.includes('how is it made') ||
-    q.includes('how was it made') ||
-    q.includes('who built')
-  ) {
-    return "Atharav engineered this portfolio site from scratch himself using React 19, Vite, and custom Vanilla CSS design tokens, rather than relying on vibecoding generators or automated AI web agents.";
-  }
+function getOfflineFallbackAnswer(userQuestion) {
+  const q = userQuestion.toLowerCase();
 
   if (
-    q.includes('tech') ||
-    q.includes('stack') ||
-    q.includes('framework')
+    q.includes('vibecod') ||
+    q.includes('vibe cod') ||
+    q.includes('ai agent') ||
+    q.includes('how was this site built') ||
+    q.includes('how was this website built') ||
+    q.includes('who built this site') ||
+    q.includes('tech stack') ||
+    q.includes('techstack')
   ) {
     return "This portfolio is built with **React 19**, **Vite 8**, and **Vanilla CSS tokens**, with a RAG chatbot backend using **Vercel Serverless**, **Supabase pgvector**, **Google Gemini API**, and **Upstash Redis**.";
   }
@@ -251,6 +233,16 @@ function getTopicAwareFallback(trimmedMessage) {
   }
 
   if (
+    q.includes('who is atharav') ||
+    q.includes('who is he') ||
+    q.includes('tell me about atharav') ||
+    q.includes('about atharav') ||
+    q.includes('background')
+  ) {
+    return "Atharav Narang is a **second-year (2nd year) B.Tech Computer Science student** at **Manipal Institute of Technology (MAHE), Bengaluru**. Originally from Delhi, he focuses on AI/ML systems, RAG architectures, and full-stack engineering, and is open to software engineering internships.";
+  }
+
+  if (
     q.includes('education') ||
     q.includes('study') ||
     q.includes('college') ||
@@ -258,7 +250,7 @@ function getTopicAwareFallback(trimmedMessage) {
     q.includes('mit') ||
     q.includes('manipal')
   ) {
-    return "Atharav is pursuing his B.Tech in Computer Science at **Manipal Institute of Technology (MAHE), Bengaluru** (July 2025 – Present), focusing on AI/ML architectures, DSA, and system engineering.";
+    return "Atharav is a **second-year (2nd year) B.Tech Computer Science student** at **Manipal Institute of Technology (MAHE), Bengaluru**, focusing on AI/ML architectures, DSA, and system engineering.";
   }
 
   if (
@@ -281,7 +273,7 @@ function getTopicAwareFallback(trimmedMessage) {
     return "Atharav's core skills include Python, Java, C/C++, JavaScript, RAG architectures, local LLMs (Ollama), FAISS, BM25, Supabase pgvector, React 19, and Android SDK.";
   }
 
-  return "Atharav is a B.Tech CS student at Manipal Institute of Technology (MAHE), Bengaluru, focusing on AI/ML pipelines and software engineering. Explore his work on [GitHub](https://github.com/Atharav001).";
+  return "Atharav is a second-year (2nd year) B.Tech CS student at Manipal Institute of Technology (MAHE), Bengaluru, focusing on AI/ML pipelines and software engineering. Explore his work on [GitHub](https://github.com/Atharav001).";
 }
 
 export default async function handler(req, res) {
@@ -298,178 +290,169 @@ export default async function handler(req, res) {
     const isLocalhost =
       origin.includes('localhost') ||
       origin.includes('127.0.0.1') ||
-      !allowedOrigin;
+      origin.includes('0.0.0.0');
 
-    if (!isLocalhost && allowedOrigin && !origin.startsWith(allowedOrigin)) {
-      return res.status(403).json({ error: 'Forbidden origin' });
+    if (
+      process.env.NODE_ENV === 'production' &&
+      allowedOrigin &&
+      !isLocalhost &&
+      !origin.startsWith(allowedOrigin)
+    ) {
+      return res.status(403).json({ error: 'Forbidden: Invalid origin' });
     }
 
     // 3. Input validation
     const { message, sessionId } = req.body || {};
     if (!message || typeof message !== 'string') {
-      return res.status(400).json({ error: 'Message must be a valid string' });
-    }
-    const trimmedMessage = message.trim();
-    if (!trimmedMessage) {
-      return res.status(400).json({ error: 'Message cannot be empty' });
-    }
-    if (trimmedMessage.length > 500) {
-      return res.status(400).json({ error: 'Message exceeds maximum length of 500 characters' });
-    }
-    if (!sessionId || typeof sessionId !== 'string') {
-      return res.status(400).json({ error: 'sessionId must be a valid string' });
+      return res.status(400).json({ error: 'Missing or invalid "message" field' });
     }
 
-    // Greeting / Status quick check ("hi", "hello", "is the bot working")
-    const lowerQuery = trimmedMessage.toLowerCase();
-    if (
-      lowerQuery === 'hi' ||
-      lowerQuery === 'hello' ||
-      lowerQuery === 'hey' ||
-      lowerQuery.includes('bot working') ||
-      lowerQuery.includes('are you working')
-    ) {
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage || trimmedMessage.length > 500) {
+      return res.status(400).json({ error: 'Message must be between 1 and 500 characters' });
+    }
+
+    // 4. Client IP resolution
+    const forwardedFor = req.headers['x-forwarded-for'];
+    const ip = forwardedFor
+      ? forwardedFor.split(',')[0].trim()
+      : req.socket?.remoteAddress || '127.0.0.1';
+
+    // 5. Rate limiting via Upstash Redis
+    const { ipLimiter, sessionLimiter } = getRateLimiters();
+
+    if (ipLimiter) {
+      try {
+        const ipRes = await ipLimiter.limit(ip);
+        if (!ipRes.success) {
+          return res.status(429).json({ answer: RATE_LIMITED_RESPONSE });
+        }
+      } catch (err) {
+        console.warn('IP Rate Limiter warning:', err);
+      }
+    }
+
+    if (sessionLimiter && sessionId) {
+      try {
+        const sessionRes = await sessionLimiter.limit(String(sessionId));
+        if (!sessionRes.success) {
+          return res.status(429).json({ answer: DAILY_BUDGET_EXCEEDED_RESPONSE });
+        }
+      } catch (err) {
+        console.warn('Session Rate Limiter warning:', err);
+      }
+    }
+
+    // 6. Fast greeting check
+    if (isGreeting(trimmedMessage)) {
       return res.status(200).json({ answer: GREETING_RESPONSE });
     }
 
-    // Initialize required services
-    const supabase = getSupabaseClient();
-    const ai = getGenAI();
-    const { ipLimiter, sessionLimiter, redis } = getRateLimiters();
+    const genAI = getGenAI();
 
-    // 4. Rate limit — per IP
-    const clientIp =
-      (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
-      req.socket?.remoteAddress ||
-      '127.0.0.1';
-
-    if (ipLimiter && !isLocalhost) {
-      try {
-        const ipResult = await ipLimiter.limit(clientIp);
-        if (!ipResult.success) {
-          return res.status(429).json({ answer: RATE_LIMITED_RESPONSE });
-        }
-      } catch (err) {
-        console.warn('Upstash IP rate limiter check failed:', err);
-      }
+    // If Gemini key is not configured, return grounded fallback
+    if (!genAI) {
+      const fallbackAnswer = getOfflineFallbackAnswer(trimmedMessage);
+      return res.status(200).json({ answer: fallbackAnswer });
     }
 
-    // 5. Rate limit — per session
-    if (sessionLimiter) {
-      try {
-        const sessionResult = await sessionLimiter.limit(sessionId);
-        if (!sessionResult.success) {
-          return res.status(429).json({ answer: RATE_LIMITED_RESPONSE });
-        }
-      } catch (err) {
-        console.warn('Upstash Session rate limiter check failed:', err);
-      }
-    }
-
-    // 6. Global daily budget check
-    const todayStr = new Date().toISOString().split('T')[0];
-    const todayKey = `budget:gemini:${todayStr}`;
-
-    if (redis) {
-      try {
-        const rawCount = await redis.get(todayKey);
-        const currentBudgetCount = rawCount ? parseInt(rawCount, 10) : 0;
-        if (currentBudgetCount >= 1300) {
-          return res.status(200).json({ answer: DAILY_BUDGET_EXCEEDED_RESPONSE });
-        }
-      } catch (err) {
-        console.warn('Upstash Redis budget check failed:', err);
-      }
-    }
-
-    // 7. Embed the user question
-    let questionEmbedding = null;
-    if (ai) {
-      try {
-        const embedResponse = await ai.models.embedContent({
-          model: 'gemini-embedding-001',
-          contents: trimmedMessage,
-          config: { outputDimensionality: 768 },
-        });
-        questionEmbedding = embedResponse.embedding?.values || embedResponse.embeddings?.[0]?.values;
-      } catch (err) {
-        console.error('Gemini embedding failed:', err);
-      }
-    }
-
-    if (redis) {
-      try { await redis.incr(todayKey); } catch (err) { console.warn('Redis budget increment failed:', err); }
-    }
-
-    // 8. Vector similarity search in Supabase
-    let retrievedChunks = [];
-    if (supabase && questionEmbedding) {
-      try {
-        const { data, error: rpcError } = await supabase.rpc('match_knowledge_chunks', {
-          query_embedding: questionEmbedding,
-          match_threshold: 0.20,
-          match_count: 8,
-        });
-
-        if (!rpcError && data && data.length > 0) {
-          retrievedChunks = data.map((d) => d.content);
-        }
-      } catch (e) {
-        console.error('Supabase RPC match error:', e);
-      }
-    }
-
-    // Prepare final context text (retrieved chunks + master knowledge base fallback)
-    const contextText =
-      retrievedChunks.length > 0
-        ? `${retrievedChunks.join('\n\n')}\n\n${DEFAULT_ATHARAV_KNOWLEDGE_BASE}`
-        : DEFAULT_ATHARAV_KNOWLEDGE_BASE;
-
-    // 10. Topic gate classification
-    if (ai) {
+    // 7. Pass 1: Intelligent Topic Classification Gate
+    try {
       const gatePrompt = TOPIC_GATE_PROMPT.replace('{user_question}', trimmedMessage);
+      const gateResponse = await genAI.models.generateContent({
+        model: 'gemini-2.5-flash-lite',
+        contents: gatePrompt,
+        config: {
+          temperature: 0.0,
+          maxOutputTokens: 10,
+        },
+      });
+
+      const gateDecision = (gateResponse.text || '').trim().toUpperCase();
+
+      if (gateDecision.includes('BLOCK')) {
+        return res.status(200).json({ answer: GATE_BLOCKED_RESPONSE });
+      }
+    } catch (gateErr) {
+      console.warn('Topic Gate failed, allowing query through to synthesis:', gateErr);
+    }
+
+    // 8. Vector Embedding Generation & Cosine Similarity Search
+    let retrievedContext = DEFAULT_ATHARAV_KNOWLEDGE_BASE;
+    const supabase = getSupabaseClient();
+
+    if (supabase) {
       try {
-        const gateRaw = await callGeminiModel(ai, gatePrompt);
-        const gateClean = gateRaw.toUpperCase().trim();
-        if (gateClean.includes('BLOCK') && !gateClean.includes('ALLOW')) {
-          return res.status(200).json({ answer: GATE_BLOCKED_RESPONSE });
+        const embeddingRes = await genAI.models.embedContent({
+          model: 'text-embedding-004',
+          contents: trimmedMessage,
+        });
+
+        const embedding = embeddingRes?.embedding?.values;
+
+        if (embedding && Array.isArray(embedding)) {
+          const { data: chunks, error: matchError } = await supabase.rpc('match_knowledge', {
+            query_embedding: embedding,
+            match_threshold: 0.35,
+            match_count: 5,
+          });
+
+          if (!matchError && chunks && chunks.length > 0) {
+            retrievedContext = chunks.map((c) => c.content).join('\n\n---\n\n');
+          }
         }
-      } catch (e) {
-        console.warn('Topic gate check skipped due to warning:', e);
+      } catch (embErr) {
+        console.warn('Vector embedding/retrieval warning, using master context:', embErr);
       }
     }
 
-    // 11. Main generation call
-    if (ai) {
-      const mainPrompt = MAIN_SYSTEM_PROMPT
-        .replace('{retrieved_context}', contextText)
-        .replace('{user_question}', trimmedMessage);
+    // 9. Pass 2: Response Synthesis
+    const synthesisPrompt = MAIN_SYSTEM_PROMPT
+      .replace('{retrieved_context}', retrievedContext)
+      .replace('{user_question}', trimmedMessage);
 
-      let answer = await callGeminiModel(ai, mainPrompt);
+    let synthesizedAnswer = '';
 
-      if (redis) {
-        try { await redis.incr(todayKey); } catch (err) { console.warn('Redis budget increment failed:', err); }
+    // Primary attempt: gemini-2.5-flash
+    try {
+      const synthesisRes = await genAI.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: synthesisPrompt,
+        config: {
+          temperature: 0.3,
+          maxOutputTokens: 250,
+        },
+      });
+      synthesizedAnswer = synthesisRes.text || '';
+    } catch (synthErr) {
+      console.warn('Primary synthesis model failed, attempting fallback:', synthErr);
+
+      // Fallback attempt: gemini-2.5-flash-lite
+      try {
+        const fallbackRes = await genAI.models.generateContent({
+          model: 'gemini-2.5-flash-lite',
+          contents: synthesisPrompt,
+          config: {
+            temperature: 0.3,
+            maxOutputTokens: 250,
+          },
+        });
+        synthesizedAnswer = fallbackRes.text || '';
+      } catch (fallbackErr) {
+        console.error('All synthesis models failed:', fallbackErr);
+        synthesizedAnswer = getOfflineFallbackAnswer(trimmedMessage);
       }
-
-      if (
-        answer.includes('You are "Atharav\'s Portfolio Assistant"') ||
-        answer.includes('CRITICAL INSTRUCTIONS FOR BREVITY AND FOCUS:')
-      ) {
-        answer = GATE_BLOCKED_RESPONSE;
-      }
-
-      return res.status(200).json({ answer });
     }
 
-    // Fallback if AI service is offline or unconfigured
-    return res.status(200).json({
-      answer: getTopicAwareFallback(trimmedMessage)
-    });
+    if (!synthesizedAnswer.trim()) {
+      synthesizedAnswer = getOfflineFallbackAnswer(trimmedMessage);
+    }
 
-  } catch (err) {
-    console.error('Unhandled exception in /api/chat handler:', err);
+    return res.status(200).json({ answer: synthesizedAnswer.trim() });
+  } catch (globalErr) {
+    console.error('Unhandled chat API error:', globalErr);
     return res.status(200).json({
-      answer: getTopicAwareFallback(req.body?.message || '')
+      answer: getOfflineFallbackAnswer(req.body?.message || ''),
     });
   }
 }
