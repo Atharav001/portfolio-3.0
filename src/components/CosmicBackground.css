@@ -28,13 +28,13 @@
   opacity: 0;
 }
 
-/* In Light Theme: Invert canvas so empty black space becomes pure white while turning deep rich palette into ultra-vibrant glowing neon rays */
+/* In Light Theme: Multiply canvas onto light backdrop with 100% hue fidelity and high glowing saturation */
 html.light-theme .cosmic-canvas,
 body.light-theme .cosmic-canvas,
 :root[data-theme="light"] .cosmic-canvas {
   opacity: 0.95;
   mix-blend-mode: multiply;
-  filter: invert(1) contrast(1.35) saturate(1.85) brightness(1.05);
+  filter: invert(1) hue-rotate(180deg) saturate(2.5) contrast(1.2) brightness(0.98);
 }
 
 /* Ambient Radial Aurora Gradients for subtle depth */

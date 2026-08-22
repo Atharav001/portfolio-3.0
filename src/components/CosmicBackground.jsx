@@ -31,30 +31,30 @@ const DARK_PALETTES = [
 ];
 
 const LIGHT_PALETTES = [
-  // 0: Electric Violet & Sapphire Glow
+  // 0: Signature Cosmic Emerald & Lime
   {
-    tubes: ['#2e1065', '#1e1b4b', '#0369a1'],
-    lights: ['#581c87', '#1d4ed8', '#0284c7', '#312e81'],
+    tubes: ['#059669', '#047857', '#10b981'],
+    lights: ['#84cc16', '#10b981', '#ea580c', '#065f46'],
   },
-  // 1: Vibrant Emerald & Spring Jade Glow
+  // 1: Cosmic Violet & Electric Cyan
   {
-    tubes: ['#064e3b', '#022c22', '#0f766e'],
-    lights: ['#047857', '#065f46', '#14532d', '#0284c7'],
+    tubes: ['#7c3aed', '#4f46e5', '#2563eb'],
+    lights: ['#06b6d4', '#9333ea', '#3b82f6', '#4338ca'],
   },
-  // 2: Radiant Sunset & Coral Amber Glow
+  // 2: Cyber Sunset (Coral + Amber + Rose)
   {
-    tubes: ['#7c2d12', '#7f1d1d', '#713f12'],
-    lights: ['#c2410c', '#b91c1c', '#991b1b', '#d97706'],
+    tubes: ['#ea580c', '#dc2626', '#f97316'],
+    lights: ['#f43f5e', '#f59e0b', '#ea580c', '#991b1b'],
   },
-  // 3: Deep Royal Indigo Glow
+  // 3: Neon Toxic Lime & Emerald
   {
-    tubes: ['#1e3a8a', '#311b92', '#581c87'],
-    lights: ['#1d4ed8', '#4338ca', '#6b21a8', '#1e1b4b'],
+    tubes: ['#84cc16', '#059669', '#10b981'],
+    lights: ['#06b6d4', '#a3e635', '#10b981', '#0284c7'],
   },
-  // 4: Cosmic Orchid & Magenta Cyan Glow
+  // 4: Royal Purple & Magenta
   {
-    tubes: ['#701a75', '#831843', '#1e1b4b'],
-    lights: ['#86198f', '#9d174d', '#4338ca', '#0284c7'],
+    tubes: ['#db2777', '#9333ea', '#4f46e5'],
+    lights: ['#a855f7', '#ec4899', '#2563eb', '#06b6d4'],
   },
 ];
 
