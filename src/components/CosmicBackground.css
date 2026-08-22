@@ -28,13 +28,13 @@
   opacity: 0;
 }
 
-/* In Light Theme: Multiply canvas onto light backdrop with 100% hue fidelity and high glowing saturation */
+/* In Light Theme: invert canvas so empty black space becomes pure white (100% white multiplication = 100% pure white background) */
 html.light-theme .cosmic-canvas,
 body.light-theme .cosmic-canvas,
 :root[data-theme="light"] .cosmic-canvas {
-  opacity: 0.95;
+  opacity: 0.85;
   mix-blend-mode: multiply;
-  filter: invert(1) hue-rotate(180deg) saturate(2.5) contrast(1.2) brightness(0.98);
+  filter: invert(1) hue-rotate(180deg) contrast(1.1) brightness(1.02);
 }
 
 /* Ambient Radial Aurora Gradients for subtle depth */
