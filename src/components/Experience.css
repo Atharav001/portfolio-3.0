@@ -414,3 +414,46 @@ html.light-theme .view-pdf-btn {
   background: rgba(197, 255, 65, 0.2);
   transform: translateY(-1px);
 }
+
+@media (max-width: 768px) {
+  .experience-section {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .timeline {
+    padding-left: 2.25rem;
+    gap: 1.75rem;
+  }
+
+  .timeline-line-container {
+    left: 0.75rem;
+  }
+
+  .timeline-dot-container {
+    left: -2.25rem;
+  }
+
+  .timeline-item {
+    padding: 1.25rem;
+    background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-color: var(--border-light);
+  }
+
+  .timeline-desc {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .skill-pill {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.76rem;
+  }
+
+  .cert-card {
+    padding: 0.85rem 1rem;
+  }
+}

@@ -104,6 +104,42 @@ html.light-theme .tool-chip:hover {
 
 @media (max-width: 768px) {
   .about-section {
-    padding: 5rem 1.25rem;
+    padding: 4.5rem 1.25rem;
+  }
+
+  .about-wrapper {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    gap: 1.25rem;
+  }
+
+  .about-statement {
+    font-size: clamp(1.85rem, 6.5vw, 2.4rem);
+    line-height: 1.15;
+  }
+
+  .about-body {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  .about-body strong {
+    color: var(--text-primary);
+  }
+
+  .about-tools-container {
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .tool-chip {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.76rem;
   }
 }

@@ -155,3 +155,49 @@ html.light-theme .status-dot,
   display: flex;
   justify-content: center;
 }
+
+/* Mobile Ambient Shield & Readability */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 100px;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero-badge {
+    margin-bottom: 1.25rem;
+    background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-color: var(--border-subtle);
+  }
+
+  .hero-title {
+    font-size: clamp(2.3rem, 9.5vw, 3.4rem);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-description-container {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem 1.25rem;
+    margin-bottom: 1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hero-description {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+}

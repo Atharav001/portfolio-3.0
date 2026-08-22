@@ -130,6 +130,10 @@ export default function CosmicBackground({ theme = 'dark' }) {
   // Global click handler to cycle ray colors on empty area clicks (aelradi.engineer feature)
   useEffect(() => {
     const handleGlobalClick = (e) => {
+      // Exclude touch devices / mobile screen widths to prevent accidental palette swaps during tap/scroll
+      const isTouchOrMobile = window.matchMedia('(pointer: coarse), (max-width: 768px)').matches;
+      if (isTouchOrMobile) return;
+
       // Don't trigger color cycle if clicking interactive UI elements
       const target = e.target;
       if (!target) return;

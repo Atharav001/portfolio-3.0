@@ -498,3 +498,49 @@ body.light-theme .action-btn.secondary:hover,
     min-width: 140px;
   }
 }
+
+@media (max-width: 768px) {
+  .projects-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .projects-list {
+    gap: 2rem;
+  }
+
+  .project-card {
+    padding: 1.25rem;
+    gap: 1.25rem;
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+  }
+
+  .project-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .project-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .technologies-section {
+    margin-bottom: 1.25rem;
+  }
+
+  .tech-badge {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .action-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.82rem;
+  }
+}
