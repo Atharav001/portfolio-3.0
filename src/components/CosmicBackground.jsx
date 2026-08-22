@@ -57,46 +57,48 @@ export default function CosmicBackground({ theme = 'dark' }) {
   const canvasRef = useRef(null);
   const tubesInstance = useRef(null);
   const [isWebGLReady, setIsWebGLReady] = useState(false);
-  const [colorIndex, setColorIndex] = useState(0);
+  const colorIndexRef = useRef(0);
+  const themeRef = useRef(theme);
 
-  const palettes = theme === 'light' ? LIGHT_PALETTES : DARK_PALETTES;
-
-  const initTubesEffect = useCallback(async () => {
-    if (!canvasRef.current) return;
-
-    try {
-      const module = await import('../vendor/tubes1.js');
-      const initTubes = module.default || module.initTubes;
-
-      if (typeof initTubes === 'function' && canvasRef.current) {
-        const activePalette = palettes[colorIndex % palettes.length];
-        
-        tubesInstance.current = initTubes(canvasRef.current, {
-          tubes: {
-            colors: activePalette.tubes,
-            lights: {
-              intensity: theme === 'dark' ? 240 : 180,
-              colors: activePalette.lights,
-            },
-          },
-        });
-        setIsWebGLReady(true);
-      }
-    } catch (err) {
-      console.warn('CosmicBackground WebGL fallback active:', err);
-      setIsWebGLReady(false);
-    }
-  }, [theme, colorIndex, palettes]);
-
+  // Initialize tubes effect once on mount
   useEffect(() => {
     const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isReduced) return;
 
-    const timer = setTimeout(() => {
-      initTubesEffect();
-    }, 150);
+    let isCancelled = false;
+
+    const initTubesEffect = async () => {
+      if (!canvasRef.current) return;
+
+      try {
+        const module = await import('../vendor/tubes1.js');
+        const initTubes = module.default || module.initTubes;
+
+        if (typeof initTubes === 'function' && canvasRef.current && !isCancelled) {
+          const currentPalettes = themeRef.current === 'light' ? LIGHT_PALETTES : DARK_PALETTES;
+          const activePalette = currentPalettes[colorIndexRef.current % currentPalettes.length];
+
+          tubesInstance.current = initTubes(canvasRef.current, {
+            tubes: {
+              colors: activePalette.tubes,
+              lights: {
+                intensity: themeRef.current === 'dark' ? 240 : 180,
+                colors: activePalette.lights,
+              },
+            },
+          });
+          setIsWebGLReady(true);
+        }
+      } catch (err) {
+        console.warn('CosmicBackground WebGL fallback active:', err);
+        setIsWebGLReady(false);
+      }
+    };
+
+    const timer = setTimeout(initTubesEffect, 150);
 
     return () => {
+      isCancelled = true;
       clearTimeout(timer);
       if (tubesInstance.current && typeof tubesInstance.current.dispose === 'function') {
         try {
@@ -107,25 +109,42 @@ export default function CosmicBackground({ theme = 'dark' }) {
         tubesInstance.current = null;
       }
     };
-  }, [initTubesEffect]);
+  }, []);
 
-  // Cycle palette function with smooth color update
+  // In-place update when theme changes without resetting the tubes/trail
+  useEffect(() => {
+    themeRef.current = theme;
+    if (!tubesInstance.current?.tubes) return;
+
+    const currentPalettes = theme === 'light' ? LIGHT_PALETTES : DARK_PALETTES;
+    const activePalette = currentPalettes[colorIndexRef.current % currentPalettes.length];
+
+    if (typeof tubesInstance.current.tubes.setColors === 'function') {
+      tubesInstance.current.tubes.setColors(activePalette.tubes);
+    }
+    if (typeof tubesInstance.current.tubes.setLightsColors === 'function') {
+      tubesInstance.current.tubes.setLightsColors(activePalette.lights);
+    }
+    if (typeof tubesInstance.current.tubes.setLightsIntensity === 'function') {
+      tubesInstance.current.tubes.setLightsIntensity(theme === 'dark' ? 240 : 180);
+    }
+  }, [theme]);
+
+  // Cycle palette function with in-place color update at current cursor position
   const cycleNextPalette = useCallback(() => {
-    setColorIndex((prev) => {
-      const nextIndex = (prev + 1) % palettes.length;
-      const nextPalette = palettes[nextIndex];
+    const currentPalettes = themeRef.current === 'light' ? LIGHT_PALETTES : DARK_PALETTES;
+    colorIndexRef.current = (colorIndexRef.current + 1) % currentPalettes.length;
+    const nextPalette = currentPalettes[colorIndexRef.current];
 
-      if (tubesInstance.current && tubesInstance.current.tubes) {
-        if (typeof tubesInstance.current.tubes.setColors === 'function') {
-          tubesInstance.current.tubes.setColors(nextPalette.tubes);
-        }
-        if (typeof tubesInstance.current.tubes.setLightsColors === 'function') {
-          tubesInstance.current.tubes.setLightsColors(nextPalette.lights);
-        }
+    if (tubesInstance.current && tubesInstance.current.tubes) {
+      if (typeof tubesInstance.current.tubes.setColors === 'function') {
+        tubesInstance.current.tubes.setColors(nextPalette.tubes);
       }
-      return nextIndex;
-    });
-  }, [palettes]);
+      if (typeof tubesInstance.current.tubes.setLightsColors === 'function') {
+        tubesInstance.current.tubes.setLightsColors(nextPalette.lights);
+      }
+    }
+  }, []);
 
   // Global click handler to cycle ray colors on empty area clicks (aelradi.engineer feature)
   useEffect(() => {
