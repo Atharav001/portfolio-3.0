@@ -31,25 +31,30 @@ const DARK_PALETTES = [
 ];
 
 const LIGHT_PALETTES = [
-  // 0: Vibrant Electric Violet & Sapphire
+  // 0: Electric Violet & Sapphire Glow
   {
-    tubes: ['#7c3aed', '#2563eb', '#06b6d4'],
-    lights: ['#9333ea', '#3b82f6', '#0284c7', '#6366f1'],
+    tubes: ['#2e1065', '#1e1b4b', '#0369a1'],
+    lights: ['#581c87', '#1d4ed8', '#0284c7', '#312e81'],
   },
-  // 1: Emerald & Cyan Glow
+  // 1: Vibrant Emerald & Spring Jade Glow
   {
-    tubes: ['#059669', '#0d9488', '#10b981'],
-    lights: ['#10b981', '#047857', '#06b6d4', '#0f766e'],
+    tubes: ['#064e3b', '#022c22', '#0f766e'],
+    lights: ['#047857', '#065f46', '#14532d', '#0284c7'],
   },
-  // 2: Radiant Sunset & Warm Crimson
+  // 2: Radiant Sunset & Coral Amber Glow
   {
-    tubes: ['#ea580c', '#dc2626', '#f97316'],
-    lights: ['#f97316', '#ef4444', '#f59e0b', '#b91c1c'],
+    tubes: ['#7c2d12', '#7f1d1d', '#713f12'],
+    lights: ['#c2410c', '#b91c1c', '#991b1b', '#d97706'],
   },
-  // 3: Deep Royal Indigo
+  // 3: Deep Royal Indigo Glow
   {
-    tubes: ['#2563eb', '#4f46e5', '#7c3aed'],
-    lights: ['#3b82f6', '#6366f1', '#a855f7', '#1d4ed8'],
+    tubes: ['#1e3a8a', '#311b92', '#581c87'],
+    lights: ['#1d4ed8', '#4338ca', '#6b21a8', '#1e1b4b'],
+  },
+  // 4: Cosmic Orchid & Magenta Cyan Glow
+  {
+    tubes: ['#701a75', '#831843', '#1e1b4b'],
+    lights: ['#86198f', '#9d174d', '#4338ca', '#0284c7'],
   },
 ];
 
@@ -59,6 +64,7 @@ export default function CosmicBackground({ theme = 'dark' }) {
   const [isWebGLReady, setIsWebGLReady] = useState(false);
   const colorIndexRef = useRef(0);
   const themeRef = useRef(theme);
+  const prevThemeRef = useRef(theme);
 
   // Initialize tubes effect once on mount
   useEffect(() => {
@@ -82,7 +88,7 @@ export default function CosmicBackground({ theme = 'dark' }) {
             tubes: {
               colors: activePalette.tubes,
               lights: {
-                intensity: themeRef.current === 'dark' ? 240 : 180,
+                intensity: themeRef.current === 'dark' ? 240 : 280,
                 colors: activePalette.lights,
               },
             },
@@ -111,10 +117,20 @@ export default function CosmicBackground({ theme = 'dark' }) {
     };
   }, []);
 
-  // In-place update when theme changes without resetting the tubes/trail
+  // In-place update when theme changes, with slight dynamic palette progression
   useEffect(() => {
-    themeRef.current = theme;
-    if (!tubesInstance.current?.tubes) return;
+    if (!tubesInstance.current?.tubes) {
+      themeRef.current = theme;
+      return;
+    }
+
+    if (prevThemeRef.current !== theme) {
+      prevThemeRef.current = theme;
+      themeRef.current = theme;
+      const currentPalettes = theme === 'light' ? LIGHT_PALETTES : DARK_PALETTES;
+      // Slightly change the background animation color on every theme toggle
+      colorIndexRef.current = (colorIndexRef.current + 1) % currentPalettes.length;
+    }
 
     const currentPalettes = theme === 'light' ? LIGHT_PALETTES : DARK_PALETTES;
     const activePalette = currentPalettes[colorIndexRef.current % currentPalettes.length];
@@ -126,7 +142,7 @@ export default function CosmicBackground({ theme = 'dark' }) {
       tubesInstance.current.tubes.setLightsColors(activePalette.lights);
     }
     if (typeof tubesInstance.current.tubes.setLightsIntensity === 'function') {
-      tubesInstance.current.tubes.setLightsIntensity(theme === 'dark' ? 240 : 180);
+      tubesInstance.current.tubes.setLightsIntensity(theme === 'dark' ? 240 : 280);
     }
   }, [theme]);
 
