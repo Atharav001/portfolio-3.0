@@ -282,8 +282,8 @@ body.light-theme .chat-message-row.assistant-row .chat-avatar,
 }
 
 .chat-message-row.user-row .chat-bubble {
-  background: var(--hero-gradient);
-  color: #000000;
+  background: var(--accent-purple);
+  color: #ffffff;
   font-weight: 500;
   border-bottom-right-radius: 4px;
 }
