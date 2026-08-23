@@ -163,15 +163,8 @@ const Navbar = ({ onThemeChange }) => {
     }
   };
 
-  const handleResumeClick = (e) => {
-    e.preventDefault();
+  const handleResumeClick = () => {
     setIsMobileMenuOpen(false);
-    const link = document.createElement('a');
-    link.href = '/Atharav Narang.pdf';
-    link.download = 'Atharav Narang.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   const drawerVariants = {
@@ -362,6 +355,8 @@ const Navbar = ({ onThemeChange }) => {
                     href="/Atharav Narang.pdf"
                     className="mobile-quick-btn mobile-resume-btn"
                     onClick={handleResumeClick}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <FileText size={15} />
                     <span>Resume</span>

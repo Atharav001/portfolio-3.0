@@ -70,15 +70,6 @@ const Hero = () => {
     },
   };
 
-  const handleResumeClick = (e) => {
-    e.preventDefault();
-    const link = document.createElement('a');
-    link.href = '/Atharav Narang.pdf';
-    link.download = 'Atharav Narang.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   return (
     <section className="hero-section" id="home" onMouseMove={handleMouseMove}>
@@ -138,11 +129,10 @@ const Hero = () => {
               <a
                 href="/Atharav Narang.pdf"
                 className="btn btn-secondary"
-                onClick={handleResumeClick}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Download Resume (PDF)
+                View Resume (PDF)
               </a>
             </motion.div>
           </div>
