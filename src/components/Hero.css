@@ -156,6 +156,23 @@ html.light-theme .status-dot,
   justify-content: center;
 }
 
+.share-btn {
+  transition: all var(--transition-fast);
+}
+
+.share-btn.share-success {
+  border-color: var(--accent-lime) !important;
+  background: rgba(197, 255, 65, 0.08) !important;
+  box-shadow: 0 0 15px rgba(197, 255, 65, 0.15) !important;
+}
+
+html.light-theme .share-btn.share-success,
+:root[data-theme="light"] .share-btn.share-success {
+  border-color: var(--accent-lime) !important;
+  background: rgba(5, 150, 105, 0.08) !important;
+  box-shadow: 0 0 15px rgba(5, 150, 105, 0.15) !important;
+}
+
 /* Mobile Ambient Shield & Readability */
 @media (max-width: 768px) {
   .hero-section {

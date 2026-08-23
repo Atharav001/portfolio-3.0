@@ -1,14 +1,42 @@
-import React, { useCallback, useRef, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Share2, Check } from 'lucide-react';
 import { useTextScramble } from '../hooks/useTextScramble';
 import ChatWidget from './ChatWidget';
 import './Hero.css';
 
 const Hero = () => {
+  const [shareSuccess, setShareSuccess] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const idleTimeoutRef = useRef(null);
+
+  const handleShareClick = async (e) => {
+    e.preventDefault();
+    const shareData = {
+      title: 'Atharav Narang | B.Tech CSE Portfolio',
+      text: 'Check out Atharav Narang\'s portfolio - B.Tech CSE student at MIT Bengaluru!',
+      url: window.location.origin,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.origin);
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 2500);
+      } catch (err) {
+        console.error('Could not copy text: ', err);
+      }
+    }
+  };
 
   const springX = useSpring(mouseX, { stiffness: 50, damping: 18, restDelta: 0.001 });
   const springY = useSpring(mouseY, { stiffness: 50, damping: 18, restDelta: 0.001 });
@@ -134,6 +162,23 @@ const Hero = () => {
               >
                 View Resume (PDF)
               </a>
+              <button
+                className={`btn btn-secondary share-btn ${shareSuccess ? 'share-success' : ''}`}
+                onClick={handleShareClick}
+                aria-label="Share Profile link"
+              >
+                {shareSuccess ? (
+                  <>
+                    <Check size={18} style={{ marginRight: '8px', color: 'var(--accent-lime)' }} />
+                    <span style={{ color: 'var(--accent-lime)' }}>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 size={18} style={{ marginRight: '8px' }} />
+                    <span>Share</span>
+                  </>
+                )}
+              </button>
             </motion.div>
           </div>
 
