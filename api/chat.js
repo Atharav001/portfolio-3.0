@@ -42,7 +42,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
   * Vercel Serverless Function (/api/chat.js) backend with CORS origin verification and input sanitization.
   * Supabase Vector Database (pgvector extension) running cosine similarity search over chunked knowledge embeddings via match_knowledge_chunks RPC.
   * Google Gemini embedding-001 model generating 768-dimensional dense vector embeddings for query matching.
-  * Google Gemini API (gemini-2.5-flash with automatic fallbacks to gemini-2.5-flash-lite and gemini-3.6-flash) for LLM reasoning and response generation.
+  * Google Gemini API (gemini-3.6-flash with automatic fallbacks to gemini-3.5-flash-lite and gemini-2.5-flash) for LLM reasoning and response generation.
   * Upstash Redis (dual sliding-window rate limiters: 8 requests/5 min per IP, 20 requests/24 hrs per session, plus global daily token budget cap).
   * Two-pass AI pipeline: Pass 1 is an intelligent Topic Classifier guarding scope lock while allowing portfolio & tech stack questions. Pass 2 is an LLM synthesis engine grounded in vector context.
 
@@ -130,13 +130,12 @@ Atharav Narang is a second-year (2nd year) B.Tech Computer Science student at Ma
 
 Your task is to provide clear, direct, intelligent, and ACCURATE responses grounded strictly in the CONTEXT below.
 
-CRITICAL INSTRUCTIONS FOR BREVITY AND FOCUS:
-1. STRICT BREVITY & CONCISENESS (MOST IMPORTANT):
-   - Keep ALL responses short, crisp, direct, and concise (typically 2 to 4 sentences, max ~60-80 words). Answer the questions properly in short but thoroughly, do not overcomplicate or over answer the question asked by the user.
-   - NEVER generate long multi-category bulleted lists, full architectural overviews, or multi-section essays unless the user EXPLICITLY asks for a complete list or full breakdown.
-2. ANSWER ONLY WHAT IS ASKED:
-   - Answer ONLY the exact question asked by the user. Do NOT add extra unasked details, unasked tech stack lists, or unasked project specifications.
-   - Example: If asked "who is atharav narang?", answer: "Atharav Narang is a second-year (2nd year) B.Tech Computer Science student at Manipal Institute of Technology (MAHE), Bengaluru. Originally from Delhi, he specializes in AI/ML pipeline engineering, RAG architectures, and full-stack software development, and is actively seeking software engineering internships."
+CRITICAL INSTRUCTIONS FOR RESPONSE QUALITY:
+1. PROVIDE SLIGHTLY DESCRIPTIVE & ENHANCED ANSWERS:
+   - Provide responses that are informative and slightly descriptive, ensuring the user gets a comprehensive yet clear answer (typically 3 to 5 sentences, max ~90-120 words).
+   - Use simple Markdown formatting (e.g. bolding key terms, using inline code or simple bullet points when listing details) to keep answers clean and premium.
+2. DO NOT OVER-ANSWER THE QUESTION:
+   - Answer ONLY the exact question asked by the user. Do NOT add extra unasked details, unasked tech stack lists, or unasked project specifications. Keep the focus narrow and deep on the queried topic.
 3. ACCURACY & CONTEXT GROUNDING: Only state facts present in CONTEXT. Always accurately identify Atharav as a second-year (2nd year) student.
 4. TONE & VOICE: Professional, articulate, warm, and confident. Speak in third person ("Atharav built...", "He is a 2nd-year student...") or as his official portfolio assistant.
 5. SCOPE LOCK & OFF-TOPIC REFUSAL: If the question is completely off-topic or unrelated to Atharav, his portfolio, his projects, or his skills, respond with EXACTLY:
@@ -388,14 +387,15 @@ export default async function handler(req, res) {
     if (supabase) {
       try {
         const embeddingRes = await genAI.models.embedContent({
-          model: 'text-embedding-004',
+          model: 'gemini-embedding-001',
           contents: trimmedMessage,
+          config: { outputDimensionality: 768 },
         });
 
-        const embedding = embeddingRes?.embedding?.values;
+        const embedding = embeddingRes?.embedding?.values || embeddingRes?.embeddings?.[0]?.values;
 
         if (embedding && Array.isArray(embedding)) {
-          const { data: chunks, error: matchError } = await supabase.rpc('match_knowledge', {
+          const { data: chunks, error: matchError } = await supabase.rpc('match_knowledge_chunks', {
             query_embedding: embedding,
             match_threshold: 0.35,
             match_count: 5,
@@ -417,34 +417,49 @@ export default async function handler(req, res) {
 
     let synthesizedAnswer = '';
 
-    // Primary attempt: gemini-2.5-flash
+    // Primary attempt: gemini-3.6-flash
     try {
       const synthesisRes = await genAI.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.6-flash',
         contents: synthesisPrompt,
         config: {
           temperature: 0.3,
-          maxOutputTokens: 250,
+          maxOutputTokens: 1000,
         },
       });
       synthesizedAnswer = synthesisRes.text || '';
     } catch (synthErr) {
-      console.warn('Primary synthesis model failed, attempting fallback:', synthErr);
+      console.warn('Primary synthesis model gemini-3.6-flash failed, trying fallback 1:', synthErr);
 
-      // Fallback attempt: gemini-2.5-flash-lite
+      // Fallback 1: gemini-3.5-flash-lite
       try {
         const fallbackRes = await genAI.models.generateContent({
-          model: 'gemini-2.5-flash-lite',
+          model: 'gemini-3.5-flash-lite',
           contents: synthesisPrompt,
           config: {
             temperature: 0.3,
-            maxOutputTokens: 250,
+            maxOutputTokens: 1000,
           },
         });
         synthesizedAnswer = fallbackRes.text || '';
       } catch (fallbackErr) {
-        console.error('All synthesis models failed:', fallbackErr);
-        synthesizedAnswer = getOfflineFallbackAnswer(trimmedMessage);
+        console.warn('Fallback 1 gemini-3.5-flash-lite failed, trying fallback 2:', fallbackErr);
+
+        // Fallback 2: gemini-2.5-flash
+        try {
+          const fallbackRes2 = await genAI.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: synthesisPrompt,
+            config: {
+              temperature: 0.3,
+              maxOutputTokens: 1000,
+            },
+          });
+          synthesizedAnswer = fallbackRes2.text || '';
+        } catch (fallbackErr2) {
+          console.error('All synthesis models failed:', fallbackErr2);
+          synthesizedAnswer = getOfflineFallbackAnswer(trimmedMessage);
+        }
       }
     }
 
