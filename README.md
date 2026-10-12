@@ -19,7 +19,7 @@ Interactive personal developer portfolio featuring WebGL procedural animations, 
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 19, Vite, Three.js, Framer Motion, Lenis, Lucide Icons, Vanilla CSS Tokens
-- **Backend & AI**: Vercel Serverless Functions, Google Gemini API, Supabase `pgvector`, Upstash Redis
+- **Backend & AI**: Vercel Serverless Functions, Google Gemini API, Supabase `pgvector`
 - **Credits**: Thinking Orb component by [Jakub Antalík](https://github.com/jakubantalik/thinking-orbs)
 
 ---

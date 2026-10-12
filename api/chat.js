@@ -1,7 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenAI } from '@google/genai';
-import { Redis } from '@upstash/redis';
-import { Ratelimit } from '@upstash/ratelimit';
 
 // --- Static Response Constants ---
 const GREETING_RESPONSE =
@@ -43,7 +41,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
   * Supabase Vector Database (pgvector extension) running cosine similarity search over chunked knowledge embeddings via match_knowledge_chunks RPC.
   * Google Gemini embedding-001 model generating 768-dimensional dense vector embeddings for query matching.
   * Google Gemini API (gemini-3.6-flash with automatic fallbacks to gemini-3.5-flash-lite and gemini-2.5-flash) for LLM reasoning and response generation.
-  * Upstash Redis (dual sliding-window rate limiters: 8 requests/5 min per IP, 20 requests/24 hrs per session, plus global daily token budget cap).
+  * Dual in-memory sliding-window rate limiters (8 requests/5 min per IP, 20 requests/24 hrs per session).
   * Two-pass AI pipeline: Pass 1 is an intelligent Topic Classifier guarding scope lock while allowing portfolio & tech stack questions. Pass 2 is an LLM synthesis engine grounded in vector context.
 
 3. KEY PROJECTS & REPOSITORIES:
@@ -96,7 +94,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
 5. TECHNICAL SKILLS:
 - Programming Languages: Python, Java, C/C++, JavaScript, SQL, Kotlin, Swift.
 - AI / ML / Vector Search: RAG Architectures, Prompt Engineering, Local LLMs (Ollama), Vector Search (Supabase pgvector), Hybrid Search (BM25, FAISS, RRF), Cross-encoders, NLI verification, Multimodal processing.
-- Web & Systems: React 19, Vite, Node.js, Vercel Serverless, CSS Tokens, Android SDK, AppKit/SwiftUI, Room DB, Upstash Redis, Git, Docker, Linux.
+- Web & Systems: React 19, Vite, Node.js, Vercel Serverless, CSS Tokens, Android SDK, AppKit/SwiftUI, Room DB, Git, Docker, Linux.
 
 6. PROBLEM-SOLVING PHILOSOPHY & VALUES:
 - Philosophy: "Finishing a task means making it efficient, not just making it work." Atharav builds functional baselines first to verify correctness, then systematically refactors time/space complexity and pipeline bottlenecks.
@@ -161,34 +159,34 @@ function getGenAI() {
   return new GoogleGenAI({ apiKey: key });
 }
 
-function getRedis() {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-  return new Redis({ url, token });
-}
+// --- In-Memory Sliding-Window Rate Limiting ---
+const ipRateLimitMap = new Map();
+const sessionRateLimitMap = new Map();
 
-let ipRatelimiterInstance = null;
-let sessionRatelimiterInstance = null;
+function checkSlidingWindowRateLimit(storeMap, key, maxRequests, windowMs) {
+  if (!key) return { success: true };
+  const now = Date.now();
+  const windowStart = now - windowMs;
 
-function getRateLimiters() {
-  const redis = getRedis();
-  if (!redis) return { ipLimiter: null, sessionLimiter: null, redis: null };
-  if (!ipRatelimiterInstance) {
-    ipRatelimiterInstance = new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(8, '5 m'),
-      prefix: 'ratelimit:ip',
-    });
+  const validTimestamps = (storeMap.get(key) || []).filter((timestamp) => timestamp > windowStart);
+
+  if (validTimestamps.length >= maxRequests) {
+    return { success: false };
   }
-  if (!sessionRatelimiterInstance) {
-    sessionRatelimiterInstance = new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(20, '24 h'),
-      prefix: 'ratelimit:session',
-    });
+
+  validTimestamps.push(now);
+  storeMap.set(key, validTimestamps);
+
+  // Periodic memory management to prevent memory leaks in warm instances
+  if (storeMap.size > 2000) {
+    for (const [k, timestamps] of storeMap.entries()) {
+      if (timestamps.every((ts) => ts <= windowStart)) {
+        storeMap.delete(k);
+      }
+    }
   }
-  return { ipLimiter: ipRatelimiterInstance, sessionLimiter: sessionRatelimiterInstance, redis };
+
+  return { success: true };
 }
 
 function isGreeting(message) {
@@ -223,7 +221,7 @@ function getOfflineFallbackAnswer(userQuestion) {
     q.includes('tech stack') ||
     q.includes('techstack')
   ) {
-    return "This portfolio is built with **React 19**, **Vite 8**, and **Vanilla CSS tokens**, with a RAG chatbot backend using **Vercel Serverless**, **Supabase pgvector**, **Google Gemini API**, and **Upstash Redis**.";
+    return "This portfolio is built with **React 19**, **Vite 8**, and **Vanilla CSS tokens**, with a RAG chatbot backend using **Vercel Serverless**, **Supabase pgvector**, and the **Google Gemini API**.";
   }
   
   if (
@@ -321,28 +319,26 @@ export default async function handler(req, res) {
       ? forwardedFor.split(',')[0].trim()
       : req.socket?.remoteAddress || '127.0.0.1';
 
-    // 5. Rate limiting via Upstash Redis
-    const { ipLimiter, sessionLimiter } = getRateLimiters();
-
-    if (ipLimiter) {
-      try {
-        const ipRes = await ipLimiter.limit(ip);
-        if (!ipRes.success) {
-          return res.status(429).json({ answer: RATE_LIMITED_RESPONSE });
-        }
-      } catch (err) {
-        console.warn('IP Rate Limiter warning:', err);
-      }
+    // 5. In-Memory Sliding-Window Rate Limiting
+    const ipCheck = checkSlidingWindowRateLimit(
+      ipRateLimitMap,
+      ip,
+      8,
+      5 * 60 * 1000 // 8 requests per 5 minutes
+    );
+    if (!ipCheck.success) {
+      return res.status(429).json({ answer: RATE_LIMITED_RESPONSE });
     }
 
-    if (sessionLimiter && sessionId) {
-      try {
-        const sessionRes = await sessionLimiter.limit(String(sessionId));
-        if (!sessionRes.success) {
-          return res.status(429).json({ answer: DAILY_BUDGET_EXCEEDED_RESPONSE });
-        }
-      } catch (err) {
-        console.warn('Session Rate Limiter warning:', err);
+    if (sessionId) {
+      const sessionCheck = checkSlidingWindowRateLimit(
+        sessionRateLimitMap,
+        String(sessionId),
+        20,
+        24 * 60 * 60 * 1000 // 20 requests per 24 hours
+      );
+      if (!sessionCheck.success) {
+        return res.status(429).json({ answer: DAILY_BUDGET_EXCEEDED_RESPONSE });
       }
     }
 

@@ -28,4 +28,4 @@ Atharav believes in an iterative, optimization-first approach: "Finishing a task
 
 ## How was this AI portfolio assistant built?
 
-This assistant ("Ask About Atharav AI") is a scope-locked RAG system built with React 19, Vercel Serverless Functions, Supabase pgvector for 768-dim similarity search, Upstash Redis for rate limiting, and Google Gemini API (gemini-3.6-flash & gemini-embedding-001) for intelligent response generation.
+This assistant ("Ask About Atharav AI") is a scope-locked RAG system built with React 19, Vercel Serverless Functions, Supabase pgvector for 768-dim similarity search, in-memory sliding-window rate limiting, and Google Gemini API (gemini-3.6-flash & gemini-embedding-001) for intelligent response generation.
