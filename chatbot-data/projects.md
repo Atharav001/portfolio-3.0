@@ -1,6 +1,6 @@
 ## Portfolio website (portfolio-3.0)
 
-Atharav's React/Vite portfolio presents selected projects as structured case studies. It uses Framer Motion for transitions, optional WebGL rays on desktop, dark and light themes, and a Q&A assistant that retrieves portfolio context when available. The WebGL effect is skipped on mobile and for visitors who prefer reduced motion. The repository is at github.com/Atharav001/portfolio-3.0 and the site is https://atharav001.vercel.com.
+Atharav's React/Vite portfolio presents selected projects as structured case studies. It uses Framer Motion for transitions, optional WebGL rays on desktop, dark and light themes, and a Q&A assistant that retrieves portfolio context when available. The WebGL effect is skipped on mobile and for visitors who prefer reduced motion. The repository is at github.com/Atharav001/portfolio-3.0 and the site is https://atharav001.vercel.app.
 
 ## RAG-Agentic-Deep-Research (Deep Research Agent)
 

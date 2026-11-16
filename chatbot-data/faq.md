@@ -16,7 +16,7 @@ Atharav is focused on expanding his deep mathematical understanding of high-dime
 
 ## How can someone reach you / what's the best way to follow up?
 
-The best way to reach Atharav is via email at `atharavnarang05@gmail.com` or through LinkedIn at `linkedin.com/in/atharav-narang-132b74273`. You can also explore his code repositories directly on GitHub at [github.com/Atharav001](https://github.com/Atharav001) or visit his portfolio website at [atharav001.vercel.com](https://atharav001.vercel.com).
+The best way to reach Atharav is via email at `atharavnarang05@gmail.com` or through LinkedIn at `linkedin.com/in/atharav-narang-132b74273`. You can also explore his code repositories directly on GitHub at [github.com/Atharav001](https://github.com/Atharav001) or visit his portfolio website at [atharav001.vercel.app](https://atharav001.vercel.app).
 
 ## Are you open to remote work, relocation, or other arrangements?
 

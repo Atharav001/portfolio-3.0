@@ -2,7 +2,7 @@
 
 Interactive personal developer portfolio featuring WebGL procedural animations, dual dark/light aesthetics, and an embedded AI assistant.
 
-[✨ Live Demo](https://atharav001.vercel.com) • [💼 LinkedIn](https://linkedin.com/in/atharav-narang-132b74273) • [🐙 GitHub](https://github.com/Atharav001)
+[✨ Live Demo](https://atharav001.vercel.app) • [💼 LinkedIn](https://linkedin.com/in/atharav-narang-132b74273) • [🐙 GitHub](https://github.com/Atharav001)
 
 ---
 

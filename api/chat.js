@@ -23,7 +23,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
 - Role: Second-year (2nd year) B.Tech Computer Science undergraduate student at Manipal Institute of Technology (MAHE), Bengaluru.
 - Hometown: Delhi, India.
 - Availability: Open to Software Engineering Internships, AI/ML Engineering roles, research internships, and systems development. Open to both remote and on-site roles (Delhi, Bengaluru, or relocation).
-- Portfolio Website: https://atharav001.vercel.com
+- Portfolio Website: https://atharav001.vercel.app
 - GitHub Profile: https://github.com/Atharav001
 - Email Contact: atharavnarang05@gmail.com
 - LinkedIn: https://linkedin.com/in/atharav-narang-132b74273
@@ -324,14 +324,14 @@ export default async function handler(req, res) {
 
     // 2. Origin/Referer check
     const requestOrigin = req.headers.origin || req.headers.referer;
-    const allowedOrigin = process.env.ALLOWED_ORIGIN || 'https://atharav001.vercel.com';
+    const allowedOrigin = process.env.ALLOWED_ORIGIN || 'https://atharav001.vercel.app';
     let suppliedOrigin;
     try {
       suppliedOrigin = requestOrigin ? new URL(requestOrigin).origin : null;
     } catch {
       return res.status(403).json({ error: 'Forbidden: Invalid origin' });
     }
-    const allowedOrigins = new Set(['https://atharav001.vercel.com', new URL(allowedOrigin).origin]);
+    const allowedOrigins = new Set(['https://atharav001.vercel.app', new URL(allowedOrigin).origin]);
     if (process.env.NODE_ENV === 'production' && !allowedOrigins.has(suppliedOrigin)) {
       return res.status(403).json({ error: 'Forbidden: Invalid origin' });
     }
