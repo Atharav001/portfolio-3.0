@@ -247,6 +247,17 @@ function isGreeting(message) {
 
 function getOfflineFallbackAnswer(userQuestion) {
   const q = userQuestion.toLowerCase();
+  const asksForSiteUrl = /portfolio|website|site/.test(q) && /\b(url|link|visit|where)\b/.test(q);
+  const asksForClaimProject = /two.step|de.bias|damage.claim/.test(q);
+
+  if (asksForClaimProject && /accur|result|severity|limit|evaluat|perform/.test(q)) {
+    const site = asksForSiteUrl ? 'Atharav’s portfolio is at [atharav001.vercel.app](https://atharav001.vercel.app). ' : '';
+    return `${site}The two-step damage-claim prototype reached **65% claim-status accuracy** on its published evaluation set, versus a **30% baseline**. **Severity accuracy was 20%**, so the project requires human review and further validation.`;
+  }
+
+  if (asksForSiteUrl) {
+    return 'Atharav’s portfolio is at [atharav001.vercel.app](https://atharav001.vercel.app). You can explore selected projects, case studies, skills, and contact details there.';
+  }
 
   if (
     q.includes('vibecod') ||
@@ -311,7 +322,18 @@ function getOfflineFallbackAnswer(userQuestion) {
     return "Atharav's core skills include Python, Java, C/C++, JavaScript, RAG architectures, local LLMs (Ollama), FAISS, BM25, Supabase pgvector, React 19, and Android SDK.";
   }
 
-  return "Atharav is a second-year (2nd year) B.Tech CS student at Manipal Institute of Technology (MAHE), Bengaluru, focusing on AI/ML pipelines and software engineering. Explore his work on [GitHub](https://github.com/Atharav001).";
+  if (/atharav|portfolio|project|skill|experience|education|intern|contact|github|website|chatbot/.test(q)) {
+    return "Atharav is a second-year B.Tech CS student at Manipal Institute of Technology, Bengaluru, focused on AI/ML pipelines and software engineering. Explore his work on [GitHub](https://github.com/Atharav001), or ask about a specific project.";
+  }
+  return GATE_BLOCKED_RESPONSE;
+}
+
+function sendVerifiedFallback(res, question) {
+  res.setHeader('X-Chat-Mode', 'verified-fallback');
+  return res.status(200).json({
+    answer: `The AI service is temporarily unavailable, so here is an answer from verified portfolio facts.\n\n${getOfflineFallbackAnswer(question)}`,
+    mode: 'verified-fallback',
+  });
 }
 
 export default async function handler(req, res) {
@@ -388,13 +410,10 @@ export default async function handler(req, res) {
 
     const genAI = getGenAI();
 
-    // If Gemini key is not configured, return grounded fallback
+    // Keep basic portfolio answers available when AI generation is not configured.
     if (!genAI) {
-      if (process.env.NODE_ENV === 'production') {
-        return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
-      }
-      const fallbackAnswer = getOfflineFallbackAnswer(trimmedMessage);
-      return res.status(200).json({ answer: fallbackAnswer });
+      console.error('Gemini API key is not configured');
+      return sendVerifiedFallback(res, trimmedMessage);
     }
 
     // 7. Pass 1: Intelligent Topic Classification Gate
@@ -498,13 +517,13 @@ export default async function handler(req, res) {
           synthesizedAnswer = fallbackRes2.text || '';
         } catch (fallbackErr2) {
           console.error('All synthesis models failed:', fallbackErr2);
-          return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
+          return sendVerifiedFallback(res, trimmedMessage);
         }
       }
     }
 
     if (!synthesizedAnswer.trim()) {
-      return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
+      return sendVerifiedFallback(res, trimmedMessage);
     }
 
     return res.status(200).json({ answer: synthesizedAnswer.trim() });
