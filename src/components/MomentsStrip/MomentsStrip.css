@@ -1,425 +1,167 @@
-/* ================================================================
-   Dark Scrapbook Style - Moments Showcase Strip (Spacious & Flexible)
-   ================================================================ */
+.moments-scrapbook-container { margin-top: 4rem; }
 
-/* --- Container --- */
-.moments-scrapbook-container {
-  margin-top: 4rem;
-  padding-top: 2.25rem;
-  border-top: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  position: relative;
-}
-
-/* --- Section Header Row --- */
 .moments-header-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: end;
   gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.moments-header-title-group {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .moments-section-title {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-primary);
   margin: 0;
-  line-height: 1.2;
-}
-
-/* Handwritten accent word strictly for gallery title accent */
-.moments-title-accent {
-  font-family: 'Caveat', cursive, sans-serif;
-  font-size: 1.75rem;
-  font-weight: 600;
-  text-transform: lowercase;
-  color: var(--accent-blue, #00c8ff);
-  margin-left: 0.35rem;
-  letter-spacing: 0;
+  font-size: clamp(1.55rem, 2.6vw, 2.3rem);
+  font-weight: 800;
+  letter-spacing: -0.065em;
 }
 
 .moments-subheading {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-}
-
-/* --- Control Button (Pause / Play) --- */
-.moments-control-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.85rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+  margin-top: 0.35rem;
   color: var(--text-secondary);
-  background: var(--glass-bg, rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08));
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  user-select: none;
+  font-size: 0.92rem;
 }
 
-.moments-control-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+.moments-gallery-controls { display: flex; gap: 0.55rem; }
+.moments-gallery-controls button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: var(--bg-card);
   color: var(--text-primary);
-  border-color: rgba(255, 255, 255, 0.18);
-  transform: translateY(-1px);
+  cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
+.moments-gallery-controls button:hover { transform: translateY(-2px); border-color: var(--accent-lime); }
 
-/* --- Viewport & Clothesline --- */
 .moments-scrapbook-viewport {
-  overflow: hidden;
-  position: relative;
   width: 100%;
-  padding: 2rem 0 1.75rem 0;
-  /* Soft edge fade */
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 4%,
-    black 96%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 4%,
-    black 96%,
-    transparent 100%
-  );
+  overflow-x: auto;
+  overflow-y: clip;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-subtle) transparent;
+  scroll-snap-type: x proximity;
+  padding: 2.8rem 1.1rem 2.2rem;
 }
 
-/* Soft brass/tan string running horizontally behind the row */
-.moments-clothesline {
-  position: absolute;
-  top: 1.35rem;
-  left: 0;
-  right: 0;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(217, 180, 140, 0.45) 5%,
-    rgba(217, 180, 140, 0.5) 95%,
-    transparent 100%
-  );
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-  z-index: 1;
-}
+.moments-scrapbook-track { display: flex; gap: 1.15rem; width: max-content; }
 
-.moments-scrapbook-track {
-  display: flex;
-  gap: 2.5rem; /* Generous spacing so cards occupy space without overcrowding */
-  width: max-content;
-  animation: scrapbook-marquee 40s linear infinite;
-  will-change: transform;
-  padding-top: 0.75rem;
-}
-
-/* Pause animation on hover or explicit pause */
-.moments-scrapbook-viewport:hover .moments-scrapbook-track,
-.moments-scrapbook-viewport.paused .moments-scrapbook-track {
-  animation-play-state: paused;
-}
-
-@keyframes scrapbook-marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* --- Polaroid Card Design (Larger & Flexible) --- */
 .moments-polaroid-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #FAF8F5; /* Warm off-white/cream polaroid paper */
-  padding: 12px 12px 16px 12px;
-  border-radius: 4px;
-  width: var(--card-width, 290px);
-  flex-shrink: 0;
+  width: clamp(250px, 27vw, 350px);
+  flex: 0 0 auto;
+  padding: 0.7rem 0.7rem 1.05rem;
+  border: 1px solid #d8d6cf;
+  border-radius: 5px;
+  background: #f5f3ec;
+  color: #1d241d;
+  text-align: left;
   cursor: pointer;
-  z-index: 2;
-  /* Dynamic tilt angle assigned per card */
-  transform: rotate(var(--tilt-deg, 0deg)) translateY(0);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
-              0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s ease,
-              z-index 0.1s ease;
-  user-select: none;
+  scroll-snap-align: start;
+  transform: rotate(var(--tilt-deg));
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.23);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease;
 }
 
-/* Hover State: Straighten to 0deg, lift up, drop deep shadow ("picking up photo") */
-.moments-polaroid-card:hover {
-  transform: rotate(0deg) translateY(-10px) scale(1.04) !important;
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.7), 
-              0 0 22px rgba(0, 200, 255, 0.2);
-  z-index: 20;
+.moments-polaroid-card:hover,
+.moments-polaroid-card:focus-visible {
+  transform: rotate(0deg) translateY(-8px);
+  box-shadow: 0 22px 46px rgba(0, 0, 0, 0.34);
+  z-index: 1;
 }
 
-/* --- Cyan/Purple Gradient Pin / Clip --- */
-.moments-polaroid-pin {
+.moments-paper-tape {
   position: absolute;
-  top: -11px;
+  top: -12px;
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 64px;
+  height: 25px;
+  transform: translateX(-50%) rotate(-4deg);
+  background: rgba(180, 213, 162, 0.86);
+  clip-path: polygon(0 0, 100% 0, 96% 100%, 3% 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
 }
 
-.moments-pin-head {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-blue, #00c8ff), #a855f7);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5),
-              inset 0 1px 2px rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.moments-pin-shadow {
-  width: 12px;
-  height: 3px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.4);
-  margin-top: 1px;
-  filter: blur(1px);
-}
-
-/* --- Photo Frame --- */
 .moments-polaroid-photo-frame {
-  width: 100%;
-  height: var(--photo-height, 185px);
-  overflow: hidden;
-  background: #18181b;
-  border-radius: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.moments-polaroid-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   display: block;
-  transition: transform 0.4s ease;
-}
-
-.moments-polaroid-card:hover .moments-polaroid-image {
-  transform: scale(1.05);
-}
-
-/* --- Handwritten Polaroid Caption Area --- */
-.moments-polaroid-caption-area {
-  padding-top: 10px;
-  padding-left: 2px;
-  padding-right: 2px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.moments-handwritten-caption {
-  font-family: 'Caveat', cursive, sans-serif;
-  font-size: 1.55rem;
-  font-weight: 600;
-  line-height: 1.15;
-  color: #24201c; /* Soft dark ink on polaroid paper */
-  white-space: nowrap;
+  width: 100%;
+  aspect-ratio: 1.45;
   overflow: hidden;
-  text-overflow: ellipsis;
+  background: #101713;
+  border-radius: 2px;
 }
 
-.moments-polaroid-date {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.68rem;
-  color: #78716c;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
+.moments-polaroid-photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.moments-polaroid-caption-area { display: flex; flex-direction: column; gap: 0.1rem; padding: 0.75rem 0.15rem 0; }
+.moments-handwritten-caption { overflow: hidden; font-size: 1rem; font-weight: 760; letter-spacing: -0.035em; text-overflow: ellipsis; white-space: nowrap; }
+.moments-polaroid-date { color: #627064; font: 600 0.68rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; }
 
-/* --- Light Mode adjustments --- */
-:root.light-theme .moments-polaroid-card {
-  background: #FFFDF9;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12),
-              0 2px 6px rgba(0, 0, 0, 0.06);
-}
+.light-theme .moments-polaroid-card { box-shadow: 0 12px 30px rgba(12, 24, 16, 0.12); }
 
-:root.light-theme .moments-polaroid-card:hover {
-  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.22),
-              0 0 18px rgba(0, 95, 163, 0.15);
-}
-
-/* --- Reduced Motion Mode --- */
-.moments-scrapbook-viewport.reduced-motion {
-  overflow-x: auto;
-  mask-image: none;
-  -webkit-mask-image: none;
-}
-
-.moments-scrapbook-viewport.reduced-motion .moments-scrapbook-track {
-  animation: none !important;
-  padding-bottom: 0.75rem;
-}
-
-.moments-scrapbook-viewport.reduced-motion .moments-polaroid-card {
-  transform: rotate(0deg) !important;
-}
-
-/* --- Lightbox Modal --- */
 .moments-lightbox-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  inset: 0;
   z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(4, 9, 7, 0.9);
+  backdrop-filter: blur(16px);
 }
 
 .moments-lightbox-content {
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  max-width: 800px;
-  width: 100%;
-  max-height: 85vh;
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
+  width: 100%;
+  max-width: 850px;
+  max-height: 88vh;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  background: #101713;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.6);
 }
 
 .moments-lightbox-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2.25rem;
-  height: 2.25rem;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(4, 9, 7, 0.7);
+  color: white;
   cursor: pointer;
-  transition: all 0.25s ease;
-  z-index: 10;
 }
 
-.moments-lightbox-close:hover {
-  background: rgba(255, 255, 255, 0.18);
-  transform: rotate(90deg);
+.moments-lightbox-image-wrapper { display: flex; justify-content: center; max-height: 64vh; overflow: hidden; background: #060a07; }
+.moments-lightbox-image { max-width: 100%; max-height: 64vh; object-fit: contain; }
+.moments-lightbox-footer { padding: 1.2rem 1.45rem; }
+.moments-lightbox-header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.moments-lightbox-title { color: #f4f7ef; font-size: 1.3rem; }
+.moments-lightbox-date { display: inline-flex; align-items: center; gap: 0.4rem; color: #c5ff41; font: 650 0.72rem var(--font-mono); white-space: nowrap; }
+.moments-lightbox-alt { margin-top: 0.5rem; color: #aeb9ae; font-size: 0.87rem; }
+
+@media (max-width: 760px) {
+  .moments-scrapbook-container { margin-top: 2.8rem; }
+  .moments-scrapbook-viewport { padding: 2.3rem 0.35rem 1.8rem; }
+  .moments-polaroid-card { width: min(73vw, 310px); }
+  .moments-header-row { align-items: center; }
+  .moments-subheading { max-width: 25ch; }
 }
 
-.moments-lightbox-image-wrapper {
-  width: 100%;
-  max-height: 60vh;
-  background: #050811;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.moments-lightbox-image {
-  max-width: 100%;
-  max-height: 60vh;
-  object-fit: contain;
-  display: block;
-}
-
-.moments-lightbox-footer {
-  padding: 1.25rem 1.5rem;
-  background: rgba(15, 23, 42, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.moments-lightbox-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.moments-lightbox-title {
-  font-family: 'Caveat', cursive, sans-serif;
-  font-size: 1.85rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.moments-lightbox-date {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
-  color: var(--accent-blue, #00c8ff);
-  background: rgba(0, 200, 255, 0.1);
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 200, 255, 0.2);
-}
-
-.moments-lightbox-alt {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* --- Mobile Responsiveness --- */
-@media (max-width: 640px) {
-  .moments-polaroid-card {
-    width: 210px !important;
-    padding: 8px 8px 12px 8px;
-  }
-  .moments-polaroid-photo-frame {
-    height: 130px !important;
-  }
-  .moments-handwritten-caption {
-    font-size: 1.3rem;
-  }
-  .moments-scrapbook-track {
-    gap: 1.5rem;
-  }
-  .moments-section-title {
-    font-size: 1.2rem;
-  }
-  .moments-title-accent {
-    font-size: 1.35rem;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .moments-polaroid-card { transform: none; transition: none; }
+  .moments-gallery-controls button { transition: none; }
 }

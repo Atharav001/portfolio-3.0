@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Award, Sparkles, X } from 'lucide-react';
-import MomentsStrip from './MomentsStrip/MomentsStrip';
 import { useModalFocus } from '../hooks/useModalFocus';
 import './Experience.css';
 
@@ -177,8 +176,6 @@ const Experience = () => {
           </div>
         </div>
 
-        {/* Moments Scrapbook Gallery */}
-        <MomentsStrip />
       </motion.div>
 
       {/* Modal Dialogs */}

@@ -119,7 +119,7 @@ body.light-theme .navbar-links-section,
 
 .nav-link {
   position: relative;
-  padding: 0.45rem 1.1rem;
+  padding: 0.45rem 0.8rem;
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-secondary);
@@ -509,7 +509,7 @@ html.light-theme .mobile-resume-btn:hover,
 }
 
 /* Responsive Media Queries */
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   .navbar-links-section {
     display: none;
   }

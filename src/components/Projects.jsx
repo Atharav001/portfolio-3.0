@@ -1,232 +1,229 @@
-import React, { useState, useRef, lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, ArrowRight, X, Eye } from 'lucide-react';
-import TiltCard from './TiltCard';
-import './Projects.css';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, ArrowUpRight, X } from 'lucide-react';
 import { projectsData } from '../data/projects';
 import { useModalFocus } from '../hooks/useModalFocus';
+import './Projects.css';
 
 const CaseStudyViewer = lazy(() => import('./CaseStudyViewer'));
-const featuredSlugs = new Set([
+
+const featuredSlugs = [
   'debiased-multimodal-pipeline',
   'hybrid-multimodal-whatsapp-router',
   'deep-research',
-]);
+];
 
-const CaseStudySkeleton = () => (
-  <div className="case-study-skeleton" role="status" aria-label="Loading case study">
-    <div className="skeleton-line skeleton-title" />
-    <div className="skeleton-line skeleton-meta" />
-    <div className="skeleton-image" />
-    <div className="skeleton-line" />
-    <div className="skeleton-line short" />
-    <span className="sr-only">Loading case study content…</span>
-  </div>
-);
+const showcase = {
+  'debiased-multimodal-pipeline': {
+    title: 'Two-Step Claim Review',
+    source: 'Multimodal AI / Hackathon',
+    role: 'Student developer',
+    scope: 'Image + claim evaluation',
+    outcome: '65% claim-status accuracy on the published set; 20% severity accuracy',
+  },
+  'hybrid-multimodal-whatsapp-router': {
+    title: 'OmniRoute AI',
+    source: 'Messaging / Applied AI',
+    role: 'Student developer',
+    scope: 'Text, image + voice routing',
+    outcome: '30/30 correct actions on a labeled sample',
+  },
+  'deep-research': {
+    title: 'Agentic Deep Research',
+    source: 'Research / Local AI',
+    role: 'Research engineering',
+    scope: '374 papers, hybrid retrieval',
+    outcome: 'Cited synthesis with parallel evaluation',
+  },
+};
 
-const ProjectCard = ({ project, setSelectedImage, setSelectedCaseStudy }) => {
-  const imgBase = project.image.split('/').pop().replace(/\.(png|jpe?g)$/i, '');
+const buildTitles = {
+  'ai-support-triage': 'AI Support Triage',
+  'scrollers-dashboard': 'Scroller’s Dashboard',
+  'portfolio-v3': 'Portfolio 3.0',
+  tabvault: 'TabVault',
+};
 
+const ProjectImage = ({ project, className = '' }) => {
+  const base = project.image.split('/').pop().replace(/\.(png|jpe?g)$/i, '');
   return (
-    <div className="project-card-wrapper">
-      <div className="project-card-inner-container">
-        <TiltCard className="project-card interactive-tag">
-          <button
-            type="button"
-            className="project-image-container group"
-            onClick={() => setSelectedImage(project.image)}
-            aria-label={`Expand preview of ${project.title}`}
-          >
-            <span className="browser-header">
-              <span className="browser-dots">
-                <span className="dot red"></span>
-                <span className="dot yellow"></span>
-                <span className="dot green"></span>
-              </span>
-              <span className="browser-url-bar">{project.urlBar}</span>
-              <span className="browser-tab"><Eye size={12} className="mr-1" /> {project.tabTag}</span>
-            </span>
-            <span className="browser-content">
-              <picture>
-                <source
-                  srcSet={`/assets/optimized/${imgBase}-mobile.webp 800w, /assets/optimized/${imgBase}.webp 1600w`}
-                  sizes="(max-width: 768px) 90vw, 45vw"
-                  type="image/webp"
-                />
-                <img src={`/assets/optimized/${imgBase}.jpg`} alt={project.title} className="project-img" loading="lazy" />
-              </picture>
-              <span className="image-hover-overlay">
-                <span className="click-to-view-badge">
-                  <Eye size={20} className="mb-2" />
-                  <span>Click to view</span>
-                </span>
-              </span>
-            </span>
-          </button>
-
-          <div className="project-info-container">
-            <h3 className="project-title">{project.title}</h3>
-            <div className="project-meta-row">
-              <p className="project-date">{project.date}</p>
-              {project.statusTag && (
-                <span className="project-status-meta">{project.statusTag}</span>
-              )}
-            </div>
-
-            <p className="project-description">
-              {project.description}
-            </p>
-
-            <div className="technologies-section">
-              <h4 className="tech-heading">TECHNOLOGIES</h4>
-              <div className="tech-tags">
-                {project.technologies.map(tech => (
-                  <span key={tech} className="tech-badge focus-pill">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="project-actions">
-              <a href={project.liveLink} target="_blank" rel="noreferrer" className="action-btn primary interactive-tag">
-                <ExternalLink size={16} /> GitHub <ArrowRight size={16} className="ml-1" />
-              </a>
-              <button onClick={() => setSelectedCaseStudy(project)} className="action-btn secondary interactive-tag">
-                <Eye size={16} /> Case Study <ArrowRight size={16} className="ml-1" />
-              </button>
-            </div>
-          </div>
-        </TiltCard>
-      </div>
-    </div>
+    <picture className={className}>
+      <source
+        srcSet={`/assets/optimized/${base}-mobile.webp 800w, /assets/optimized/${base}.webp 1600w`}
+        sizes="(max-width: 720px) 90vw, 52vw"
+        type="image/webp"
+      />
+      <img src={`/assets/optimized/${base}.jpg`} alt={`${project.title} project preview`} loading="lazy" />
+    </picture>
   );
 };
 
-const Projects = () => {
+const SectionHeading = ({ eyebrow, title, description, id }) => (
+  <header className="work-section-heading">
+    <span className="work-section-eyebrow">{eyebrow}</span>
+    <div className="work-section-heading-row">
+      <h2 id={id}>{title}</h2>
+      <p>{description}</p>
+    </div>
+  </header>
+);
+
+const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
+  const detail = showcase[project.slug];
+  return (
+    <motion.article
+      className={`work-showcase-card work-tone-${index + 1}`}
+      style={{ '--stack-index': index }}
+    >
+      <div className="work-showcase-copy">
+        <div className="work-showcase-topline">
+          <span>{detail.source}</span>
+          <span>{String(index + 1).padStart(2, '0')} / 03</span>
+        </div>
+        <h3>{detail.title}</h3>
+        <p className="work-showcase-description">{project.description}</p>
+        <dl className="work-showcase-facts">
+          <div><dt>Role</dt><dd>{detail.role}</dd></div>
+          <div><dt>Scope</dt><dd>{detail.scope}</dd></div>
+          <div className="work-fact-wide"><dt>Result</dt><dd>{detail.outcome}</dd></div>
+        </dl>
+        <div className="work-showcase-actions">
+          <button type="button" className="work-case-study-link" onClick={() => onCaseStudy(project)}>
+            <span className="work-round-arrow"><ArrowUpRight size={19} /></span>
+            Read case study
+          </button>
+          <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="work-repo-link">
+            GitHub <ArrowUpRight size={15} />
+          </a>
+        </div>
+      </div>
+      <button
+        type="button"
+        className="work-showcase-visual"
+        onClick={() => onImage(project)}
+        aria-label={`Expand preview of ${project.title}`}
+      >
+        <ProjectImage project={project} />
+        <span className="work-image-hint">View preview <ArrowUpRight size={16} /></span>
+      </button>
+    </motion.article>
+  );
+};
+
+const BuildCard = ({ project, index, onCaseStudy }) => (
+  <motion.article
+    className={`work-build-card work-build-tone-${(index % 4) + 1}`}
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.16 }}
+    transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+  >
+    <div className="work-build-topline">
+      <span>{project.tabTag}</span>
+      <span className="work-build-status"><i aria-hidden="true" /> Built</span>
+    </div>
+    <button
+      type="button"
+      className="work-build-visual"
+      onClick={() => onCaseStudy(project)}
+      aria-label={`Read ${project.title} case study`}
+    >
+      <ProjectImage project={project} />
+    </button>
+    <div className="work-build-bottom">
+      <div>
+        <h3>{buildTitles[project.slug] || project.title}</h3>
+        <p>{project.description}</p>
+      </div>
+      <button type="button" className="work-build-arrow" onClick={() => onCaseStudy(project)} aria-label={`Read ${project.title} case study`}>
+        <ArrowUpRight size={20} />
+      </button>
+    </div>
+    <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="work-build-repo">
+      View code on GitHub <ArrowRight size={15} />
+    </a>
+  </motion.article>
+);
+
+export default function Projects() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
   const imageDialogRef = useRef(null);
   useModalFocus(imageDialogRef, Boolean(selectedImage), () => setSelectedImage(null));
-  const featuredProjects = projectsData.filter((project) => featuredSlugs.has(project.slug));
-  const moreProjects = projectsData.filter((project) => !featuredSlugs.has(project.slug));
+
+  const featured = featuredSlugs.map((slug) => projectsData.find((project) => project.slug === slug)).filter(Boolean);
+  const more = projectsData.filter((project) => !featuredSlugs.includes(project.slug));
 
   return (
-    <section id="projects" className="projects-section py-32 px-6 lg:px-16 container mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        <div className="section-heading mb-16">
-          <div className="section-heading-label">
-            <span className="section-number-inline">03</span>
-            <span className="about-label-text">Projects</span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 font-heading tracking-tight">
-            Featured <span className="text-accent underline-effect">Projects</span>.
-          </h2>
-          <p className="text-secondary text-sm font-mono uppercase tracking-widest max-w-2xl">
-            Selected engineering work, with the problem, approach, and evidence behind each project.
-          </p>
-        </div>
+    <section id="projects" className="projects-section" aria-labelledby="selected-work-title">
+      <SectionHeading
+        eyebrow="03 / PROJECTS"
+        title="SELECTED WORK"
+        id="selected-work-title"
+        description="A closer look at the systems I’ve designed, built, and evaluated."
+      />
 
-        <div className="projects-list flex flex-col gap-8 md:gap-16">
-          {featuredProjects.map((project, index) => (
+      <div className="work-showcase-stack">
+        {featured.map((project, index) => (
+          <FeaturedCard
+            key={project.id}
+            project={project}
+            index={index}
+            onCaseStudy={setSelectedCaseStudy}
+            onImage={setSelectedImage}
+          />
+        ))}
+      </div>
+
+      <div id="builds" className="work-builds" aria-labelledby="things-built-title">
+        <SectionHeading
+          eyebrow="MORE PROJECTS"
+          title="THINGS I BUILT"
+          id="things-built-title"
+          description="Small tools, experiments, and apps made to solve practical problems."
+        />
+        <div className="work-build-grid">
+          {more.map((project, index) => (
+            <BuildCard key={project.id} project={project} index={index} onCaseStudy={setSelectedCaseStudy} />
+          ))}
+        </div>
+      </div>
+
+      {createPortal(
+        <AnimatePresence>
+          {selectedImage && (
             <motion.div
-              key={project.id || index}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{
-                duration: 0.55,
-                ease: [0.16, 1, 0.3, 1],
-                delay: Math.min(index * 0.08, 0.32),
-              }}
+              className="fullscreen-modal"
+              ref={imageDialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${selectedImage.title} preview`}
+              tabIndex={-1}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedImage(null)}
             >
-              <ProjectCard
-                project={project}
-                setSelectedImage={setSelectedImage}
-                setSelectedCaseStudy={setSelectedCaseStudy}
-              />
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="more-projects-heading">
-          <span className="section-number-inline">EXPLORE MORE</span>
-          <h3>More things I have built</h3>
-        </div>
-        <div className="more-projects-grid">
-          {moreProjects.map((project) => (
-            <article key={project.id} className="more-project-card">
-              <span className="more-project-category">{project.tabTag} · {project.date}</span>
-              <h4>{project.title}</h4>
-              <p>{project.description}</p>
-              <div className="more-project-actions">
-                <button type="button" onClick={() => setSelectedCaseStudy(project)}>Read case study <ArrowRight size={15} /></button>
-                <a href={project.liveLink} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} on GitHub`}><ExternalLink size={17} /></a>
+              <button type="button" className="modal-close-btn" onClick={(event) => { event.stopPropagation(); setSelectedImage(null); }} aria-label="Close preview">
+                <X size={24} />
+              </button>
+              <div className="fullscreen-image-frame" onClick={(event) => event.stopPropagation()}>
+                <ProjectImage project={selectedImage} />
               </div>
-            </article>
-          ))}
-        </div>
-      </motion.div>
-
-      {createPortal(<AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            className="fullscreen-modal"
-            ref={imageDialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Expanded project preview"
-            tabIndex={-1}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
-          >
-            <button
-              className="modal-close-btn"
-              onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-              aria-label="Close modal"
-            >
-              <X size={24} />
-            </button>
-            <picture style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <source
-                srcSet={`/assets/optimized/${selectedImage.split('/').pop().replace(/\.(png|jpe?g)$/i, '')}-mobile.webp 800w, /assets/optimized/${selectedImage.split('/').pop().replace(/\.(png|jpe?g)$/i, '')}.webp 1600w`}
-                sizes="90vw"
-                type="image/webp"
-              />
-              <motion.img
-                src={`/assets/optimized/${selectedImage.split('/').pop().replace(/\.(png|jpe?g)$/i, '')}.jpg`}
-                alt="Fullscreen expanded project"
-                className="fullscreen-img"
-                initial={{ scale: 0.95 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.95 }}
-                onClick={(e) => e.stopPropagation()}
-              />
-            </picture>
-          </motion.div>
-        )}
-      </AnimatePresence>, document.body)}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
 
       <AnimatePresence>
         {selectedCaseStudy && (
-          <Suspense fallback={<CaseStudySkeleton />}>
-            <CaseStudyViewer
-              project={selectedCaseStudy}
-              onClose={() => setSelectedCaseStudy(null)}
-            />
+          <Suspense fallback={<div className="case-study-loading" role="status">Opening case study…</div>}>
+            <CaseStudyViewer project={selectedCaseStudy} onClose={() => setSelectedCaseStudy(null)} />
           </Suspense>
         )}
       </AnimatePresence>
     </section>
   );
-};
-
-export default Projects;
+}

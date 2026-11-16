@@ -462,7 +462,7 @@ export const projectsData = [
       solutionTitle: 'One visual system, several levels of detail',
       solutionText: '<p>The homepage uses a concise introduction and selected projects. Each project can expand into a structured case study with context, implementation details, and results. Design tokens keep both color themes consistent, while the WebGL background provides the signature motion.</p><p>The assistant answers questions about the work through a serverless API. The interface has a compact mobile entry point and an expanded view for longer questions.</p>',
       features: [
-        { title: 'Responsive project storytelling', text: 'Featured work leads with the problem and evidence. Additional projects remain available in a compact list.', image: '/assets/optimized/portfolio_dark.jpg', caption: 'Dark theme and project presentation.' },
+        { title: 'Responsive project storytelling', text: 'Featured work pairs the problem, scope, and results with large previews. Smaller experiments appear in an image-led grid.', image: '/assets/optimized/portfolio_dark.jpg', caption: 'Dark theme and project presentation.' },
         { title: 'Theme and motion controls', text: 'A stored theme preference avoids a color flash on load. Reduced-motion preferences disable smooth scrolling and the WebGL effect.', image: '/assets/optimized/portfolio_light.jpg', caption: 'Light theme uses the same content hierarchy.' },
         { title: 'Portfolio assistant', text: 'A Vercel function validates requests, limits usage, retrieves project context when available, and returns concise answers about the portfolio.' }
       ],

@@ -81,7 +81,7 @@ const Navbar = ({ onThemeChange }) => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 25);
 
-      const sections = ['home', 'about', 'experience', 'projects', 'contact'];
+      const sections = ['home', 'about', 'experience', 'projects', 'outside-work', 'contact'];
       let maxVisible = 0;
       let current = '';
 
@@ -92,7 +92,7 @@ const Navbar = ({ onThemeChange }) => {
           const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
           if (visibleHeight > maxVisible && visibleHeight > 0) {
             maxVisible = visibleHeight;
-            current = section.charAt(0).toUpperCase() + section.slice(1);
+            current = section === 'outside-work' ? 'Outside Work' : section.charAt(0).toUpperCase() + section.slice(1);
           }
         }
       }
@@ -134,13 +134,13 @@ const Navbar = ({ onThemeChange }) => {
     };
   }, [isMobileMenuOpen]);
 
-  const links = ['Home', 'About', 'Experience', 'Projects', 'Contact'];
+  const links = ['Home', 'About', 'Experience', 'Projects', 'Outside Work', 'Contact'];
 
   const scrollToSection = (e, link) => {
     e.preventDefault();
     setActiveTab(link);
     setIsMobileMenuOpen(false);
-    const targetId = link === 'Home' ? 'home' : link.toLowerCase();
+    const targetId = link === 'Outside Work' ? 'outside-work' : link.toLowerCase();
     const element = document.getElementById(targetId);
     if (element) {
       const lenis = window.__lenis;
@@ -224,7 +224,7 @@ const Navbar = ({ onThemeChange }) => {
             {links.map((link) => (
               <a
                 key={link}
-                href={`#${link === 'Home' ? 'home' : link.toLowerCase()}`}
+                href={`#${link === 'Outside Work' ? 'outside-work' : link.toLowerCase()}`}
                 className={`nav-link interactive-tag ${activeTab === link ? 'active' : ''}`}
                 onClick={(e) => scrollToSection(e, link)}
               >
@@ -325,7 +325,7 @@ const Navbar = ({ onThemeChange }) => {
                   return (
                     <motion.a
                       key={link}
-                      href={`#${link === 'Home' ? 'home' : link.toLowerCase()}`}
+                      href={`#${link === 'Outside Work' ? 'outside-work' : link.toLowerCase()}`}
                       className={`mobile-nav-link ${isActive ? 'active' : ''}`}
                       onClick={(e) => scrollToSection(e, link)}
                       variants={linkItemVariants}

@@ -15,7 +15,7 @@ const Contact = () => {
         <div className="contact-container">
           {/* Section label */}
           <div className="section-heading-label">
-            <span className="section-number-inline">04</span>
+            <span className="section-number-inline">05</span>
             <span className="about-label-text">Get in Touch</span>
           </div>
 

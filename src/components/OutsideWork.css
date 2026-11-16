@@ -1,0 +1,112 @@
+.outside-work-section {
+  max-width: 1360px;
+  padding: 7rem clamp(1.25rem, 3vw, 3rem) 8rem;
+}
+
+.outside-work-heading {
+  padding-bottom: 2.2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.outside-work-eyebrow {
+  display: block;
+  margin-bottom: 1.5rem;
+  color: var(--accent-lime);
+  font: 700 0.72rem var(--font-mono);
+  letter-spacing: 0.15em;
+}
+
+.outside-work-heading-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 330px);
+  align-items: end;
+  gap: 2rem;
+}
+
+.outside-work-heading h2 {
+  font-size: clamp(3.3rem, 7vw, 6.6rem);
+  font-weight: 850;
+  letter-spacing: -0.09em;
+  line-height: 0.91;
+}
+
+.outside-work-heading-row p {
+  padding-bottom: 0.24rem;
+  color: var(--text-secondary);
+  font-size: clamp(0.95rem, 1.2vw, 1.12rem);
+}
+
+.outside-work-intro {
+  max-width: 1100px;
+  margin: 2.8rem 0 2.5rem;
+  font-size: clamp(1.5rem, 2.4vw, 2.6rem);
+  font-weight: 570;
+  letter-spacing: -0.055em;
+  line-height: 1.33;
+  text-wrap: pretty;
+}
+
+.outside-work-intro strong {
+  color: var(--accent-lime);
+  font-weight: 760;
+}
+
+.outside-work-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.outside-work-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  padding: clamp(1.2rem, 2.2vw, 2rem);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 26px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.outside-work-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.16);
+}
+
+.outside-badminton { background: #b9df9a; color: #173624; }
+.outside-small-apps { background: #121914; color: #ecf3e9; border-color: rgba(255, 255, 255, 0.14); }
+
+.outside-card-kicker {
+  font: 650 0.72rem var(--font-mono);
+  letter-spacing: 0.08em;
+}
+
+.outside-card-word {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.8rem 0;
+  font-size: clamp(2.8rem, 5.6vw, 5.3rem);
+  font-weight: 850;
+  letter-spacing: -0.09em;
+  line-height: 1;
+}
+
+.outside-small-apps .outside-card-word { color: #c5ff41; }
+.outside-card-asterisk { font-size: 0.65em; transform: translateY(-0.28em); }
+.outside-work-card p { max-width: 38ch; font-size: 0.95rem; line-height: 1.5; }
+.outside-small-apps p { color: #afbaad; }
+
+@media (max-width: 760px) {
+  .outside-work-section { padding: 4.5rem 1.25rem 5rem; }
+  .outside-work-heading { padding-bottom: 1.3rem; }
+  .outside-work-heading-row { grid-template-columns: 1fr; gap: 0.85rem; }
+  .outside-work-heading h2 { font-size: clamp(2.8rem, 12vw, 4.7rem); }
+  .outside-work-intro { margin: 2rem 0; }
+  .outside-work-cards { grid-template-columns: 1fr; }
+  .outside-work-card { min-height: 190px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outside-work-card { transition: none; }
+}

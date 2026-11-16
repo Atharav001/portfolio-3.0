@@ -11,6 +11,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
+import OutsideWork from './components/OutsideWork';
 import Contact from './components/Contact';
 import CosmicBackground from './components/CosmicBackground';
 import GrainOverlay from './components/GrainOverlay';
@@ -155,6 +156,8 @@ function App() {
         <Experience />
         <SectionDivider />
         <Projects />
+        <SectionDivider />
+        <OutsideWork />
         <SectionDivider />
         <Contact />
       </main>
