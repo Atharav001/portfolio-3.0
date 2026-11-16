@@ -62,8 +62,8 @@ export default function CosmicBackground({ theme = 'dark' }) {
 
   // Initialize tubes effect once on mount
   useEffect(() => {
-    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isReduced) return;
+    const useStaticBackground = window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 768px), (pointer: coarse)').matches;
+    if (useStaticBackground) return;
 
     let isCancelled = false;
 

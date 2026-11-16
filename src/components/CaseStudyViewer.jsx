@@ -4,10 +4,12 @@
  * Structured case study layout: Overview → Problem → Approach →
  * Architecture → Implementation → Results.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ExternalLink, X } from 'lucide-react';
 import DOMPurify from 'dompurify';
+import { useModalFocus } from '../hooks/useModalFocus';
 import './CaseStudyViewer.css';
 
 const normalizeMetrics = (metrics) => {
@@ -24,7 +26,7 @@ const normalizeMetrics = (metrics) => {
 
 const SectionBlock = ({ id, number, title, children }) => (
   <section id={id} className="case-study-section-block">
-    <span className="case-study-section-label">{number} — {title}</span>
+    <h2 className="case-study-section-label"><span>{number}</span> {title}</h2>
     {children}
   </section>
 );
@@ -32,12 +34,18 @@ const SectionBlock = ({ id, number, title, children }) => (
 const ProseBlock = ({ html }) => (
   <div
     className="case-study-prose"
-    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }}
+    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize((html || '')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')) }}
   />
 );
 
 const CaseStudyViewer = ({ project, onClose }) => {
   const [isImgZoomed, setIsImgZoomed] = useState(false);
+  const dialogRef = useRef(null);
+  const imageDialogRef = useRef(null);
+  useModalFocus(dialogRef, Boolean(project) && !isImgZoomed, onClose);
+  useModalFocus(imageDialogRef, isImgZoomed, () => setIsImgZoomed(false));
 
   useEffect(() => {
     if (!project) return;
@@ -48,22 +56,16 @@ const CaseStudyViewer = ({ project, onClose }) => {
     const originalHash = window.location.hash;
     window.history.replaceState(null, '', `#project-${project.id}`);
 
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
     return () => {
       if (lenis) lenis.start();
       document.body.style.overflow = '';
       window.history.replaceState(null, '', originalHash || '#projects');
-      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [project, onClose]);
+  }, [project]);
 
   const handleTocClick = (e, targetId) => {
     e.preventDefault();
-    const element = document.getElementById(targetId);
+    const element = dialogRef.current?.querySelector(`#${targetId}`);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -86,7 +88,7 @@ const CaseStudyViewer = ({ project, onClose }) => {
       ]
     : [];
 
-  return (
+  return createPortal(
     <>
       <motion.div
         className="case-study-backdrop-animator"
@@ -99,6 +101,11 @@ const CaseStudyViewer = ({ project, onClose }) => {
       </motion.div>
       <motion.div
         className="case-study-overlay"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="case-study-title"
+        tabIndex={-1}
         data-lenis-prevent="true"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -124,11 +131,11 @@ const CaseStudyViewer = ({ project, onClose }) => {
         <div className="case-study-layout">
           <main className="case-study-content">
             <header className="case-study-header">
-              <h1 className="case-study-title">{project.title}</h1>
+              <span className="case-study-kicker">Case study <span>/{project.tabTag}</span></span>
+              <h1 id="case-study-title" className="case-study-title">{project.title}</h1>
+              <p className="case-study-dek">{details?.problemLead || project.description}</p>
               <div className="case-study-meta">
-                <span>Atharav Narang</span>
-                <span className="separator">/</span>
-                <span>B.Tech Computer Science</span>
+                <span>Designed & built by Atharav Narang</span>
                 <span className="separator">/</span>
                 <span>{project.date}</span>
               </div>
@@ -140,12 +147,14 @@ const CaseStudyViewer = ({ project, onClose }) => {
                   <SectionBlock id="overview" number="01" title="Overview">
                     <div className="case-study-overview-grid">
                       {project.image && (
-                        <div
+                        <button
+                          type="button"
                           className="overview-item image-overview-item interactive-tag"
                           onClick={() => setIsImgZoomed(true)}
+                          aria-label={`Expand ${project.title} preview`}
                         >
-                          <h4>Project Preview</h4>
-                          <div className="overview-image-wrapper">
+                          <span className="overview-label">Project Preview</span>
+                          <span className="overview-image-wrapper">
                             <picture style={{ display: 'block', width: '100%', height: '100%' }}>
                               <source
                                 srcSet={`/assets/optimized/${project.image.split('/').pop().replace(/\.(png|jpe?g)$/i, '')}-mobile.webp 800w, /assets/optimized/${project.image.split('/').pop().replace(/\.(png|jpe?g)$/i, '')}.webp 1600w`}
@@ -158,11 +167,11 @@ const CaseStudyViewer = ({ project, onClose }) => {
                                 className="overview-thumbnail"
                               />
                             </picture>
-                            <div className="overview-image-overlay">
+                            <span className="overview-image-overlay">
                               <span className="view-text">Click to expand</span>
-                            </div>
-                          </div>
-                        </div>
+                            </span>
+                          </span>
+                        </button>
                       )}
                       <div className="overview-item">
                         <h4>My Role</h4>
@@ -177,7 +186,6 @@ const CaseStudyViewer = ({ project, onClose }) => {
                         <p>{details.localLLM || details.platform}</p>
                       </div>
                     </div>
-                    <p className="case-study-summary">{details.problemLead}</p>
                   </SectionBlock>
 
                   <SectionBlock id="problem" number="02" title="Problem Statement">
@@ -323,6 +331,11 @@ const CaseStudyViewer = ({ project, onClose }) => {
         {isImgZoomed && (
           <motion.div
             className="fullscreen-modal"
+            ref={imageDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Expanded case study preview"
+            tabIndex={-1}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -355,7 +368,8 @@ const CaseStudyViewer = ({ project, onClose }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </>,
+    document.body
   );
 };
 

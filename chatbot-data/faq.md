@@ -16,7 +16,7 @@ Atharav is focused on expanding his deep mathematical understanding of high-dime
 
 ## How can someone reach you / what's the best way to follow up?
 
-The best way to reach Atharav is via email at `atharavnarang05@gmail.com` or through LinkedIn at `linkedin.com/in/atharav-narang-132b74273`. You can also explore his code repositories directly on GitHub at [github.com/Atharav001](https://github.com/Atharav001) or visit his portfolio website at [atharav001n.vercel.app](https://atharav001n.vercel.app).
+The best way to reach Atharav is via email at `atharavnarang05@gmail.com` or through LinkedIn at `linkedin.com/in/atharav-narang-132b74273`. You can also explore his code repositories directly on GitHub at [github.com/Atharav001](https://github.com/Atharav001) or visit his portfolio website at [atharav001.vercel.com](https://atharav001.vercel.com).
 
 ## Are you open to remote work, relocation, or other arrangements?
 
@@ -28,4 +28,4 @@ Atharav believes in an iterative, optimization-first approach: "Finishing a task
 
 ## How was this AI portfolio assistant built?
 
-This assistant ("Ask About Atharav AI") is a scope-locked RAG system built with React 19, Vercel Serverless Functions, Supabase pgvector for 768-dim similarity search, in-memory sliding-window rate limiting, and Google Gemini API (gemini-3.6-flash & gemini-embedding-001) for intelligent response generation.
+This assistant ("Ask About Atharav AI") uses React 19, a Vercel Serverless Function, Supabase pgvector for 768-dimensional similarity search, and Google Gemini for grounded responses. It uses shared Redis rate limits when available and per-instance limits as a fallback.

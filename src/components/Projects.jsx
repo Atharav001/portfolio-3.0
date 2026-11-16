@@ -1,11 +1,18 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useRef, lazy, Suspense } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, ArrowRight, X, Eye } from 'lucide-react';
 import TiltCard from './TiltCard';
 import './Projects.css';
 import { projectsData } from '../data/projects';
+import { useModalFocus } from '../hooks/useModalFocus';
 
 const CaseStudyViewer = lazy(() => import('./CaseStudyViewer'));
+const featuredSlugs = new Set([
+  'debiased-multimodal-pipeline',
+  'hybrid-multimodal-whatsapp-router',
+  'deep-research',
+]);
 
 const CaseStudySkeleton = () => (
   <div className="case-study-skeleton" role="status" aria-label="Loading case study">
@@ -25,20 +32,22 @@ const ProjectCard = ({ project, setSelectedImage, setSelectedCaseStudy }) => {
     <div className="project-card-wrapper">
       <div className="project-card-inner-container">
         <TiltCard className="project-card interactive-tag">
-          <div
+          <button
+            type="button"
             className="project-image-container group"
             onClick={() => setSelectedImage(project.image)}
+            aria-label={`Expand preview of ${project.title}`}
           >
-            <div className="browser-header">
-              <div className="browser-dots">
+            <span className="browser-header">
+              <span className="browser-dots">
                 <span className="dot red"></span>
                 <span className="dot yellow"></span>
                 <span className="dot green"></span>
-              </div>
-              <div className="browser-url-bar">{project.urlBar}</div>
-              <div className="browser-tab"><Eye size={12} className="mr-1" /> {project.tabTag}</div>
-            </div>
-            <div className="browser-content">
+              </span>
+              <span className="browser-url-bar">{project.urlBar}</span>
+              <span className="browser-tab"><Eye size={12} className="mr-1" /> {project.tabTag}</span>
+            </span>
+            <span className="browser-content">
               <picture>
                 <source
                   srcSet={`/assets/optimized/${imgBase}-mobile.webp 800w, /assets/optimized/${imgBase}.webp 1600w`}
@@ -47,14 +56,14 @@ const ProjectCard = ({ project, setSelectedImage, setSelectedCaseStudy }) => {
                 />
                 <img src={`/assets/optimized/${imgBase}.jpg`} alt={project.title} className="project-img" loading="lazy" />
               </picture>
-              <div className="image-hover-overlay">
-                <div className="click-to-view-badge">
+              <span className="image-hover-overlay">
+                <span className="click-to-view-badge">
                   <Eye size={20} className="mb-2" />
                   <span>Click to view</span>
-                </div>
-              </div>
-            </div>
-          </div>
+                </span>
+              </span>
+            </span>
+          </button>
 
           <div className="project-info-container">
             <h3 className="project-title">{project.title}</h3>
@@ -98,14 +107,10 @@ const ProjectCard = ({ project, setSelectedImage, setSelectedCaseStudy }) => {
 const Projects = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setSelectedImage(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  const imageDialogRef = useRef(null);
+  useModalFocus(imageDialogRef, Boolean(selectedImage), () => setSelectedImage(null));
+  const featuredProjects = projectsData.filter((project) => featuredSlugs.has(project.slug));
+  const moreProjects = projectsData.filter((project) => !featuredSlugs.has(project.slug));
 
   return (
     <section id="projects" className="projects-section py-32 px-6 lg:px-16 container mx-auto">
@@ -124,12 +129,12 @@ const Projects = () => {
             Featured <span className="text-accent underline-effect">Projects</span>.
           </h2>
           <p className="text-secondary text-sm font-mono uppercase tracking-widest max-w-2xl">
-            Highlighting my latest work: AI research, security innovation, and full-stack development. All project images feature real screenshots of the active applications.
+            Selected engineering work, with the problem, approach, and evidence behind each project.
           </p>
         </div>
 
         <div className="projects-list flex flex-col gap-8 md:gap-16">
-          {projectsData.map((project, index) => (
+          {featuredProjects.map((project, index) => (
             <motion.div
               key={project.id || index}
               initial={{ opacity: 0, y: 24 }}
@@ -149,12 +154,35 @@ const Projects = () => {
             </motion.div>
           ))}
         </div>
+
+        <div className="more-projects-heading">
+          <span className="section-number-inline">EXPLORE MORE</span>
+          <h3>More things I have built</h3>
+        </div>
+        <div className="more-projects-grid">
+          {moreProjects.map((project) => (
+            <article key={project.id} className="more-project-card">
+              <span className="more-project-category">{project.tabTag} · {project.date}</span>
+              <h4>{project.title}</h4>
+              <p>{project.description}</p>
+              <div className="more-project-actions">
+                <button type="button" onClick={() => setSelectedCaseStudy(project)}>Read case study <ArrowRight size={15} /></button>
+                <a href={project.liveLink} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} on GitHub`}><ExternalLink size={17} /></a>
+              </div>
+            </article>
+          ))}
+        </div>
       </motion.div>
 
-      <AnimatePresence>
+      {createPortal(<AnimatePresence>
         {selectedImage && (
           <motion.div
             className="fullscreen-modal"
+            ref={imageDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Expanded project preview"
+            tabIndex={-1}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -185,7 +213,7 @@ const Projects = () => {
             </picture>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
 
       <AnimatePresence>
         {selectedCaseStudy && (

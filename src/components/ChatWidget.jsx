@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Send, Bot, User, Sparkles, X, MessageSquareText, RotateCcw, Copy, Check } from 'lucide-react';
 import { ThinkingOrb } from './ThinkingOrb';
+import { useModalFocus } from '../hooks/useModalFocus';
 import './ChatWidget.css';
 
 const SUGGESTED_QUESTIONS = [
@@ -26,6 +27,15 @@ const getOrCreateSessionId = () => {
 
 const generateId = (prefix) => `${prefix}_${Math.random().toString(36).substring(2, 9)}`;
 
+const safeLink = (url) => {
+  try {
+    const parsed = new URL(url);
+    return ['https:', 'mailto:'].includes(parsed.protocol) ? parsed.href : null;
+  } catch {
+    return null;
+  }
+};
+
 // Parses markdown bold (**text**), inline code (`code`), and markdown clickable links ([text](url))
 const parseLineTokens = (line) => {
   const tokens = line.split(/(\*\*.*?\*\*|`.*?`|\[.*?\]\(.*?\))/g);
@@ -38,10 +48,12 @@ const parseLineTokens = (line) => {
     }
     const linkMatch = token.match(/^\[(.*?)\]\((.*?)\)$/);
     if (linkMatch) {
+      const href = safeLink(linkMatch[2]);
+      if (!href) return token;
       return (
         <a
           key={idx}
-          href={linkMatch[2]}
+          href={href}
           target="_blank"
           rel="noopener noreferrer"
           className="chat-link"
@@ -105,6 +117,9 @@ const ChatWidget = () => {
 
   const chatMessagesRef = useRef(null);
   const inputRef = useRef(null);
+  const autoQuerySentRef = useRef(null);
+  const mobileDialogRef = useRef(null);
+  useModalFocus(mobileDialogRef, isMobileExpanded, () => setIsMobileExpanded(false));
 
   // Lock outer webpage scrolling and Lenis scroll when mobile fullscreen modal is open
   useEffect(() => {
@@ -222,13 +237,14 @@ const ChatWidget = () => {
     }
   }, [input, isLoading, sessionId]);
 
-  // URL query parameter auto-trigger (aaabadcode.com style URL sync: ?query=... or ?q=...)
+  // Send a shared question once, even when loading state changes the callback.
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const queryParam = params.get('query') || params.get('q');
-      if (queryParam) {
+      if (queryParam && autoQuerySentRef.current !== queryParam) {
         const timer = setTimeout(() => {
+          autoQuerySentRef.current = queryParam;
           handleSend(queryParam);
         }, 250);
         return () => clearTimeout(timer);
@@ -258,13 +274,6 @@ const ChatWidget = () => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleWheel = (e) => {
-    const container = chatMessagesRef.current;
-    if (container) {
-      container.scrollTop += e.deltaY;
-    }
-  };
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -282,7 +291,7 @@ const ChatWidget = () => {
           <div className="chat-header-title-wrap">
             <Bot size={16} className="chat-bot-icon" />
             <span className="chat-header-title">Ask About Atharav AI</span>
-            <span className="chat-status-badge">Scope-Locked RAG</span>
+            <span className="chat-status-badge">Project Q&amp;A</span>
           </div>
         </div>
         <div className="chat-header-right">
@@ -291,6 +300,7 @@ const ChatWidget = () => {
               className="chat-header-action-btn"
               onClick={handleClear}
               title="Reset Conversation"
+              aria-label="Reset conversation"
               type="button"
             >
               <RotateCcw size={13} />
@@ -302,6 +312,7 @@ const ChatWidget = () => {
               className="chat-close-btn"
               onClick={() => setIsMobileExpanded(false)}
               title="Close Assistant"
+              aria-label="Close assistant"
               type="button"
             >
               <X size={18} />
@@ -311,7 +322,7 @@ const ChatWidget = () => {
       </div>
 
       <div className="chat-body">
-        <div className="chat-messages" ref={chatMessagesRef} onWheel={handleWheel}>
+        <div className="chat-messages" ref={chatMessagesRef}>
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -334,6 +345,7 @@ const ChatWidget = () => {
                         className="chat-copy-btn"
                         onClick={() => handleCopy(msg.id, msg.text)}
                         title="Copy message"
+                        aria-label="Copy message"
                         type="button"
                       >
                         {copiedId === msg.id ? (
@@ -392,6 +404,7 @@ const ChatWidget = () => {
           onClick={() => inputRef.current?.focus()}
         >
           <input
+            aria-label="Ask about Atharav's work"
             ref={inputRef}
             type="text"
             className="chat-input"
@@ -407,6 +420,7 @@ const ChatWidget = () => {
             className="chat-send-btn"
             disabled={!input.trim() || isLoading}
             title="Send Message"
+            aria-label="Send message"
           >
             <Send size={15} />
           </button>
@@ -436,7 +450,7 @@ const ChatWidget = () => {
       {isMobileExpanded &&
         typeof document !== 'undefined' &&
         createPortal(
-          <div className="chat-mobile-overlay">
+          <div className="chat-mobile-overlay" ref={mobileDialogRef} role="dialog" aria-modal="true" aria-label="Portfolio assistant" tabIndex={-1}>
             {content}
           </div>,
           document.body

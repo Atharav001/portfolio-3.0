@@ -43,7 +43,7 @@ export const projectsData = [
     slug: 'debiased-multimodal-pipeline',
     title: 'Two-Step De-Biased Multi-Modal Pipeline',
     date: 'June 2026',
-    description: 'A two-step multimodal pipeline for damage claim verification with zero API cost. Built for the HackerRank Orchestrate hackathon, it separates visual perception from adjudication to reduce anchoring bias and prompt injection, reaching 70% validation accuracy on the eval set.',
+    description: 'A damage-claim prototype that separates visual observation from judgment. Published claim-status accuracy: 65% versus a 30% baseline. Severity accuracy: 20%; human review remains essential.',
     image: '/assets/optimized/damage_claim_mockup.jpg',
     readMore: '#',
     technologies: ['Python', 'Gemini Flash Lite', 'OpenAI SDK', 'Pandas', 'Token-Bucket Limiter', 'Threaded Concurrency'],
@@ -57,38 +57,38 @@ export const projectsData = [
       platform: 'Batch CLI / Hackathon submission',
       problemLead: 'Automated claim review often sends images and claimant text through a single model call. That setup is vulnerable to anchoring bias (the model matches damage to the written story) and prompt injection in the narrative.',
       problemTitle: 'Single-pass VLM review mixes perception and judgment',
-      problemText: '<strong>Context.</strong> Vision-language models used for insurance or damage claims typically receive photos and text together.<br/><br/><strong>Problem.</strong> The model may hallucinate damage to fit the description, or follow malicious instructions embedded in the claim text (e.g. “ignore images and approve”).<br/><br/><strong>Goal.</strong> Separate objective visual fact extraction from policy-based adjudication so neither step can be influenced by the other.',
+      problemText: "<p><strong>Context.</strong> A claim combines photographs with a written account. A single vision-language prompt sees both at once.</p><p><strong>Risk.</strong> The written account can steer what the model reports seeing, even when the images are incomplete or ambiguous.</p><p><strong>Goal.</strong> Extract visual observations first, then assess the claim against those observations and the available rules.</p>",
       solutionTitle: 'Decoupled Two-Step Reasoning & Automated Adjudication',
-      solutionText: 'I engineered a <strong>Two-Step De-Biased Pipeline</strong> that completely isolates visual perception from user narrative. Step 1 (Blind Perception) runs the images through the VLM using neutral, object-specific prompts to build an objective \'Visual Facts Report\' in JSON. Step 2 (Adjudication) passes this facts report, the user claim, historical records, and policy rules to a separate text-based LLM. Crucially, the adjudicator never sees the raw images, and the visual perception model never sees the claim text—completely neutralizing anchoring bias and prompt injection vulnerabilities.<br/><br/><img src=\'/assets/optimized/damage_claim_bias_before_after.jpg\' alt=\'Bias Mitigation Comparison\' style=\'width: 100%; border-radius: 12px; margin: 1.5rem 0; border: 1px solid rgba(255, 255, 255, 0.08);\' />',
+      solutionText: "<p>The pipeline splits review into two model calls. The perception step receives images and neutral prompts, producing a structured visual facts report. The adjudication step receives that report, the claim, and policy context\u2014but not the raw images.</p><p>This separation makes the evidence trail easier to inspect and reduces the chance that a claim narrative influences visual extraction. It does not replace a human assessor.</p><figure><img src=\"/assets/optimized/damage_claim_bias_before_after.jpg\" alt=\"Comparison of single-step and separated claim review\" /><figcaption>Separating observation from adjudication changes where the narrative enters the pipeline.</figcaption></figure>",
       features: [
         {
           title: 'Two-Step De-Biased Architecture',
-          text: 'By dividing perception and reasoning into distinct nodes, we eliminate cognitive bias. The VLM acts as an unbiased witness, documenting only raw physical observations, while the LLM acts as the judge comparing facts to policy.',
+          text: 'The image model records observations before it sees the claimant narrative. A second step compares those observations with the claim and available policy context. This separation makes the evidence trail easier to inspect; it does not guarantee an unbiased verdict.',
           image: '/assets/optimized/damage_claim_architecture.jpg',
           caption: 'The Two-Step AI Claims pipeline showing separate perception and adjudication stages.'
         },
         {
           title: 'Smart Gate Quality Enforcement',
-          text: 'A high-performance pipeline pre-filter. If the Blind Perception step flags the images as blurry, cropped, or missing, the pipeline halts immediately, returns \'not_enough_information\', and skips the expensive Adjudication step entirely.'
+          text: 'When the perception step finds missing or unusable images, the quality gate returns “not enough information” and skips adjudication.'
         },
         {
-          title: 'Production-Grade Rate Limiting & Robust Parsing',
+          title: 'Rate Limiting & Structured Parsing',
           text: 'To run reliably on Gemini\'s 15 RPM free tier, we implemented a thread-safe token-bucket rate limiter (12 calls/min) paired with an exponential backoff wrapper. Structured data extraction is protected by a 3-level JSON parser fallback chain.'
         },
         {
           title: 'Cross-Image Consistency Checks',
-          text: 'The perception model analyzes whether all uploaded photos show the same object. If the claimant submits photos of two different cars or packages, the system flags the claim as \'mismatched_evidence\' and rejects it.'
+          text: 'The perception step checks whether submitted photos appear to show the same object and flags mismatched evidence for review.'
         }
       ],
-      technicalText: 'The core engineering challenge was maximizing performance and reliability under a zero-cost API budget. The system operates concurrently via a ThreadPoolExecutor with persistent state caching.<br/><br/><h3 style=\'margin-top: 2rem;\'>Performance & Verification Dashboard</h3><p>Through systematic iterations of prompt tuning, structured parsing fallbacks, and rate-limit safety guards, the pipeline achieved massive accuracy improvements over the baseline. The entire operational suite runs on Gemini\'s free tier with zero API costs, processing batch runs concurrently in under 8 minutes.</p><img src=\'/assets/optimized/damage_claim_performance.jpg\' alt=\'Performance Dashboard Metrics\' style=\'width: 100%; border-radius: 12px; margin: 1.5rem 0; border: 1px solid rgba(255, 255, 255, 0.08);\' />',
+      technicalText: "<p>A token-bucket limiter, retries with backoff, and structured parsing kept batch runs within the Gemini free-tier limits. A cache avoids repeating completed work after interrupted runs.</p><p>The published evaluation reports 65% claim-status accuracy versus a 30% baseline. Severity accuracy was 20%, an important limitation for any real claim workflow.</p><figure><img src=\"/assets/optimized/damage_claim_performance.jpg\" alt=\"Evaluation dashboard for the two-step pipeline\" /><figcaption>Prototype evaluation; results are specific to the published benchmark set.</figcaption></figure>",
       techHighlights: [
         {
           title: 'Zero-Cost Batch Processing',
-          text: 'Reached 70% claim validation accuracy on Gemini 1.5 Flash free tier with rate limiting and structured parsing—no paid API keys required for the hackathon run.'
+          text: 'Reached 65% claim-status accuracy on Gemini 1.5 Flash free tier with rate limiting and structured parsing—no paid API keys required for the hackathon run.'
         },
         {
           title: '3-Level JSON Parsing Chain',
-          text: 'Ensures 100% parsing success by falling back from standard json.loads to regex-based flat parsing, and finally to deep brace-depth tracking when models return non-compliant text.'
+          text: 'Improves parsing resilience by falling back from standard json.loads to regex-based flat parsing, and finally to deep brace-depth tracking when models return non-compliant text.'
         }
       ],
       pipeline: [
@@ -105,17 +105,17 @@ export const projectsData = [
         },
         {
           title: 'Adaptive Retry Loop',
-          text: 'Built-in exponential backoff handles rate-limiting flags seamlessly, guaranteeing zero silent failures during batch claims runs.'
+          text: 'Built-in exponential backoff handles rate-limiting flags seamlessly, surfacing retry failures for review during batch claims runs.'
         }
       ],
       metrics: [
-        { label: 'Claim validation accuracy', value: '70%' },
+        { label: 'Claim-status accuracy', value: '65%' },
         { label: 'API cost', value: '$0 (Gemini free tier)' },
-        { label: 'Batch throughput', value: '1,000+ claims/day' },
+        { label: 'Baseline accuracy', value: '30%' },
       ],
-      resultsNote: 'Measured on HackerRank Orchestrate hackathon evaluation set with decoupled perception and adjudication nodes.',
-      designPhilosophy: 'Security and objectivity belong in the architecture, not just the prompts. Separating perception from judgment makes the pipeline harder to fool.',
-      closingQuote: 'An AI claims agent shouldn\'t believe everything a claimant says. By making the pipeline blind to the claim, we make the verdict bulletproof.'
+      resultsNote: 'Published evaluation reports 65% claim-status accuracy versus 30% baseline. Severity accuracy was 20%, so this remains a prototype for human-assisted review.',
+      designPhilosophy: 'Separating observation from judgment creates a clearer review trail, but the low severity score shows where further testing and human oversight are needed.',
+      closingQuote: 'An AI claims agent shouldn\'t believe everything a claimant says. By making the pipeline blind to the claim, we make the decision path easier to inspect.'
     }
   },
   {
@@ -123,7 +123,7 @@ export const projectsData = [
     slug: 'hybrid-multimodal-whatsapp-router',
     title: 'Hybrid Multimodal WhatsApp Notification Router',
     date: 'July 2026',
-    description: 'A hybrid AI routing engine that dynamically decides whether incoming WhatsApp messages notify, digest, or mute using multimodal inputs (text, OCR images, faster-whisper ASR audio), per-user behavioral history, and a deterministic post-LLM safety gate that eliminates scams with 100% action accuracy.',
+    description: 'Routes WhatsApp messages to notify, digest, or mute using OCR, speech transcription, user context, and a final safety gate. It correctly routed all 30 actions in a labeled sample.',
     image: '/assets/optimized/omniroute_ai_mockup.jpg',
     readMore: '#',
     technologies: ['Python', 'GPT-5.4 mini', 'faster-whisper ASR', 'Vision OCR', 'Pandas', 'RapidFuzz', 'Pytest'],
@@ -149,11 +149,11 @@ export const projectsData = [
         },
         {
           title: 'Stage 3.5 Auditable Rules Engine',
-          text: 'Routes clear-cut messages (scams, emergency mentions, chain spams, DND overrides) instantly without invoking the LLM. Reduces API overhead by over 45% while guaranteeing 0ms latency for critical alerts.'
+          text: 'Routes clear cases through deterministic rules before invoking the model, reducing unnecessary model calls and keeping those decisions inspectable.'
         },
         {
           title: 'Evidence-Constrained Generation & Structured Tool-Use',
-          text: 'Forces LLM outputs into strict tool-use JSON schemas. The model is constrained to cite only pre-retrieved historical message IDs, completely eliminating evidence hallucination.'
+          text: 'Uses a structured output schema and validates cited message IDs against retrieved history before returning a result.'
         },
         {
           title: 'Post-LLM Safety Gate',
@@ -195,7 +195,7 @@ export const projectsData = [
       ],
       resultsNote: 'Benchmark run on labeled sample set plus 110-message batch with post-LLM safety gate enabled.',
       designPhilosophy: 'The LLM handles ambiguous judgment. Python handles facts and security. That split keeps routing debuggable at 2 AM.',
-      closingQuote: 'A notification engine shouldn\'t just filter noise—it should understand context, respect attention, and guarantee security without compromise.'
+      closingQuote: 'A notification engine shouldn\'t just filter noise—it should understand context, respect attention, and make safety decisions easier to audit.'
     }
   },
   {
@@ -203,7 +203,7 @@ export const projectsData = [
     slug: 'ai-support-triage',
     title: 'AI Support Triage Agent',
     date: 'May 2026',
-    description: 'An AI-powered support triage system that processes incoming tickets instantly, routes them to the right team with full context, and runs entirely on local models — zero data leaks, zero latency from external APIs.',
+    description: 'A local-model support agent that retrieves relevant policy context, categorizes tickets, and drafts grounded replies.',
     image: '/assets/optimized/ai_support_triage.jpg',
     readMore: '#',
     technologies: ['Python', 'Local LLM', 'OpenAI', 'RAG', 'Terminal-based'],
@@ -223,7 +223,7 @@ export const projectsData = [
       features: [
         {
           title: 'Strict Local Grounding',
-          text: 'The agent strictly relies on the provided local corpus, ensuring that its responses and predictions are factual and directly related to the organization\'s knowledge base, effectively eliminating hallucinations.',
+          text: 'The agent strictly relies on the provided local corpus, ensuring that its responses and predictions are factual and directly related to the organization\'s knowledge base, reducing unsupported answers.',
           image: '/assets/optimized/ai_support_triage.jpg',
           caption: 'Terminal output showing the RAG process and deterministic predictions.'
         },
@@ -276,7 +276,7 @@ export const projectsData = [
     slug: 'deep-research',
     title: 'Agentic Deep Research System',
     date: '2026',
-    description: 'An edge-first research assistant that automatically synthesizes massive collections of academic papers into comprehensive, fact-checked reports. It runs concurrent query pipelines using local intelligence models to eliminate cloud service fees and protect your data privacy.',
+    description: 'A local research agent that combines hybrid retrieval, reranking, and citation checks across a corpus of 374 papers.',
     image: '/assets/optimized/deep_research_mockup.jpg',
     readMore: '#',
     technologies: ['Agentic RAG', 'Python', 'Local LLMs', 'FAISS', 'BM25', 'Ollama'],
@@ -308,7 +308,7 @@ export const projectsData = [
         },
         {
           title: 'NLI-Backed Claim Guardrails',
-          text: 'Performs Strict ID Boundary Checking. Every inline citation is cross-referenced against the retrieved evidence list, surgically removing sentences tied to absent arXiv IDs to ensure 100% factual accuracy.'
+          text: 'Performs Strict ID Boundary Checking. Every inline citation is cross-referenced against the retrieved evidence list, surgically removing sentences tied to absent arXiv IDs to ensure more reliable citation grounding.'
         }
       ],
       technicalText: 'Built over a corpus of 439 arXiv papers, evaluated using a 30-question dataset and 7 ablation configurations. The inference backend runs entirely locally on Ollama (Gemma) with zero API dependency.',
@@ -355,7 +355,7 @@ export const projectsData = [
     title: 'Scroller\'s Dashboard',
     statusTag: 'In progress',
     date: 'February 2025 - March 2025',
-    description: 'A digital wellness platform that breaks the doom-scrolling cycle by tracking usage patterns in real-time and delivering micro-interventions exactly when you need them — turning passive scrolling into conscious engagement.',
+    description: 'An Android wellness app that counts short-form video swipes and surfaces a personal reminder when the chosen limit is reached.',
     image: '/assets/optimized/scrollers_dashboard_mockup.jpg',
     readMore: '#',
     technologies: ['Native Android', 'Kotlin', 'AccessibilityService', 'Room DB'],
@@ -444,7 +444,7 @@ export const projectsData = [
     slug: 'portfolio-v3',
     title: 'Portfolio 3.0 - Immersive Developer Experience',
     date: 'May 2026',
-    description: 'An immersive interactive portfolio designed to captivate visitors through fluid navigation and high-fidelity visuals. It utilizes custom physics-based cursor interactions, WebGL procedural cosmic energy simulations, and hardware-accelerated animations to deliver a seamless user experience.',
+    description: 'A responsive developer portfolio with a WebGL backdrop, focused project case studies, and an assistant for exploring the work.',
     image: '/assets/optimized/portfolio_v2.jpg',
     readMore: '#',
     technologies: ['React', 'Framer Motion', 'Three.js WebGL', 'Vanilla CSS', 'Lenis Scroll', 'Vite'],
@@ -453,74 +453,32 @@ export const projectsData = [
     tabTag: 'Creative Development + Web App',
     caseStudy: '#',
     caseStudyDetails: {
-      role: 'Frontend Developer',
-      techStack: 'React, Framer Motion, Lenis Smooth Scroll, HTML5 Canvas, Vanilla CSS, Vite',
-      platform: 'Modern Web (Fully Responsive)',
-      problemLead: 'Many developer portfolios are static PDF-style pages. Heavy blur and scroll animation together also trigger real rendering bugs in Chromium when transforms and backdrop-filter share the same layer.',
-      problemTitle: 'Interactive portfolios vs. production rendering bugs',
-      problemText: '<strong>Context.</strong> I wanted a portfolio that demonstrates interaction design—not just a list of projects.<br/><br/><strong>Problem.</strong> Combining Framer Motion transforms with CSS <code>backdrop-filter</code> creates stacking-context bugs where blur disappears in production. Minifiers can also strip WebKit prefixes and break glass overlays.<br/><br/><strong>Goal.</strong> Ship smooth scroll, canvas effects, and glass UI without layout dropouts or bloated dependencies.',
-      solutionTitle: 'Decoupled Blur Architecture & Physics-Based Motion',
-      solutionText: 'Portfolio 2.0 breaks this paradigm. To solve the backdrop blur issue, I engineered a **Decoupled Motion Architecture**—separating Framer Motion wrappers from static, GPU-accelerated backdrop blur panels (`transform: translateZ(0)`). To keep the site lightweight, I avoided heavy packages (like Tailwind or heavy component libraries) in favor of modular Vanilla CSS variables. The experience is enhanced by a canvas-based neural simulation and a custom cursor with spring-physics delay, which gracefully returns to a predefined cursor dock (`#cursor-dock`) when the mouse exits the browser window.<br/><br/><div class="theme-showcase-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; width: 100%;"><div class="theme-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; overflow: hidden; padding: 12px; transition: all 0.3s ease;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><span style="font-family: monospace; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Dark Theme</span><span style="background: rgba(138, 43, 226, 0.15); color: #c084fc; font-size: 0.7rem; padding: 2px 8px; border-radius: 9999px;">Primary Mode</span></div><img src="/assets/optimized/portfolio_dark.jpg" alt="Portfolio Dark Theme" style="width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.05);" /></div><div class="theme-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; overflow: hidden; padding: 12px; transition: all 0.3s ease;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><span style="font-family: monospace; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Light Theme</span><span style="background: rgba(138, 43, 226, 0.15); color: #c084fc; font-size: 0.7rem; padding: 2px 8px; border-radius: 9999px;">Alternate Mode</span></div><img src="/assets/optimized/portfolio_light.jpg" alt="Portfolio Light Theme" style="width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.05);" /></div></div>',
+      role: 'Design and frontend engineering',
+      techStack: 'React 19, Vite, Framer Motion, Lenis, WebGL, Vanilla CSS',
+      platform: 'Responsive web',
+      problemLead: 'A portfolio has to make the work easy to understand while showing enough craft to be memorable. This project explores motion, responsive layout, and an interactive assistant without losing a clear path to the projects and contact details.',
+      problemTitle: 'Show the work clearly without making interaction the obstacle',
+      problemText: '<p>Project depth matters to technical reviewers, but a first visit is usually a quick scan. The challenge was to give the site a distinctive visual identity while keeping navigation, project evidence, and contact information easy to find.</p>',
+      solutionTitle: 'One visual system, several levels of detail',
+      solutionText: '<p>The homepage uses a concise introduction and selected projects. Each project can expand into a structured case study with context, implementation details, and results. Design tokens keep both color themes consistent, while the WebGL background provides the signature motion.</p><p>The assistant answers questions about the work through a serverless API. The interface has a compact mobile entry point and an expanded view for longer questions.</p>',
       features: [
-        {
-          title: 'Decoupled Stacking Contexts',
-          text: 'Decoupled all Framer Motion components from CSS blur layers. The animation layers are transparent wrappers, while standard static divs handle the hardware-accelerated `-webkit-backdrop-filter` rendering, preventing any layout dropouts.',
-          image: '/assets/optimized/portfolio_v2.jpg',
-          caption: 'Decoupled rendering layout isolates Framer Motion animations from backdrop blur layers.'
-        },
-        {
-          title: 'Custom Cursor & Window-Exit Docking',
-          text: 'A custom canvas-drawn cursor that tracks mouse movement with spring interpolation. When the cursor exits the browser screen, it triggers a custom exit state, flying back to dock inside the navbar navigation target (`#cursor-dock`).'
-        },
-        {
-          title: 'Mathematical Canvas Simulation',
-          text: 'A beautiful interactive particle engine running on an HTML5 canvas, calculating dynamic proximity lines to form a real-time reactive neural-orb constellation.',
-          image: '/assets/optimized/portfolio_dark.jpg',
-          caption: 'Mathematical Canvas node structure calculating dynamic proximity limits at 60 FPS.'
-        },
-        {
-          title: 'Momentum Scroll & Accessibility Optimization',
-          text: 'Integrated Lenis scroll engine with linear interpolation to offer smooth scrolling across all devices. Implemented a zero-FOUC theme sync with localStorage and a blocking head script, while auditing all light-theme elements to exceed WCAG AA contrast standards (minimum 4.5:1 ratio).',
-          image: '/assets/optimized/portfolio_light.jpg',
-          caption: 'Lightweight performance layout achieving near-perfect Google Lighthouse score.'
-        }
+        { title: 'Responsive project storytelling', text: 'Featured work leads with the problem and evidence. Additional projects remain available in a compact list.', image: '/assets/optimized/portfolio_dark.jpg', caption: 'Dark theme and project presentation.' },
+        { title: 'Theme and motion controls', text: 'A stored theme preference avoids a color flash on load. Reduced-motion preferences disable smooth scrolling and the WebGL effect.', image: '/assets/optimized/portfolio_light.jpg', caption: 'Light theme uses the same content hierarchy.' },
+        { title: 'Portfolio assistant', text: 'A Vercel function validates requests, limits usage, retrieves project context when available, and returns concise answers about the portfolio.' }
       ],
-      technicalText: 'Developing the portfolio required overcoming standard browser canvas bottlenecking and animation layout shifts.',
+      technicalText: '<p>The site is built as a React and Vite application with modular CSS. Project images use responsive WebP sources, and the case study viewer loads only when opened. The WebGL background is optional for visitors who prefer reduced motion.</p><p>The main engineering trade-off is visual weight: the WebGL engine adds meaningful download and GPU cost, so the simpler fallback and mobile experience are important parts of the design.</p>',
       techHighlights: [
-        {
-          title: 'Targeted Build Compilation',
-          text: 'Tuned the Vite configuration to target `safari13.1` and `chrome80`, forcing the esbuild minifier to preserve critical `-webkit-` vendor prefixes for all backdrop filters in production.'
-        },
-        {
-          title: 'Optimized Canvas Animation Loop',
-          text: 'Developed a lightweight mathematical particle engine in Vanilla JS. Proximity calculations are limited dynamically to avoid high CPU/GPU overhead, maintaining a consistent 60 FPS experience.'
-        }
+        { title: 'Responsive media', text: 'Project cards serve smaller image variants on narrow screens and defer image loading below the fold.' },
+        { title: 'Progressive detail', text: 'The homepage is a scan path; case studies carry the architecture and evaluation detail for interested readers.' }
       ],
-      pipeline: [
-        'User enters website',
-        'Lenis initializes scroll timeline bindings',
-        'Mathematical particle simulation spawns neural node orb',
-        'Framer motion orchestrates fade-in reveals on scroll',
-        'Interactive custom magnetic cursor reacts to hover states',
-        'Trigger cursor dock animation on mouse-leave events'
-      ],
-      deepIntegration: [
-        {
-          title: 'GPU Layer Promotion',
-          text: 'Forced hardware-accelerated layer repaints using `transform: translateZ(0)` to make sure blur rendering is fluid and never drops frames.'
-        },
-        {
-          title: 'Modular Pure CSS Tokens',
-          text: 'Built with pure CSS variables for maximum flex control, avoiding massive external libraries and keeping bundle sizes extremely slim for optimal SEO metrics.'
-        }
-      ],
+      pipeline: ['Load the theme preference before React renders', 'Render the hero and selected work', 'Load the WebGL effect when motion is enabled', 'Open case study content on demand'],
       metrics: [
-        { label: 'Scroll target', value: '60 FPS on desktop' },
-        { label: 'Accessibility', value: 'WCAG AA focus states' },
-        { label: 'Bundle approach', value: 'Vite + lazy case studies' },
+        { label: 'Framework', value: 'React + Vite' },
+        { label: 'Themes', value: 'Dark / Light' },
+        { label: 'Case studies', value: 'Loaded on demand' }
       ],
-      designPhilosophy: 'Motion layers and blur layers need separation—Framer wrappers stay transparent while static divs handle backdrop-filter so production builds do not drop glass panels.',
-      closingQuote: 'An interactive resume is standard. A digital experience is unforgettable.'
+      resultsNote: 'This is an evolving portfolio. Performance and accessibility should be checked against the deployed build on real devices.',
+      designPhilosophy: '<p>Interaction should support the evidence. The best effect is one that helps a visitor remember the work after they leave.</p>'
     }
   },
   {
@@ -529,7 +487,7 @@ export const projectsData = [
     title: 'TabVault: Browser Memory Layer',
     statusTag: 'In progress',
     date: 'June 2026',
-    description: 'A Manifest V3 browser extension designed to resolve tab clutter and prevent browser crashes. It acts as a zero-latency, local-first persistent memory layer that auto-archives inactive tabs while preserving scroll coordinates, active window indexes, and tab group metadata.',
+    description: 'A Manifest V3 extension that archives inactive tabs and restores their scroll position and group details.',
     image: '/assets/optimized/tabvault_mockup.jpg',
     readMore: '#',
     technologies: ['React 18', 'TypeScript', 'Vite 6 + CRXJS', 'Dexie.js (IndexedDB)', 'Zustand 5', 'Tailwind CSS 4', '@tanstack/react-virtual'],

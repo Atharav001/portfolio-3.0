@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Tag } from 'lucide-react';
+import { useModalFocus } from '../../hooks/useModalFocus';
 
 const MomentsLightbox = ({ moment, onClose }) => {
+  const dialogRef = useRef(null);
+  useModalFocus(dialogRef, Boolean(moment), onClose);
   useEffect(() => {
     if (!moment) return;
 
@@ -10,24 +14,14 @@ const MomentsLightbox = ({ moment, onClose }) => {
     const originalStyle = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
-    // Handle Escape key to close modal
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.body.style.overflow = originalStyle;
-      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [moment, onClose]);
+  }, [moment]);
 
   if (!moment) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <motion.div
         className="moments-lightbox-overlay"
@@ -41,6 +35,8 @@ const MomentsLightbox = ({ moment, onClose }) => {
       >
         <motion.div
           className="moments-lightbox-content"
+        ref={dialogRef}
+        tabIndex={-1}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -77,7 +73,8 @@ const MomentsLightbox = ({ moment, onClose }) => {
           </div>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

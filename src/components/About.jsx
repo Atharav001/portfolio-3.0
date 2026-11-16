@@ -3,11 +3,6 @@ import { motion } from 'framer-motion';
 import './About.css';
 
 const About = () => {
-  const tools = [
-    "Python", "PyTorch", "Ollama", "FAISS", "BM25", "Reciprocal Rank Fusion",
-    "React 19", "Vite", "Node.js", "Docker", "Linux", "Android SDK", "Room DB", "n8n", "Cursor IDE"
-  ];
-
   return (
     <section id="about" className="about-section">
       <motion.div
@@ -42,23 +37,12 @@ const About = () => {
               viewport={{ once: true }}
             >
               <p>
-                I am a second-year B.Tech Computer Science student at <strong>Manipal Institute of Technology (MAHE), Bengaluru</strong>. I learn by building—architecting local LLM pipelines, multimodal routing systems, Android wellness tools, and high-performance web applications.
+                I study Computer Science at <strong>Manipal Institute of Technology, Bengaluru</strong>. I learn by building systems that can be examined, measured, and improved.
               </p>
               <p>
-                My work spans <strong>Agentic RAG systems</strong>, <strong>de-biased ML inference</strong>, and full-stack software. I prioritize code I can measure and stress-test: local models, clear accuracy benchmarks, zero-silent-failure gates, and production-ready architectures shipped openly on GitHub.
+                My recent work spans <strong>retrieval systems</strong>, <strong>multimodal evaluation</strong>, and useful software for the web and native platforms. The projects below show the design decisions and their limits.
               </p>
             </motion.div>
-
-            <div className="about-tools-container">
-              <h3 className="tools-title">Technologies & Tools I Reach For Often</h3>
-              <div className="tools-cloud">
-                {tools.map((tool) => (
-                  <span key={tool} className="tool-chip interactive-tag">
-                    {tool}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </motion.div>

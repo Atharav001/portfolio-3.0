@@ -1,6 +1,6 @@
 ## Portfolio website (portfolio-3.0)
 
-Atharav's own flagship personal portfolio site — a React/Vite site he designed and built from scratch, featuring Three.js procedural cosmic energy rays, Framer Motion parallax transitions, and a live "Ask About Atharav" Scope-Locked RAG-powered chatbot embedded in the hero section that answers visitor questions grounded in his verified data. The repository is at github.com/Atharav001/portfolio-3.0.
+Atharav's React/Vite portfolio presents selected projects as structured case studies. It uses Framer Motion for transitions, optional WebGL rays on desktop, dark and light themes, and a Q&A assistant that retrieves portfolio context when available. The WebGL effect is skipped on mobile and for visitors who prefer reduced motion. The repository is at github.com/Atharav001/portfolio-3.0 and the site is https://atharav001.vercel.com.
 
 ## RAG-Agentic-Deep-Research (Deep Research Agent)
 
@@ -12,7 +12,7 @@ Built for the HackerRank Orchestrate hackathon (August 2026), this is a hybrid A
 
 ## Two-Step De-biased Multimodal Verification Pipeline
 
-Built for automated damage claim verification using Gemini Flash Lite at zero API cost. The core design decision was separating visual perception from adjudication into two distinct steps — the model first describes what it sees in an image (blind perception) before it's allowed to make any judgment call about the claim — which structurally reduces the anchoring bias and prompt-injection risk that sinks most single-pass vision-language pipelines. This restructuring took claim validation accuracy from 30% to 65% on the evaluation set. The repository is at github.com/Atharav001/Two-Step-Debiased-MultiModal-Pipeline.
+Built as a prototype for damage claim verification with Gemini Flash Lite. It separates image description from claim adjudication to reduce anchoring. On the published evaluation set, claim-status accuracy improved from a 30% baseline to 65%; severity accuracy was 20%, so the result needs human review and further validation. The repository is at github.com/Atharav001/Two-Step-Debiased-MultiModal-Pipeline.
 
 ## Aura (macOS Dynamic Island app)
 

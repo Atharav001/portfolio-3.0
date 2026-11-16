@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Moon, Sun, X, ArrowUpRight, FileText } from 'lucide-react';
 import LiveLocationClock from './LiveLocationClock';
 import './Navbar.css';
+import { useModalFocus } from '../hooks/useModalFocus';
 
 const Navbar = ({ onThemeChange }) => {
   const [activeTab, setActiveTab] = useState('Home');
@@ -14,6 +15,8 @@ const Navbar = ({ onThemeChange }) => {
     return 'dark';
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef(null);
+  useModalFocus(mobileMenuRef, isMobileMenuOpen, () => setIsMobileMenuOpen(false));
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: light)');
@@ -131,17 +134,6 @@ const Navbar = ({ onThemeChange }) => {
     };
   }, [isMobileMenuOpen]);
 
-  // Keyboard Escape listener to dismiss mobile drawer
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobileMenuOpen]);
-
   const links = ['Home', 'About', 'Experience', 'Projects', 'Contact'];
 
   const scrollToSection = (e, link) => {
@@ -210,7 +202,6 @@ const Navbar = ({ onThemeChange }) => {
 
   return (
     <header className="navbar-container">
-      <a href="#about" className="skip-link">Skip to main content</a>
       
       <motion.div
         className="navbar-animator"
@@ -291,6 +282,11 @@ const Navbar = ({ onThemeChange }) => {
           <motion.div
             id="mobile-menu-nav"
             className="mobile-menu-overlay"
+            ref={mobileMenuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
+            tabIndex={-1}
             variants={drawerVariants}
             initial="closed"
             animate="open"

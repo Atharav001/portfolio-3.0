@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenAI } from '@google/genai';
+import { createHash } from 'node:crypto';
 
 // --- Static Response Constants ---
 const GREETING_RESPONSE =
@@ -22,18 +23,18 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
 - Role: Second-year (2nd year) B.Tech Computer Science undergraduate student at Manipal Institute of Technology (MAHE), Bengaluru.
 - Hometown: Delhi, India.
 - Availability: Open to Software Engineering Internships, AI/ML Engineering roles, research internships, and systems development. Open to both remote and on-site roles (Delhi, Bengaluru, or relocation).
-- Portfolio Website: https://atharav001n.vercel.app
+- Portfolio Website: https://atharav001.vercel.com
 - GitHub Profile: https://github.com/Atharav001
 - Email Contact: atharavnarang05@gmail.com
 - LinkedIn: https://linkedin.com/in/atharav-narang-132b74273
 
 2. PORTFOLIO WEBSITE & CHATBOT TECH STACK (portfolio-3.0):
-- Development Method: Atharav engineered this portfolio website (portfolio-3.0) from scratch himself writing clean React 19 code and modular Vanilla CSS design tokens. It was NOT built using "vibecoding" tools or automated AI web agents.
+- Development Method: This portfolio uses React 19, Vite, and modular CSS design tokens.
 - Frontend Architecture:
   * React 19 + Vite 8 for high-performance component rendering and fast HMR builds.
   * Custom Vanilla CSS system with HSL design tokens (tokens.css, index.css) featuring glassmorphism, dynamic backdrop blur filters, and fluid responsive layouts. Zero utility CSS frameworks like Tailwind were used for complete bespoke aesthetic control.
   * Lucide React (lucide-react) for vector icons, Framer Motion for UI micro-interactions, and Lenis for smooth scroll dynamics.
-  * WebGL procedural energy rays engine (tubes1.js) with Three.js.
+  * WebGL procedural energy rays engine (tubes1.js) with Three.js on supported desktop devices; mobile and reduced-motion visitors see a static backdrop.
   * thinking-orbs library for rendering the dynamic animated canvas orb while the AI composes responses.
   * @vercel/analytics for privacy-focused web telemetry.
 - RAG Chatbot Architecture ("Ask About Atharav AI"):
@@ -41,7 +42,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
   * Supabase Vector Database (pgvector extension) running cosine similarity search over chunked knowledge embeddings via match_knowledge_chunks RPC.
   * Google Gemini embedding-001 model generating 768-dimensional dense vector embeddings for query matching.
   * Google Gemini API (gemini-3.6-flash with automatic fallbacks to gemini-3.5-flash-lite and gemini-2.5-flash) for LLM reasoning and response generation.
-  * Dual in-memory sliding-window rate limiters (8 requests/5 min per IP, 20 requests/24 hrs per session).
+  * Shared Redis-backed fixed-window limits when available (8 requests/5 min per IP, 20 requests/24 hrs per session); per-instance in-memory limits keep the assistant available during Redis outages.
   * Two-pass AI pipeline: Pass 1 is an intelligent Topic Classifier guarding scope lock while allowing portfolio & tech stack questions. Pass 2 is an LLM synthesis engine grounded in vector context.
 
 3. KEY PROJECTS & REPOSITORIES:
@@ -63,8 +64,8 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
 
 - Two-Step De-Biased Multi-Modal Verification Pipeline:
   * Description: Automated damage claim photo and text verification pipeline built for HackerRank Orchestrate hackathon using Gemini Flash Lite at zero API cost.
-  * Core Design: Two-step architecture separating visual perception (blind description) from adjudication, eliminating visual anchoring bias and prompt injection vulnerabilities.
-  * Metrics: Improved claim validation accuracy from 30% to 65% on the evaluation benchmark.
+  * Core Design: Two-step architecture separating visual perception (blind description) from adjudication, reducing anchoring between the claim and visual evidence.
+  * Metrics: Improved claim-status accuracy from 30% to 65% on the published evaluation benchmark. Severity accuracy was 20%, so it is a prototype requiring human review.
   * Repository: https://github.com/Atharav001/Two-Step-Debiased-MultiModal-Pipeline
 
 - Aura (macOS Dynamic Island & Menu Bar App):
@@ -134,7 +135,7 @@ CRITICAL INSTRUCTIONS FOR RESPONSE QUALITY:
    - Use simple Markdown formatting (e.g. bolding key terms, using inline code or simple bullet points when listing details) to keep answers clean and premium.
 2. DO NOT OVER-ANSWER THE QUESTION:
    - Answer ONLY the exact question asked by the user. Do NOT add extra unasked details, unasked tech stack lists, or unasked project specifications. Keep the focus narrow and deep on the queried topic.
-3. ACCURACY & CONTEXT GROUNDING: Only state facts present in CONTEXT. Always accurately identify Atharav as a second-year (2nd year) student.
+3. ACCURACY & CONTEXT GROUNDING: Only state facts present in CONTEXT. The CURRENT PORTFOLIO FACTS section takes precedence if older retrieved passages disagree. Include the evaluation set and limitations when quoting project metrics. Always accurately identify Atharav as a second-year student.
 4. TONE & VOICE: Professional, articulate, warm, and confident. Speak in third person ("Atharav built...", "He is a 2nd-year student...") or as his official portfolio assistant.
 5. SCOPE LOCK & OFF-TOPIC REFUSAL: If the question is completely off-topic or unrelated to Atharav, his portfolio, his projects, or his skills, respond with EXACTLY:
    "I can only answer questions about Atharav — his background, projects, technical skills, portfolio website, or experience! Feel free to ask about one of those."
@@ -162,6 +163,11 @@ function getGenAI() {
 // --- In-Memory Sliding-Window Rate Limiting ---
 const ipRateLimitMap = new Map();
 const sessionRateLimitMap = new Map();
+const RATE_LIMIT_SCRIPT = `
+  local count = redis.call('INCR', KEYS[1])
+  if count == 1 then redis.call('PEXPIRE', KEYS[1], ARGV[1]) end
+  return count
+`;
 
 function checkSlidingWindowRateLimit(storeMap, key, maxRequests, windowMs) {
   if (!key) return { success: true };
@@ -187,6 +193,37 @@ function checkSlidingWindowRateLimit(storeMap, key, maxRequests, windowMs) {
   }
 
   return { success: true };
+}
+
+async function checkRequestLimit(kind, identifier, maxRequests, windowMs) {
+  const store = kind === 'ip' ? ipRateLimitMap : sessionRateLimitMap;
+  if (process.env.NODE_ENV !== 'production') {
+    return checkSlidingWindowRateLimit(store, identifier, maxRequests, windowMs);
+  }
+
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) {
+    console.warn('Shared rate limiter not configured; using per-instance limits');
+    return checkSlidingWindowRateLimit(store, identifier, maxRequests, windowMs);
+  }
+
+  try {
+    const digest = createHash('sha256').update(String(identifier)).digest('hex');
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(['EVAL', RATE_LIMIT_SCRIPT, '1', `portfolio:chat:${kind}:${digest}`, String(windowMs)]),
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!response.ok) throw new Error('Shared rate limiter unavailable');
+    const data = await response.json();
+    if (data.error || !Number.isFinite(Number(data.result))) throw new Error('Invalid rate limiter response');
+    return { success: Number(data.result) <= maxRequests };
+  } catch (error) {
+    console.warn('Shared rate limiter unavailable; using per-instance limits:', error);
+    return checkSlidingWindowRateLimit(store, identifier, maxRequests, windowMs);
+  }
 }
 
 function isGreeting(message) {
@@ -286,19 +323,16 @@ export default async function handler(req, res) {
     }
 
     // 2. Origin/Referer check
-    const origin = req.headers.origin || req.headers.referer || '';
-    const allowedOrigin = process.env.ALLOWED_ORIGIN || '';
-    const isLocalhost =
-      origin.includes('localhost') ||
-      origin.includes('127.0.0.1') ||
-      origin.includes('0.0.0.0');
-
-    if (
-      process.env.NODE_ENV === 'production' &&
-      allowedOrigin &&
-      !isLocalhost &&
-      !origin.startsWith(allowedOrigin)
-    ) {
+    const requestOrigin = req.headers.origin || req.headers.referer;
+    const allowedOrigin = process.env.ALLOWED_ORIGIN || 'https://atharav001.vercel.com';
+    let suppliedOrigin;
+    try {
+      suppliedOrigin = requestOrigin ? new URL(requestOrigin).origin : null;
+    } catch {
+      return res.status(403).json({ error: 'Forbidden: Invalid origin' });
+    }
+    const allowedOrigins = new Set(['https://atharav001.vercel.com', new URL(allowedOrigin).origin]);
+    if (process.env.NODE_ENV === 'production' && !allowedOrigins.has(suppliedOrigin)) {
       return res.status(403).json({ error: 'Forbidden: Invalid origin' });
     }
 
@@ -312,6 +346,9 @@ export default async function handler(req, res) {
     if (!trimmedMessage || trimmedMessage.length > 500) {
       return res.status(400).json({ error: 'Message must be between 1 and 500 characters' });
     }
+    if (typeof sessionId !== 'string' || !sessionId.trim() || sessionId.length > 128) {
+      return res.status(400).json({ error: 'Missing or invalid session' });
+    }
 
     // 4. Client IP resolution
     const forwardedFor = req.headers['x-forwarded-for'];
@@ -319,24 +356,26 @@ export default async function handler(req, res) {
       ? forwardedFor.split(',')[0].trim()
       : req.socket?.remoteAddress || '127.0.0.1';
 
-    // 5. In-Memory Sliding-Window Rate Limiting
-    const ipCheck = checkSlidingWindowRateLimit(
-      ipRateLimitMap,
-      ip,
-      8,
-      5 * 60 * 1000 // 8 requests per 5 minutes
-    );
+    // 5. Shared production rate limiting; local development uses an in-memory fallback.
+    let ipCheck;
+    try {
+      ipCheck = await checkRequestLimit('ip', ip, 8, 5 * 60 * 1000);
+    } catch (error) {
+      console.error('Rate limit service error:', error);
+      return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
+    }
     if (!ipCheck.success) {
       return res.status(429).json({ answer: RATE_LIMITED_RESPONSE });
     }
 
-    if (sessionId) {
-      const sessionCheck = checkSlidingWindowRateLimit(
-        sessionRateLimitMap,
-        String(sessionId),
-        20,
-        24 * 60 * 60 * 1000 // 20 requests per 24 hours
-      );
+    {
+      let sessionCheck;
+      try {
+        sessionCheck = await checkRequestLimit('session', sessionId, 20, 24 * 60 * 60 * 1000);
+      } catch (error) {
+        console.error('Rate limit service error:', error);
+        return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
+      }
       if (!sessionCheck.success) {
         return res.status(429).json({ answer: DAILY_BUDGET_EXCEEDED_RESPONSE });
       }
@@ -351,6 +390,9 @@ export default async function handler(req, res) {
 
     // If Gemini key is not configured, return grounded fallback
     if (!genAI) {
+      if (process.env.NODE_ENV === 'production') {
+        return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
+      }
       const fallbackAnswer = getOfflineFallbackAnswer(trimmedMessage);
       return res.status(200).json({ answer: fallbackAnswer });
     }
@@ -377,7 +419,7 @@ export default async function handler(req, res) {
     }
 
     // 8. Vector Embedding Generation & Cosine Similarity Search
-    let retrievedContext = DEFAULT_ATHARAV_KNOWLEDGE_BASE;
+    let retrievedContext = '';
     const supabase = getSupabaseClient();
 
     if (supabase) {
@@ -397,6 +439,7 @@ export default async function handler(req, res) {
             match_count: 5,
           });
 
+          if (matchError) console.warn('Knowledge retrieval unavailable; using current portfolio facts:', matchError);
           if (!matchError && chunks && chunks.length > 0) {
             retrievedContext = chunks.map((c) => c.content).join('\n\n---\n\n');
           }
@@ -407,8 +450,9 @@ export default async function handler(req, res) {
     }
 
     // 9. Pass 2: Response Synthesis
+    const currentContext = `CURRENT PORTFOLIO FACTS (canonical for this deployment):\n${DEFAULT_ATHARAV_KNOWLEDGE_BASE}\n\n${retrievedContext ? `ADDITIONAL RETRIEVED DETAIL (may contain older descriptions):\n${retrievedContext}` : ''}`;
     const synthesisPrompt = MAIN_SYSTEM_PROMPT
-      .replace('{retrieved_context}', retrievedContext)
+      .replace('{retrieved_context}', currentContext)
       .replace('{user_question}', trimmedMessage);
 
     let synthesizedAnswer = '';
@@ -454,20 +498,18 @@ export default async function handler(req, res) {
           synthesizedAnswer = fallbackRes2.text || '';
         } catch (fallbackErr2) {
           console.error('All synthesis models failed:', fallbackErr2);
-          synthesizedAnswer = getOfflineFallbackAnswer(trimmedMessage);
+          return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
         }
       }
     }
 
     if (!synthesizedAnswer.trim()) {
-      synthesizedAnswer = getOfflineFallbackAnswer(trimmedMessage);
+      return res.status(503).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
     }
 
     return res.status(200).json({ answer: synthesizedAnswer.trim() });
   } catch (globalErr) {
     console.error('Unhandled chat API error:', globalErr);
-    return res.status(200).json({
-      answer: getOfflineFallbackAnswer(req.body?.message || ''),
-    });
+    return res.status(500).json({ answer: 'The assistant is temporarily unavailable. Please try again shortly.' });
   }
 }

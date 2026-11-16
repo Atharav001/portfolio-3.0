@@ -1,7 +1,9 @@
 import React, { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Award, Sparkles, X } from 'lucide-react';
 import MomentsStrip from './MomentsStrip/MomentsStrip';
+import { useModalFocus } from '../hooks/useModalFocus';
 import './Experience.css';
 
 const Experience = () => {
@@ -14,6 +16,12 @@ const Experience = () => {
   const [showJavaCert, setShowJavaCert] = useState(false);
   const [showSpaceLabCert, setShowSpaceLabCert] = useState(false);
   const [showMlNotice, setShowMlNotice] = useState(false);
+  const certDialogRef = useRef(null);
+  useModalFocus(certDialogRef, showJavaCert || showSpaceLabCert || showMlNotice, () => {
+    setShowJavaCert(false);
+    setShowSpaceLabCert(false);
+    setShowMlNotice(false);
+  });
 
   const skillGroups = [
     {
@@ -119,48 +127,51 @@ const Experience = () => {
               </span>
               <div className="certifications-list">
                 {/* Space Lab */}
-                <div
+                <button
+                  type="button"
                   className="cert-card space-lab interactive-tag"
                   onClick={() => setShowSpaceLabCert(true)}
                   title="Click to view certificate"
                 >
-                  <div className="cert-badge space-tech">Space Tech</div>
-                  <div className="cert-info">
-                    <h4 className="cert-name">India Space Lab Summer Internship</h4>
+                  <span className="cert-badge space-tech">Space Tech</span>
+                  <span className="cert-info">
+                    <span className="cert-name">India Space Lab Summer Internship</span>
                     <span className="cert-action-hint">Click to view certificate →</span>
-                  </div>
-                </div>
+                  </span>
+                </button>
 
                 {/* IBM Java */}
-                <div
+                <button
+                  type="button"
                   className="cert-card ibm-java interactive-tag"
                   onClick={() => setShowJavaCert(true)}
                   title="Click to view certificate"
                 >
-                  <div className="cert-badge">IBM</div>
-                  <div className="cert-info">
-                    <h4 className="cert-name">IBM SkillBuilder JAVA</h4>
+                  <span className="cert-badge">IBM</span>
+                  <span className="cert-info">
+                    <span className="cert-name">IBM SkillBuilder JAVA</span>
                     <span className="cert-action-hint">Click to view certificate →</span>
-                  </div>
-                </div>
+                  </span>
+                </button>
 
                 {/* DeepLearning.ai ML */}
-                <div
+                <button
+                  type="button"
                   className="cert-card ml-specialization interactive-tag"
                   onClick={() => setShowMlNotice(true)}
                   title="Click for certificate details"
                 >
-                  <div className="cert-badge deeplearning">deeplearning.ai</div>
-                  <div className="cert-info">
-                    <h4 className="cert-name">Machine Learning Specialisation</h4>
+                  <span className="cert-badge deeplearning">deeplearning.ai</span>
+                  <span className="cert-info">
+                    <span className="cert-name">Machine Learning Specialisation</span>
                     <span className="cert-action-hint">Click for details →</span>
-                    <div className="cert-subcourses">
+                    <span className="cert-subcourses">
                       <span className="subcourse">Supervised ML</span>
                       <span className="subcourse">Advanced Algorithms</span>
                       <span className="subcourse">Unsupervised & RL</span>
-                    </div>
-                  </div>
-                </div>
+                    </span>
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -171,7 +182,7 @@ const Experience = () => {
       </motion.div>
 
       {/* Modal Dialogs */}
-      <AnimatePresence>
+      {createPortal(<AnimatePresence>
         {showSpaceLabCert && (
           <motion.div
             className="cert-modal-overlay"
@@ -182,13 +193,18 @@ const Experience = () => {
           >
             <motion.div
               className="cert-modal-content"
+              ref={certDialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="India Space Lab certificate"
+              tabIndex={-1}
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="cert-modal-close" onClick={() => setShowSpaceLabCert(false)}>
+              <button className="cert-modal-close" onClick={() => setShowSpaceLabCert(false)} aria-label="Close certificate">
                 <X size={20} />
               </button>
               <picture>
@@ -232,13 +248,18 @@ const Experience = () => {
           >
             <motion.div
               className="cert-modal-content"
+              ref={certDialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="IBM Java certificate"
+              tabIndex={-1}
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="cert-modal-close" onClick={() => setShowJavaCert(false)}>
+              <button className="cert-modal-close" onClick={() => setShowJavaCert(false)} aria-label="Close certificate">
                 <X size={20} />
               </button>
               <picture>
@@ -272,13 +293,18 @@ const Experience = () => {
           >
             <motion.div
               className="cert-modal-content cert-notice-modal"
+              ref={certDialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Machine Learning specialisation details"
+              tabIndex={-1}
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="cert-modal-close" onClick={() => setShowMlNotice(false)}>
+              <button className="cert-modal-close" onClick={() => setShowMlNotice(false)} aria-label="Close details">
                 <X size={20} />
               </button>
               <div className="cert-modal-footer cert-notice-body">
@@ -301,7 +327,7 @@ const Experience = () => {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </section>
   );
 };

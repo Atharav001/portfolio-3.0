@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
-import { motion, useScroll, useSpring, useReducedMotion } from 'framer-motion';
+import { motion, MotionConfig, useScroll, useSpring, useReducedMotion } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 
@@ -122,7 +122,7 @@ function App() {
   }, [shouldReduceMotion]);
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       <a href="#main-content" className="skip-link">Skip to main content</a>
       
       {/* Top Scroll Progress Indicator */}
@@ -160,7 +160,7 @@ function App() {
       </main>
 
       <Analytics />
-    </>
+    </MotionConfig>
   );
 }
 
