@@ -1,150 +1,23 @@
-/* =============================================================================
-   Custom Cursor — dot + ring + particle trail with velocity physics
-   ============================================================================= */
-
-.custom-cursor-container {
+.light-pointer-halo {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
   z-index: var(--z-cursor, 9999);
-  transition: opacity 0.3s ease;
-}
-
-/* ---- Shared base ---- */
-.custom-cursor-dot,
-.custom-cursor-ring,
-.cursor-trail-dot {
-  position: fixed;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
   pointer-events: none;
-  will-change: transform;
+  opacity: 0;
+  background: radial-gradient(circle,
+    rgba(10, 104, 74, 0.3) 0%,
+    rgba(16, 140, 104, 0.18) 19%,
+    rgba(48, 149, 119, 0.08) 44%,
+    transparent 72%);
+  transition: opacity 180ms ease;
 }
 
-/* ---- Main dot ---- */
-.custom-cursor-dot {
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  background-color: var(--accent-lime);
-  z-index: 999991;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: normal;
-  transition:
-    width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.2s;
-  box-shadow: 0 0 10px var(--accent-lime);
-}
+:root[data-theme="light"] .light-pointer-halo.is-visible { opacity: 1; }
 
-.custom-cursor-dot.hovered {
-  width: 9px;
-  height: 9px;
-  background-color: var(--accent-lime);
-}
-
-.custom-cursor-dot.clicking {
-  width: 4px;
-  height: 4px;
-  transition-duration: 0.08s;
-}
-
-/* ---- Outer ring ---- */
-.custom-cursor-ring {
-  top: 0;
-  left: 0;
-  width: 44px;
-  height: 44px;
-  border: 1.5px solid var(--accent-lime);
-  z-index: 999990;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: normal;
-  transition:
-    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.3s,
-    border-color 0.3s,
-    border-width 0.3s,
-    opacity 0.3s,
-    box-shadow 0.3s;
-}
-
-.custom-cursor-ring.hovered {
-  width: 64px;
-  height: 64px;
-  background-color: rgba(197, 255, 65, 0.12);
-  border-color: var(--accent-lime);
-  border-width: 1.5px;
-  box-shadow: 0 0 30px rgba(197, 255, 65, 0.4);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-}
-
-.custom-cursor-ring.clicking {
-  width: 32px;
-  height: 32px;
-  opacity: 0.7;
-  transition-duration: 0.1s;
-}
-
-.custom-cursor-ring.docked {
-  border-color: var(--accent-lime);
-  opacity: 0.4;
-  width: 28px;
-  height: 28px;
-  border-width: 1.5px;
-  background-color: transparent;
-}
-
-/* ---- Particle trail dots ---- */
-.cursor-trail-dot {
-  top: 0;
-  left: 0;
-  background-color: var(--accent-lime);
-  transform: translate(-50%, -50%);
-  z-index: 999989;
-  box-shadow: 0 0 6px var(--accent-lime);
-}
-
-.cursor-trail-dot.trail-hover {
-  background-color: var(--accent-lime);
-  box-shadow: 0 0 10px var(--accent-lime);
-}
-
-/* ---- Light theme adjustments ---- */
-:root[data-theme="light"] .custom-cursor-dot,
-.light-theme .custom-cursor-dot {
-  background-color: var(--accent-blue);
-  box-shadow: 0 0 8px var(--accent-blue);
-}
-
-:root[data-theme="light"] .custom-cursor-ring,
-.light-theme .custom-cursor-ring {
-  border-color: var(--accent-blue);
-}
-
-:root[data-theme="light"] .custom-cursor-ring.hovered,
-.light-theme .custom-cursor-ring.hovered {
-  background-color: rgba(37, 99, 235, 0.12);
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 25px rgba(37, 99, 235, 0.35);
-}
-
-:root[data-theme="light"] .cursor-trail-dot,
-.light-theme .cursor-trail-dot {
-  background-color: var(--accent-blue);
-  box-shadow: 0 0 6px var(--accent-blue);
-}
-
-/* ---- Mobile & coarse pointer: hide custom cursor ---- */
-@media (max-width: 768px), (pointer: coarse) {
-  .custom-cursor-dot,
-  .custom-cursor-ring,
-  .cursor-trail-dot,
-  .custom-cursor-container {
-    display: none !important;
-  }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .light-pointer-halo { display: none; }
 }

@@ -107,6 +107,11 @@
   .outside-work-card { min-height: 190px; }
 }
 
+@media (max-width: 520px) {
+  .outside-work-heading h2 { font-size: clamp(2.3rem, 11vw, 3.5rem); }
+  .outside-work-intro { font-size: clamp(1.35rem, 5.5vw, 1.7rem); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .outside-work-card { transition: none; }
 }
