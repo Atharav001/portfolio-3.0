@@ -197,8 +197,8 @@ body.light-theme .navbar-links-section,
 html.light-theme .theme-toggle-btn:hover,
 body.light-theme .theme-toggle-btn:hover,
 :root[data-theme="light"] .theme-toggle-btn:hover {
-  color: #7c3aed;
-  border-color: #7c3aed;
+  color: var(--accent-lime);
+  border-color: var(--accent-lime);
 }
 
 /* Mobile Burger Menu */

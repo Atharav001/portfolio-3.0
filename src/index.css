@@ -92,7 +92,7 @@ body {
 }
 
 html.light-theme ::selection {
-  background: #7c3aed;
+  background: var(--accent-lime);
   color: #ffffff;
 }
 
@@ -172,7 +172,7 @@ section {
 }
 
 html.light-theme .section-number-inline {
-  color: var(--accent-purple);
+  color: var(--accent-lime);
 }
 
 .about-label-text {
@@ -220,7 +220,7 @@ html.light-theme .section-number-inline {
 }
 
 html.light-theme .btn-primary:hover {
-  background: var(--accent-purple);
+  background: var(--accent-lime);
   color: #ffffff;
 }
 
@@ -263,7 +263,7 @@ html.light-theme .btn-primary:hover {
 }
 
 html.light-theme :focus-visible {
-  outline-color: var(--accent-purple);
+  outline-color: var(--accent-lime);
   box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.2);
 }
 

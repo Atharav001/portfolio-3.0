@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, X } from 'lucide-react';
 import { projectsData } from '../data/projects';
+import WorkflowVisual from './WorkflowVisual';
 import { useModalFocus } from '../hooks/useModalFocus';
 import './Projects.css';
 
@@ -102,10 +103,14 @@ const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
         type="button"
         className="work-showcase-visual"
         onClick={() => onImage(project)}
-        aria-label={`Expand preview of ${project.title}`}
+        aria-label={`Open original project artifact for ${project.title}`}
       >
-        <ProjectImage project={project} />
-        <span className="work-image-hint">View preview <ArrowUpRight size={16} /></span>
+        <span className="work-visual-orbit work-visual-orbit-one" aria-hidden="true" />
+        <span className="work-visual-orbit work-visual-orbit-two" aria-hidden="true" />
+        <span className="work-art-frame">
+          <WorkflowVisual slug={project.slug} />
+        </span>
+        <span className="work-image-hint">View original artifact <ArrowUpRight size={16} /></span>
       </button>
     </motion.article>
   );
@@ -113,7 +118,7 @@ const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
 
 const BuildCard = ({ project, index, onCaseStudy }) => (
   <motion.article
-    className={`work-build-card work-build-tone-${(index % 4) + 1}`}
+    className={`work-build-card work-build-tone-${(index % 4) + 1} work-build-project-${project.slug}`}
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, amount: 0.16 }}
@@ -129,7 +134,14 @@ const BuildCard = ({ project, index, onCaseStudy }) => (
       onClick={() => onCaseStudy(project)}
       aria-label={`Read ${project.title} case study`}
     >
-      <ProjectImage project={project} />
+      <span className="work-project-window work-build-window">
+        <span className="work-project-window-bar" aria-hidden="true">
+          <span className="work-window-controls"><i /><i /><i /></span>
+          <span>{project.tabTag}</span>
+          <span className="work-window-label">PROJECT SNAPSHOT</span>
+        </span>
+        <ProjectImage project={project} />
+      </span>
     </button>
     <div className="work-build-bottom">
       <div>

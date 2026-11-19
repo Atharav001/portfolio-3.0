@@ -3,54 +3,14 @@ import './CosmicBackground.css';
 
 // Rich palettes for interactive ray swapping inspired by aelradi.engineer
 const DARK_PALETTES = [
-  // 0: Signature Cosmic Emerald & Lime (Sawad + Aelradi)
-  {
-    tubes: ['#10b981', '#065f46', '#34d399'],
-    lights: ['#c5ff41', '#10b981', '#f46c38', '#065f46'],
-  },
-  // 1: Cosmic Violet & Electric Cyan
-  {
-    tubes: ['#6366f1', '#4338ca', '#818cf8'],
-    lights: ['#06b6d4', '#a855f7', '#3b82f6', '#4338ca'],
-  },
-  // 2: Cyber Sunset (Coral + Amber + Rose)
-  {
-    tubes: ['#f46c38', '#c2410c', '#fb923c'],
-    lights: ['#f43f5e', '#fbbf24', '#f97316', '#991b1b'],
-  },
-  // 3: Neon Toxic Lime & Emerald
-  {
-    tubes: ['#c5ff41', '#84cc16', '#10b981'],
-    lights: ['#06b6d4', '#c5ff41', '#10b981', '#3b82f6'],
-  },
-  // 4: Royal Purple & Magenta
-  {
-    tubes: ['#ec4899', '#9333ea', '#3b82f6'],
-    lights: ['#a855f7', '#ec4899', '#3b82f6', '#06b6d4'],
-  },
+  { tubes: ['#10b981', '#065f46', '#34d399'], lights: ['#c5ff41', '#10b981', '#34d399', '#065f46'] },
+  { tubes: ['#84cc16', '#14532d', '#4ade80'], lights: ['#c5ff41', '#84cc16', '#10b981', '#34d399'] },
+  { tubes: ['#14b8a6', '#115e59', '#2dd4bf'], lights: ['#c5ff41', '#10b981', '#14b8a6', '#34d399'] },
 ];
 
 const LIGHT_PALETTES = [
-  // 0: Vibrant Electric Violet & Sapphire
-  {
-    tubes: ['#7c3aed', '#2563eb', '#06b6d4'],
-    lights: ['#9333ea', '#3b82f6', '#0284c7', '#6366f1'],
-  },
-  // 1: Emerald & Cyan Glow
-  {
-    tubes: ['#059669', '#0d9488', '#10b981'],
-    lights: ['#10b981', '#047857', '#06b6d4', '#0f766e'],
-  },
-  // 2: Radiant Sunset & Warm Crimson
-  {
-    tubes: ['#ea580c', '#dc2626', '#f97316'],
-    lights: ['#f97316', '#ef4444', '#f59e0b', '#b91c1c'],
-  },
-  // 3: Deep Royal Indigo
-  {
-    tubes: ['#2563eb', '#4f46e5', '#7c3aed'],
-    lights: ['#3b82f6', '#6366f1', '#a855f7', '#1d4ed8'],
-  },
+  { tubes: ['#087a50', '#176b56', '#73a98b'], lights: ['#087a50', '#176b56', '#93b89b', '#bfd1ac'] },
+  { tubes: ['#3f7859', '#769e76', '#a3b894'], lights: ['#087a50', '#4e8768', '#a3b894', '#bfd1ac'] },
 ];
 
 export default function CosmicBackground({ theme = 'dark' }) {

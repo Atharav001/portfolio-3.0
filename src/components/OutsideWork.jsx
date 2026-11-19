@@ -22,32 +22,25 @@ export default function OutsideWork() {
         viewport={{ once: true, amount: 0.4 }}
         transition={{ duration: 0.6 }}
       >
-        In my free time, I like playing <strong>badminton</strong>. I make <strong>small apps</strong> for problems I run into every day. Some moments from hackathons and developer meetups are below.
+        A mix of <strong>court time</strong>, conversations with other builders, and <strong>small experiments</strong> sparked by everyday problems.
       </motion.p>
 
-      <div className="outside-work-cards">
-        <motion.div
-          className="outside-work-card outside-badminton"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="outside-card-kicker">OFF THE CLOCK · BADMINTON</span>
-          <span className="outside-card-word">PLAY<span className="outside-card-asterisk">✳</span></span>
-          <p>A way to reset, move, and spend time away from a screen.</p>
-        </motion.div>
-        <motion.a
-          href="#builds"
-          className="outside-work-card outside-small-apps"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.6, delay: 0.08 }}
-        >
-          <span className="outside-card-kicker">ON THE SIDE · SMALL APPS</span>
-          <span className="outside-card-word">BUILD<ArrowUpRight size={36} strokeWidth={1.8} /></span>
-          <p>Little tools for the small frictions that show up in daily life.</p>
+      <div className="outside-story-grid">
+        <motion.article className="outside-story outside-story-badminton" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <span className="outside-story-index">01 / ON THE COURT</span>
+          <div className="outside-racket" aria-hidden="true"><span /><i /></div>
+          <div><h3>Badminton is my reset.</h3><p>Fast rallies, a clear head, and time away from a screen.</p></div>
+        </motion.article>
+        <motion.article className="outside-story outside-story-community" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: .08 }}>
+          <img src="/assets/moments/cursor-meetup.jpg" alt="Atharav at a developer meetup" loading="lazy" />
+          <div className="outside-story-photo-shade" />
+          <span className="outside-story-index">02 / WITH BUILDERS</span>
+          <div><h3>Hackathons & meetups.</h3><p>Showing up, sharing what I build, and learning from other people.</p></div>
+        </motion.article>
+        <motion.a href="#builds" className="outside-story outside-story-projects" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: .16 }}>
+          <span className="outside-story-index">03 / SIDE PROJECTS <ArrowUpRight size={18} /></span>
+          <div className="outside-mini-builds" aria-hidden="true"><span>TabVault</span><span>Scroller’s Dashboard</span><span>Portfolio 3.0</span></div>
+          <div><h3>Small ideas, shipped.</h3><p>I build tools for the everyday problems I notice.</p></div>
         </motion.a>
       </div>
 

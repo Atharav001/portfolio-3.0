@@ -51,60 +51,12 @@
   font-weight: 760;
 }
 
-.outside-work-cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.outside-work-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 220px;
-  padding: clamp(1.2rem, 2.2vw, 2rem);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 26px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.outside-work-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.16);
-}
-
-.outside-badminton { background: #b9df9a; color: #173624; }
-.outside-small-apps { background: #121914; color: #ecf3e9; border-color: rgba(255, 255, 255, 0.14); }
-
-.outside-card-kicker {
-  font: 650 0.72rem var(--font-mono);
-  letter-spacing: 0.08em;
-}
-
-.outside-card-word {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin: 0.8rem 0;
-  font-size: clamp(2.8rem, 5.6vw, 5.3rem);
-  font-weight: 850;
-  letter-spacing: -0.09em;
-  line-height: 1;
-}
-
-.outside-small-apps .outside-card-word { color: #c5ff41; }
-.outside-card-asterisk { font-size: 0.65em; transform: translateY(-0.28em); }
-.outside-work-card p { max-width: 38ch; font-size: 0.95rem; line-height: 1.5; }
-.outside-small-apps p { color: #afbaad; }
-
 @media (max-width: 760px) {
   .outside-work-section { padding: 4.5rem 1.25rem 5rem; }
   .outside-work-heading { padding-bottom: 1.3rem; }
   .outside-work-heading-row { grid-template-columns: 1fr; gap: 0.85rem; }
   .outside-work-heading h2 { font-size: clamp(2.8rem, 12vw, 4.7rem); }
   .outside-work-intro { margin: 2rem 0; }
-  .outside-work-cards { grid-template-columns: 1fr; }
-  .outside-work-card { min-height: 190px; }
 }
 
 @media (max-width: 520px) {
@@ -112,6 +64,24 @@
   .outside-work-intro { font-size: clamp(1.35rem, 5.5vw, 1.7rem); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .outside-work-card { transition: none; }
-}
+
+.outside-story-grid{display:grid;grid-template-columns:1.12fr .88fr;grid-template-rows:repeat(2,minmax(270px,auto));gap:1rem;margin:2.8rem 0 5rem}
+.outside-story{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-width:0;min-height:0;padding:clamp(1.3rem,2.3vw,2.2rem);overflow:hidden;border:1px solid var(--border-subtle);border-radius:28px;isolation:isolate;transition:transform .3s ease,box-shadow .3s ease}
+.outside-story:hover{transform:translateY(-4px);box-shadow:0 20px 45px rgba(0,0,0,.16)}
+.outside-story-index{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;font:700 .67rem var(--font-mono);letter-spacing:.09em}
+.outside-story h3{position:relative;z-index:2;max-width:12ch;margin:0 0 .65rem;color:inherit;font-size:clamp(2rem,3.2vw,3.4rem);font-weight:800;letter-spacing:-.07em;line-height:1}
+.outside-story p{position:relative;z-index:2;max-width:36ch;font-size:clamp(.87rem,1vw,1rem);line-height:1.45}
+.outside-story-badminton{grid-row:span 2;min-height:560px;background:#badd9d;color:#183a25}
+.outside-racket{position:absolute;top:16%;right:10%;width:min(57%,360px);aspect-ratio:1;transform:rotate(-25deg)}
+.outside-racket>span{display:block;width:80%;height:80%;border:15px solid #24533d;border-radius:50%;background:repeating-linear-gradient(0deg,transparent 0 19px,rgba(36,83,61,.27) 20px 21px),repeating-linear-gradient(90deg,transparent 0 19px,rgba(36,83,61,.27) 20px 21px)}
+.outside-racket>i{position:absolute;top:72%;left:38%;width:15px;height:58%;border-radius:8px;background:#24533d}
+.outside-story-community{background:#141a18;color:#f5f5ef}
+.outside-story-community img,.outside-story-photo-shade{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.outside-story-photo-shade{background:linear-gradient(180deg,rgba(5,12,9,.52),rgba(5,12,9,.15) 35%,rgba(5,12,9,.9) 100%)}
+.outside-story-projects{background:#e9e7db;color:#173b2d}
+.outside-mini-builds{display:flex;flex-wrap:wrap;gap:.35rem;margin:1.2rem 0;transform:rotate(-3deg)}
+.outside-mini-builds span{padding:.45rem .6rem;border:1px solid rgba(23,59,45,.2);border-radius:7px;background:#fcfbf4;box-shadow:0 7px 14px rgba(23,59,45,.1);font:700 clamp(.55rem,.9vw,.75rem) var(--font-mono)}
+:root[data-theme="light"] .outside-story-badminton{background:#d9e8c9}
+:root[data-theme="light"] .outside-story-projects{background:#e8e9dd}
+@media(max-width:760px){.outside-story-grid{grid-template-columns:1fr;grid-template-rows:none;margin:2rem 0 4rem}.outside-story{min-height:270px}.outside-story-badminton{grid-row:auto;min-height:390px}}
+@media(prefers-reduced-motion:reduce){.outside-story{transition:none}}

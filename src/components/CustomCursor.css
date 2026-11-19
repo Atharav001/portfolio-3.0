@@ -17,6 +17,8 @@
 }
 
 :root[data-theme="light"] .light-pointer-halo.is-visible { opacity: 1; }
+:root[data-theme="dark"] .light-pointer-halo { background: radial-gradient(circle,rgba(197,255,65,.14) 0%,rgba(16,185,129,.07) 40%,transparent 72%); }
+:root[data-theme="dark"] .light-pointer-halo.is-visible { opacity: 1; }
 
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
   .light-pointer-halo { display: none; }
