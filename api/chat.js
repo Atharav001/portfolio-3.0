@@ -90,7 +90,7 @@ When asked generally what Atharav has built, lead with these three featured proj
 
 - Other public work (verified from Atharav's GitHub repository list, November 2026; provide details only when asked):
   * Loopinn: offline-first macOS productivity app for tasks, planning, focus, and activity tracking. https://github.com/Atharav001/Loopinn
-  * Precipitation Forecast Comparison: compares ECMWF IFS and AIFS rainfall forecasts and exposes disagreement and uncertainty. https://github.com/Atharav001/precipitation-forecast-comparison
+  * PreciCast: deployed seven-day ECMWF IFS and AIFS rainfall forecast comparison with separate ensemble ranges, ERA5 context, and a labelled disagreement cue. It does not train a weather model or validate the disagreement badge as a warning. In a 120 city-day retrospective comparison against ERA5 reanalysis, AIFS had 2.204 mm MAE and the experimental weighted blend had 2.359 mm MAE, so the blend did not outperform AIFS. Live: https://precipitation-forecast.vercel.app/ Code: https://github.com/Atharav001/precipitation-forecast-comparison
   * Ghost Data Deletion Audit Agent: HackerRank Orchestrate October 2026 project. https://github.com/Atharav001/hackerrank-orchestrate-ghost-data-deletion
   * Roadpulse: citizen road issue reporting with photo and GPS input, classification, deduplication, routing, and a public dashboard. https://github.com/Atharav001/roadpulse
   * FocusFlow: productivity tracker with Gemini orchestration, Google Calendar sync, and procrastination analytics. https://github.com/Atharav001/FocusFlow

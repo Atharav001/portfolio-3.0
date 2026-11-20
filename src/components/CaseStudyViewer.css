@@ -89,6 +89,7 @@
   max-width: 1400px;
   margin: 0 auto;
 }
+.case-study-external-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 1rem; }
 
 .back-btn,
 .view-live-btn {

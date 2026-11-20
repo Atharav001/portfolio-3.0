@@ -561,5 +561,48 @@ export const projectsData = [
       designPhilosophy: 'Performance is design. A local-first extension can stay fast and feature-rich without shipping browsing history to a cloud sync layer.',
       closingQuote: 'A clean workspace is a clean mind. TabVault preserves your digital context seamlessly.'
     }
+  },
+  {
+    id: 8,
+    slug: 'precicast',
+    title: 'PreciCast — Comparing physics and AI rainfall forecasts',
+    date: '2026',
+    description: 'A deployed comparison of ECMWF IFS and AIFS seven-day rainfall forecasts, with separate ensemble ranges and historical context. In a 120 city-day retrospective against ERA5, an experimental weighted blend did not outperform AIFS alone.',
+    image: '/assets/optimized/precicast_mockup.jpg',
+    readMore: '#',
+    technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Recharts', 'Leaflet', 'Open-Meteo', 'Vercel'],
+    liveLink: 'https://precipitation-forecast.vercel.app/',
+    repoLink: 'https://github.com/Atharav001/precipitation-forecast-comparison',
+    urlBar: 'precipitation-forecast.vercel.app',
+    tabTag: 'Weather Forecast Comparison',
+    caseStudy: '#',
+    caseStudyDetails: {
+      role: 'Solo developer',
+      techStack: 'Next.js, React, TypeScript, Tailwind CSS, Recharts, Leaflet, Open-Meteo, Vercel',
+      platform: 'Deployed web application and retrospective evaluation',
+      problemLead: 'A single rainfall number hides uncertainty. PreciCast places physics-based IFS and AI-based AIFS forecasts side by side, without treating disagreement as a validated warning.',
+      problemTitle: 'A forecast needs context, not just one number',
+      problemText: '<p>A single rainfall total can hide how differently weather models see the coming week. I wanted people to inspect where ECMWF’s IFS and AIFS forecasts agree or differ, while making clear that disagreement does not prove either model is more accurate or predict danger.</p>',
+      solutionTitle: 'A transparent seven-day comparison',
+      solutionText: '<p>PreciCast lets users search for a city and compare seven daily precipitation totals from IFS and AIFS. It labels days when their difference crosses a documented threshold, shows each model’s ensemble range separately, adds seasonal context from ERA5 reanalysis, and marks the location on a map.</p><p>It compares existing forecasts; it does not train a weather model. The disagreement badge is a comparison cue, not a validated warning.</p>',
+      features: [
+        { title: 'The models stay separate', text: 'The interface puts IFS and AIFS daily totals and ensemble ranges side by side so visitors can see what each model actually reports.', image: '/assets/optimized/precicast_mockup.jpg', caption: 'PreciCast’s deployed interface, shown from a real screenshot of the app.' },
+        { title: 'Data handling and failure states', text: 'Next.js Server Components fetch and validate forecast data. Checks cover missing model values, malformed dates and units, invalid coordinates, and upstream failures. A failed live point forecast produces a retry state instead of an expired snapshot.' },
+        { title: 'Context with explicit limits', text: 'ERA5 adds seasonal context, but it is reanalysis rather than independent rain-gauge truth. The disagreement badge shows a threshold crossing; it does not establish forecast skill.' },
+      ],
+      technicalText: '<p>I built a reproducible retrospective comparison of IFS, AIFS, an equal blend, and an experimental weighted blend on 120 paired city-days from archived model runs. ERA5 reanalysis served as the comparison reference. Their mean absolute errors were 2.573 mm, 2.204 mm, 2.318 mm, and 2.359 mm respectively. AIFS alone performed best in this small sample, so the weighted blend remains visibly labelled experimental.</p><p>Matching displayed values to the provider verifies data handling; it does not verify whether future predictions come true. A station-data pilot yielded only 12 same-date pairs with unconfirmed accumulation windows, which is insufficient to calibrate the blend or badges.</p>',
+      techHighlights: [
+        { title: 'Reproducible retrospective evaluation', text: 'Compared four forecast approaches on the same 120 paired city-days against ERA5 reanalysis, and reported the result even though the proposed blend did not win.' },
+        { title: 'Honest uncertainty cues', text: 'Kept model disagreement, ensemble spread, historical context, and the experimental blend distinct rather than presenting a single confidence or danger score.' },
+      ],
+      pipeline: ['Search for a city and validate its coordinates', 'Fetch and validate IFS and AIFS daily rainfall values', 'Present seven-day totals and each model’s ensemble range', 'Mark threshold-based disagreement with its explanation', 'Show ERA5 context and retry on live forecast failure'],
+      metrics: [
+        { label: 'Retrospective comparison', value: '120 city-days' },
+        { label: 'AIFS MAE', value: '2.204 mm' },
+        { label: 'Experimental blend MAE', value: '2.359 mm' },
+      ],
+      resultsNote: 'IFS: 2.573 mm; equal blend: 2.318 mm. ERA5 is reanalysis, not independent gauge truth. This sample does not establish future forecast skill.',
+      designPhilosophy: '<p>The next research step is a larger, time-aligned observational benchmark before changing weights or making accuracy claims. The current app is a comparison and evaluation prototype, not a weather warning system.</p>',
+    },
   }
 ];

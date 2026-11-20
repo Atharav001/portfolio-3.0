@@ -123,9 +123,12 @@ const CaseStudyViewer = ({ project, onClose }) => {
             <ArrowLeft size={18} className="mr-2" /> Back to Portfolio
           </button>
 
-          <a href={project.liveLink} target="_blank" rel="noreferrer" className="view-live-btn interactive-tag">
-            GitHub <ExternalLink size={16} className="ml-1" />
-          </a>
+          <div className="case-study-external-links">
+            {project.repoLink && <a href={project.liveLink} target="_blank" rel="noreferrer" className="view-live-btn interactive-tag">Live app <ExternalLink size={16} className="ml-1" /></a>}
+            <a href={project.repoLink || project.liveLink} target="_blank" rel="noreferrer" className="view-live-btn interactive-tag">
+              GitHub <ExternalLink size={16} className="ml-1" />
+            </a>
+          </div>
         </nav>
 
         <div className="case-study-layout">

@@ -44,6 +44,7 @@ const buildTitles = {
   'scrollers-dashboard': 'Scroller’s Dashboard',
   'portfolio-v3': 'Portfolio 3.0',
   tabvault: 'TabVault',
+  precicast: 'PreciCast',
 };
 
 const ProjectImage = ({ project, className = '' }) => {
@@ -152,9 +153,12 @@ const BuildCard = ({ project, index, onCaseStudy }) => (
         <ArrowUpRight size={20} />
       </button>
     </div>
-    <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="work-build-repo">
-      View code on GitHub <ArrowRight size={15} />
-    </a>
+    <div className="work-build-links">
+      {project.repoLink && <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="work-build-repo">Live app <ArrowUpRight size={15} /></a>}
+      <a href={project.repoLink || project.liveLink} target="_blank" rel="noopener noreferrer" className="work-build-repo">
+        View code on GitHub <ArrowRight size={15} />
+      </a>
+    </div>
   </motion.article>
 );
 
