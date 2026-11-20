@@ -34,7 +34,7 @@ body.light-theme .cosmic-canvas,
 :root[data-theme="light"] .cosmic-canvas {
   opacity: 1;
   mix-blend-mode: multiply;
-  filter: invert(1) hue-rotate(180deg) saturate(1.65) contrast(1.45) brightness(1.02);
+  filter: invert(1) hue-rotate(180deg) saturate(2) contrast(.8) brightness(1.2);
 }
 
 /* Ambient Radial Aurora Gradients for subtle depth */
