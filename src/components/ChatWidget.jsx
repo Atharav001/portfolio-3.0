@@ -427,9 +427,14 @@ const ChatWidget = () => {
   if (typeof document === 'undefined') return null;
   return createPortal(
     <>
-      <button type="button" className="chat-launcher" onClick={() => setIsOpen(true)} aria-label="Open Atharav's project assistant" aria-expanded={isOpen}>
-        <MessageSquareText size={19} /> <span>Ask Atharav AI</span>
-      </button>
+      <div className="chat-launcher-wrap">
+        <div className="chat-launcher-genie" aria-hidden="true">
+          <img src="/assets/mascot/blue-genie.png" alt="" />
+        </div>
+        <button type="button" className="chat-launcher" onClick={() => setIsOpen(true)} aria-label="Open Atharav's project assistant" aria-expanded={isOpen}>
+          <MessageSquareText size={19} /> <span>Ask Atharav AI</span>
+        </button>
+      </div>
       {isOpen && (
         <div className="chat-mobile-overlay" ref={mobileDialogRef} role="dialog" aria-modal="true" aria-label="Portfolio assistant" tabIndex={-1} onMouseDown={(event) => { if (event.target === event.currentTarget) setIsOpen(false); }}>
           {content}
