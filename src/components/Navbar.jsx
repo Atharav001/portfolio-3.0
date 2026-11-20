@@ -82,13 +82,26 @@ const Navbar = ({ onThemeChange }) => {
       paint.style.setProperty('--paint-x', `${x}px`);
       paint.style.setProperty('--paint-y', `${y}px`);
       paint.style.setProperty('--paint-size', `${endRadius * 2}px`);
-      document.body.appendChild(paint);
+      document.getElementById('root').appendChild(paint);
       const spray = document.createElement('div');
       spray.className = 'theme-paint-spray';
       spray.style.setProperty('--paint-x', `${x}px`);
       spray.style.setProperty('--paint-y', `${y}px`);
       spray.style.setProperty('--paint-color', next === 'light' ? '#f5f4ec' : '#0a0a0a');
-      document.body.appendChild(spray);
+      const reach = Math.min(1100, Math.hypot(window.innerWidth, window.innerHeight) * .63);
+      for (let i = 0; i < 30; i += 1) {
+        const angle = i * 2.39996;
+        const distance = 55 + reach * (.16 + (i % 11) / 13);
+        const drop = document.createElement('i');
+        drop.className = 'theme-paint-drop';
+        drop.style.setProperty('--drop-x', `${Math.cos(angle) * distance}px`);
+        drop.style.setProperty('--drop-y', `${Math.sin(angle) * distance}px`);
+        drop.style.setProperty('--drop-size', `${4 + (i * 7) % 15}px`);
+        drop.style.setProperty('--drop-delay', `${(i * 37) % 170}ms`);
+        drop.style.setProperty('--drop-rotation', `${(i * 29) % 180}deg`);
+        spray.appendChild(drop);
+      }
+      document.getElementById('root').appendChild(spray);
       if (paint.animate) {
         paint.classList.add('theme-paint-polygon');
         const spread = paint.animate(
@@ -98,7 +111,7 @@ const Navbar = ({ onThemeChange }) => {
         spread.finished.then(() => {
           applyTheme();
           paint.classList.add('theme-paint-fading');
-          return paint.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }).finished;
+          return paint.animate([{ opacity: .32 }, { opacity: 0 }], { duration: 350, fill: 'forwards' }).finished;
         }).finally(() => {
           paint.remove();
           spray.remove();

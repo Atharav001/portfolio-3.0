@@ -650,3 +650,20 @@ html.light-theme .work-build-status i,
   .work-build-visual img { transition: none; }
   .work-project-window { transition: none; transform: none; }
 }
+
+/* Each card has its own color story, with the image stage in the same family. */
+:root[data-theme] .work-showcase-card.work-tone-1 { --work-ink: #f3fbfa; --work-muted: #bfd9df; --work-accent: #8ce6dd; --work-line: rgba(196,235,234,.25); background: #143448; }
+:root[data-theme] .work-showcase-card.work-tone-2 { --work-ink: #38251e; --work-muted: #694338; --work-accent: #864026; --work-line: rgba(81,43,30,.22); background: #f5ad7a; }
+:root[data-theme] .work-showcase-card.work-tone-3 { --work-ink: #292342; --work-muted: #5d537a; --work-accent: #51429a; --work-line: rgba(69,55,115,.22); background: #cfc2f3; }
+:root[data-theme] .work-showcase-card.work-tone-1 .work-showcase-visual { background: linear-gradient(135deg,#94d8dc,#a6b8e5 55%,#e1b5d4); }
+:root[data-theme] .work-showcase-card.work-tone-2 .work-showcase-visual { background: linear-gradient(135deg,#fbd4a9,#f5a6a0 55%,#b8d5b6); }
+:root[data-theme] .work-showcase-card.work-tone-3 .work-showcase-visual { background: linear-gradient(135deg,#e9dffc,#c6c3f1 55%,#abcfe8); }
+
+:root[data-theme] .work-build-card.work-build-project-ai-support-triage { --work-ink: #f3f8ff; --work-muted: #c2d4ef; background: #253d71; border-color: rgba(164,195,244,.3); }
+:root[data-theme] .work-build-card.work-build-project-scrollers-dashboard { --work-ink: #fff4fa; --work-muted: #e4bdd2; background: #683957; border-color: rgba(247,179,212,.3); }
+:root[data-theme] .work-build-card.work-build-project-portfolio-v3 { --work-ink: #482c21; --work-muted: #77513d; background: #ffc98c; border-color: rgba(122,68,35,.24); }
+:root[data-theme] .work-build-card.work-build-project-tabvault { --work-ink: #173c44; --work-muted: #436970; background: #a9dcde; border-color: rgba(34,93,105,.26); }
+:root[data-theme] .work-build-project-ai-support-triage .work-build-visual { background: linear-gradient(135deg,#9dc8f8,#b9acf0 55%,#e0b7dc); }
+:root[data-theme] .work-build-project-scrollers-dashboard .work-build-visual { background: linear-gradient(135deg,#cba7df,#e7aec9 55%,#f3d0bd); }
+:root[data-theme] .work-build-project-portfolio-v3 .work-build-visual { background: linear-gradient(135deg,#f4ad79,#f7d2a3 55%,#b8d9bd); }
+:root[data-theme] .work-build-project-tabvault .work-build-visual { background: linear-gradient(135deg,#91d6d8,#b7dff1 55%,#d5d1f1); }

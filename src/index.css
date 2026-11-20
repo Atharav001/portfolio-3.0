@@ -258,14 +258,16 @@ html.light-theme .btn-primary:hover {
   height: var(--paint-size);
   margin-left: calc(var(--paint-size) / -2);
   margin-top: calc(var(--paint-size) / -2);
-  z-index: var(--z-max);
+  z-index: 0;
   pointer-events: none;
+  opacity: .32;
+  filter: blur(3px);
   border-radius: 47% 53% 49% 51% / 56% 44% 55% 45%;
   transform: scale(0) rotate(0deg);
   animation: theme-paint-spread 1150ms cubic-bezier(.2,.72,.25,1) forwards;
 }
 
-.theme-paint-fallback.theme-paint-fading { animation: theme-paint-fade 250ms ease forwards; transform: scale(1) rotate(20deg); }
+.theme-paint-fallback.theme-paint-fading { animation: theme-paint-fade 350ms ease forwards; transform: scale(1) rotate(20deg); }
 
 .theme-paint-fallback.theme-paint-polygon {
   inset: 0;
@@ -281,27 +283,32 @@ html.light-theme .btn-primary:hover {
   position: fixed;
   left: var(--paint-x);
   top: var(--paint-y);
-  width: 390px;
-  height: 390px;
-  margin: -195px;
-  z-index: calc(var(--z-max) + 1);
+  width: 0;
+  height: 0;
+  z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 12% 42%, var(--paint-color) 0 5px, transparent 6px),
-    radial-gradient(circle at 24% 14%, var(--paint-color) 0 3px, transparent 4px),
-    radial-gradient(circle at 74% 9%, var(--paint-color) 0 6px, transparent 7px),
-    radial-gradient(circle at 91% 32%, var(--paint-color) 0 3px, transparent 4px),
-    radial-gradient(circle at 88% 76%, var(--paint-color) 0 4px, transparent 5px),
-    radial-gradient(circle at 58% 92%, var(--paint-color) 0 6px, transparent 7px),
-    radial-gradient(circle at 19% 85%, var(--paint-color) 0 3px, transparent 4px);
-  animation: theme-paint-spray 850ms cubic-bezier(.12,.68,.25,1) forwards;
 }
 
-@keyframes theme-paint-spray {
-  0% { transform: scale(.12) rotate(-15deg); opacity: 0; }
-  20% { opacity: .8; }
-  72% { opacity: .75; }
-  100% { transform: scale(1.16) rotate(18deg); opacity: 0; }
+.theme-paint-drop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: var(--drop-size);
+  height: calc(var(--drop-size) * .72);
+  border-radius: 58% 42% 55% 45% / 65% 38% 62% 35%;
+  background: var(--paint-color);
+  filter: blur(.7px);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.2);
+  animation: theme-paint-drop 850ms cubic-bezier(.13,.63,.3,1) var(--drop-delay) forwards;
+}
+
+@keyframes theme-paint-drop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.2) rotate(0); }
+  20% { opacity: .7; }
+  65% { opacity: .48; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--drop-x)), calc(-50% + var(--drop-y))) scale(.75) rotate(var(--drop-rotation)); }
 }
 
 @keyframes theme-paint-spread {
