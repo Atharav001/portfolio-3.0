@@ -3,14 +3,12 @@
   top: 0;
   left: 0;
   z-index: var(--z-cursor, 9999);
-  width: 46px;
-  height: 46px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   pointer-events: none;
   opacity: 0;
-  border: 1.5px solid rgba(12, 93, 68, 0.68);
-  background: radial-gradient(circle, rgba(12, 93, 68, 0.2) 0 2px, transparent 3px), rgba(12, 93, 68, 0.035);
-  box-shadow: 0 0 0 5px rgba(12, 93, 68, 0.055), 0 2px 12px rgba(12, 75, 55, 0.12);
+  background: radial-gradient(circle, rgba(23, 107, 86, .24) 0%, rgba(23, 107, 86, .13) 18%, rgba(23, 107, 86, .05) 40%, transparent 70%);
   transition: opacity 180ms ease;
 }
 

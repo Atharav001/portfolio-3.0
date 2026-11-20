@@ -6,6 +6,12 @@ import LiveLocationClock from './LiveLocationClock';
 import './Navbar.css';
 import { useModalFocus } from '../hooks/useModalFocus';
 
+const paintShape = (x, y, radius, phase = 0) => `polygon(${Array.from({ length: 64 }, (_, index) => {
+  const angle = (index / 64) * Math.PI * 2;
+  const edge = 1 + .18 * Math.sin(angle * 5 + phase) + .09 * Math.cos(angle * 11 - phase) + .04 * Math.sin(angle * 17);
+  return `${x + Math.cos(angle) * radius * edge}px ${y + Math.sin(angle) * radius * edge}px`;
+}).join(',')})`;
+
 const Navbar = ({ onThemeChange }) => {
   const [activeTab, setActiveTab] = useState('Home');
   const [scrolled, setScrolled] = useState(false);
@@ -17,6 +23,7 @@ const Navbar = ({ onThemeChange }) => {
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef(null);
+  const themeSwitchingRef = useRef(false);
   useModalFocus(mobileMenuRef, isMobileMenuOpen, () => setIsMobileMenuOpen(false));
 
   useEffect(() => {
@@ -35,6 +42,7 @@ const Navbar = ({ onThemeChange }) => {
   }, [onThemeChange]);
 
   const toggleTheme = (event) => {
+    if (themeSwitchingRef.current) return;
     const toggleButton = event.currentTarget;
     const next = theme === 'dark' ? 'light' : 'dark';
     const applyTheme = () => {
@@ -48,47 +56,67 @@ const Navbar = ({ onThemeChange }) => {
     };
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!document.startViewTransition || reducedMotion) {
-      if (!reducedMotion) {
-        document.documentElement.classList.add('theme-fallback-transition');
-        toggleButton.classList.remove('theme-toggle-spinning');
-        void toggleButton.offsetWidth;
-        toggleButton.classList.add('theme-toggle-spinning');
-        window.setTimeout(() => {
-          document.documentElement.classList.remove('theme-fallback-transition');
-          toggleButton.classList.remove('theme-toggle-spinning');
-        }, 650);
-      }
+    if (reducedMotion) {
       applyTheme();
       return;
     }
 
+    themeSwitchingRef.current = true;
     const button = toggleButton.getBoundingClientRect();
     const x = button.left + button.width / 2;
     const y = button.top + button.height / 2;
-    const endRadius = Math.hypot(
+    const endRadius = 1.9 * Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     );
+    toggleButton.classList.add('theme-toggle-spinning');
+    const finish = () => {
+      toggleButton.classList.remove('theme-toggle-spinning');
+      themeSwitchingRef.current = false;
+    };
 
-    const transition = document.startViewTransition(applyTheme);
-
-    transition.ready.then(() => {
-      document.documentElement.animate(
-        {
-          clipPath: [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${endRadius}px at ${x}px ${y}px)`,
-          ],
-        },
-        {
-          duration: 700,
-          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          pseudoElement: '::view-transition-new(root)',
+    window.setTimeout(() => {
+      const paint = document.createElement('div');
+      paint.className = 'theme-paint-fallback';
+      paint.style.background = next === 'light' ? '#f5f4ec' : '#0a0a0a';
+      paint.style.setProperty('--paint-x', `${x}px`);
+      paint.style.setProperty('--paint-y', `${y}px`);
+      paint.style.setProperty('--paint-size', `${endRadius * 2}px`);
+      document.body.appendChild(paint);
+      const spray = document.createElement('div');
+      spray.className = 'theme-paint-spray';
+      spray.style.setProperty('--paint-x', `${x}px`);
+      spray.style.setProperty('--paint-y', `${y}px`);
+      spray.style.setProperty('--paint-color', next === 'light' ? '#f5f4ec' : '#0a0a0a');
+      document.body.appendChild(spray);
+      if (paint.animate) {
+        paint.classList.add('theme-paint-polygon');
+        const spread = paint.animate(
+          { clipPath: [paintShape(x, y, 1), paintShape(x, y, endRadius * .19, .5), paintShape(x, y, endRadius * .62, 1.1), paintShape(x, y, endRadius, 1.7)] },
+          { duration: 1150, easing: 'cubic-bezier(.2,.72,.25,1)', fill: 'forwards' }
+        );
+        spread.finished.then(() => {
+          applyTheme();
+          paint.classList.add('theme-paint-fading');
+          return paint.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }).finished;
+        }).finally(() => {
+          paint.remove();
+          spray.remove();
+          finish();
+        });
+        return;
+      }
+      paint.addEventListener('animationend', (paintEvent) => {
+        if (paintEvent.animationName === 'theme-paint-spread') {
+          applyTheme();
+          paint.classList.add('theme-paint-fading');
+        } else if (paintEvent.animationName === 'theme-paint-fade') {
+          paint.remove();
+          spray.remove();
+          finish();
         }
-      );
-    }).catch(() => {});
+      });
+    }, 720);
   };
 
   useEffect(() => {

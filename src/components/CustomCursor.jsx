@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './CustomCursor.css';
 
-// Keep the native pointer and add a soft, high-contrast halo in light mode.
+// Keep the native pointer and add a soft ambient accent in light mode.
 export default function CustomCursor() {
   const haloRef = useRef(null);
 
@@ -12,7 +12,7 @@ export default function CustomCursor() {
 
     const move = (event) => {
       if (!haloRef.current) return;
-      haloRef.current.style.transform = `translate3d(${event.clientX - 23}px, ${event.clientY - 23}px, 0)`;
+      haloRef.current.style.transform = `translate3d(${event.clientX - 34}px, ${event.clientY - 34}px, 0)`;
       haloRef.current.classList.add('is-visible');
     };
     const hide = () => haloRef.current?.classList.remove('is-visible');

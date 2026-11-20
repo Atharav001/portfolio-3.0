@@ -112,6 +112,7 @@ const Hero = () => {
               </motion.span>
             </motion.h1>
 
+            <div className="hero-lower">
             <motion.div
               variants={itemVariants}
               style={{ x: descX, y: descY }}
@@ -135,17 +136,8 @@ const Hero = () => {
                 View Resume
               </a>
             </motion.div>
-          </div>
-
-          <motion.aside className="hero-focus" variants={itemVariants} aria-label="Current work">
-            <span className="hero-focus-label">CURRENT FOCUS / 2026</span>
-            <p>Systems that turn messy inputs into useful decisions.</p>
-            <div className="hero-focus-links">
-              <a href="#projects">01 / Claim review <ArrowRight size={15} /></a>
-              <a href="#projects">02 / Message routing <ArrowRight size={15} /></a>
-              <a href="#projects">03 / Deep research <ArrowRight size={15} /></a>
             </div>
-          </motion.aside>
+          </div>
         </motion.div>
       </div>
       <ChatWidget />
