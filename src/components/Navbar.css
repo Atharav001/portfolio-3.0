@@ -194,6 +194,29 @@ body.light-theme .navbar-links-section,
   color: var(--accent-lime);
 }
 
+.theme-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  view-transition-name: theme-toggle-icon;
+}
+
+.theme-toggle-spinning .theme-toggle-icon {
+  animation: theme-toggle-spin 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes theme-toggle-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  45% { transform: rotate(150deg) scale(0.7); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-spinning .theme-toggle-icon {
+    animation: none;
+  }
+}
+
 html.light-theme .theme-toggle-btn:hover,
 body.light-theme .theme-toggle-btn:hover,
 :root[data-theme="light"] .theme-toggle-btn:hover {

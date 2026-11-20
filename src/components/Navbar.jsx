@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Moon, Sun, X, ArrowUpRight, FileText } from 'lucide-react';
 import LiveLocationClock from './LiveLocationClock';
@@ -33,26 +34,39 @@ const Navbar = ({ onThemeChange }) => {
     return () => mq.removeEventListener('change', handler);
   }, [onThemeChange]);
 
-  const toggleTheme = () => {
+  const toggleTheme = (event) => {
+    const toggleButton = event.currentTarget;
     const next = theme === 'dark' ? 'light' : 'dark';
     const applyTheme = () => {
       document.documentElement.classList.toggle('light-theme', next === 'light');
       document.documentElement.dataset.theme = next;
       localStorage.setItem('theme', next);
-      setTheme(next);
-      if (onThemeChange) onThemeChange(next);
+      flushSync(() => {
+        setTheme(next);
+        onThemeChange?.(next);
+      });
     };
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!document.startViewTransition || reducedMotion) {
+      if (!reducedMotion) {
+        document.documentElement.classList.add('theme-fallback-transition');
+        toggleButton.classList.remove('theme-toggle-spinning');
+        void toggleButton.offsetWidth;
+        toggleButton.classList.add('theme-toggle-spinning');
+        window.setTimeout(() => {
+          document.documentElement.classList.remove('theme-fallback-transition');
+          toggleButton.classList.remove('theme-toggle-spinning');
+        }, 650);
+      }
       applyTheme();
       return;
     }
 
-    // Corner Burst Transition
-    const x = window.innerWidth;
-    const y = 0;
+    const button = toggleButton.getBoundingClientRect();
+    const x = button.left + button.width / 2;
+    const y = button.top + button.height / 2;
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
@@ -69,12 +83,12 @@ const Navbar = ({ onThemeChange }) => {
           ],
         },
         {
-          duration: 500,
-          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          duration: 700,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
           pseudoElement: '::view-transition-new(root)',
         }
       );
-    });
+    }).catch(() => {});
   };
 
   useEffect(() => {
@@ -255,7 +269,9 @@ const Navbar = ({ onThemeChange }) => {
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               aria-pressed={theme === 'light'}
             >
-              {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
+              <span className="theme-toggle-icon" aria-hidden="true">
+                {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
+              </span>
             </button>
 
             {/* Mobile Hamburger Button */}
