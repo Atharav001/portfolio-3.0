@@ -82,7 +82,7 @@ export default function CosmicBackground({ theme = 'dark' }) {
             tubes: {
               colors: activePalette.tubes,
               lights: {
-                intensity: themeRef.current === 'dark' ? 240 : 180,
+                intensity: themeRef.current === 'dark' ? 240 : 235,
                 colors: activePalette.lights,
               },
             },
@@ -126,7 +126,7 @@ export default function CosmicBackground({ theme = 'dark' }) {
       tubesInstance.current.tubes.setLightsColors(activePalette.lights);
     }
     if (typeof tubesInstance.current.tubes.setLightsIntensity === 'function') {
-      tubesInstance.current.tubes.setLightsIntensity(theme === 'dark' ? 240 : 180);
+      tubesInstance.current.tubes.setLightsIntensity(theme === 'dark' ? 240 : 235);
     }
   }, [theme]);
 

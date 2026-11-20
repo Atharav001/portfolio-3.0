@@ -5,7 +5,6 @@ import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 
 // Components
-import CustomCursor from './components/CustomCursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -145,7 +144,6 @@ function App() {
       {/* Cosmic Procedural Rays & Aurora Background */}
       <CosmicBackground theme={theme} />
       <GrainOverlay />
-      <CustomCursor />
       <Navbar activeTheme={theme} onThemeChange={setTheme} />
 
       <main id="main-content">
