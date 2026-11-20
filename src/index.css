@@ -249,75 +249,19 @@ html.light-theme .btn-primary:hover {
   background: transparent;
 }
 
-/* The paint shape expands from the spinning toggle, then reveals the next theme. */
-.theme-paint-fallback {
-  position: fixed;
-  left: var(--paint-x);
-  top: var(--paint-y);
-  width: var(--paint-size);
-  height: var(--paint-size);
-  margin-left: calc(var(--paint-size) / -2);
-  margin-top: calc(var(--paint-size) / -2);
-  z-index: 0;
-  pointer-events: none;
-  opacity: .32;
-  filter: blur(3px);
-  border-radius: 47% 53% 49% 51% / 56% 44% 55% 45%;
-  transform: scale(0) rotate(0deg);
-  animation: theme-paint-spread 1150ms cubic-bezier(.2,.72,.25,1) forwards;
-}
-
-.theme-paint-fallback.theme-paint-fading { animation: theme-paint-fade 350ms ease forwards; transform: scale(1) rotate(20deg); }
-
-.theme-paint-fallback.theme-paint-polygon {
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  border-radius: 0;
-  transform: none;
+/* The new theme itself spreads from the toggle; both snapshots keep page content visible. */
+::view-transition-old(root),
+::view-transition-new(root) {
   animation: none;
+  mix-blend-mode: normal;
 }
 
-.theme-paint-spray {
-  position: fixed;
-  left: var(--paint-x);
-  top: var(--paint-y);
-  width: 0;
-  height: 0;
-  z-index: 0;
-  pointer-events: none;
-}
+::view-transition-old(root) { z-index: 1; }
 
-.theme-paint-drop {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: block;
-  width: var(--drop-size);
-  height: calc(var(--drop-size) * .72);
-  border-radius: 58% 42% 55% 45% / 65% 38% 62% 35%;
-  background: var(--paint-color);
-  filter: blur(.7px);
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(.2);
-  animation: theme-paint-drop 850ms cubic-bezier(.13,.63,.3,1) var(--drop-delay) forwards;
+::view-transition-new(root) {
+  z-index: 2;
+  clip-path: circle(0 at var(--theme-origin-x) var(--theme-origin-y));
 }
-
-@keyframes theme-paint-drop {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(.2) rotate(0); }
-  20% { opacity: .7; }
-  65% { opacity: .48; }
-  100% { opacity: 0; transform: translate(calc(-50% + var(--drop-x)), calc(-50% + var(--drop-y))) scale(.75) rotate(var(--drop-rotation)); }
-}
-
-@keyframes theme-paint-spread {
-  0% { transform: scale(0) rotate(0deg); }
-  40% { transform: scale(.18) rotate(5deg); }
-  100% { transform: scale(1) rotate(20deg); }
-}
-
-@keyframes theme-paint-fade { to { opacity: 0; } }
 /* Accessibility Focus States */
 :focus {
   outline: none;
