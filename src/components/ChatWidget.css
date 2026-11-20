@@ -648,3 +648,73 @@ body.light-theme .chat-bullet-dot,
     border-bottom: none;
   }
 }
+
+/* Compact assistant, styled as a focused editor panel. */
+.chat-launcher {
+  position: fixed;
+  right: max(22px, env(safe-area-inset-right));
+  bottom: max(22px, env(safe-area-inset-bottom));
+  z-index: var(--z-cursor, 9999);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 17px;
+  border: 1px solid rgba(196, 255, 89, .28);
+  border-radius: 16px;
+  background: #1c211f;
+  color: #f2f4ee;
+  box-shadow: 0 12px 36px rgba(0,0,0,.3), 0 0 20px rgba(197,255,65,.1);
+  font: 600 .82rem var(--font-sans);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.chat-launcher:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.34), 0 0 28px rgba(197,255,65,.18); }
+.chat-launcher svg { color: var(--accent-lime); }
+html.light-theme .chat-launcher { background: #173d31; color: #fff; border-color: #27664e; box-shadow: 0 12px 32px rgba(17,61,43,.2); }
+html.light-theme .chat-launcher svg { color: #b7e8c9; }
+.chat-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-cursor, 9999) + 1);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 24px;
+  background: rgba(4, 8, 7, .36);
+  backdrop-filter: blur(5px);
+}
+.chat-mobile-overlay .chat-card {
+  width: min(440px, 100%);
+  height: min(650px, calc(100dvh - 100px));
+  min-height: 0;
+  border-radius: 17px;
+  background: #191d1b;
+  border: 1px solid #3b443f;
+  box-shadow: 0 30px 80px rgba(0,0,0,.45);
+}
+.chat-mobile-overlay .chat-header { background: #242a26; border-bottom-color: #39423d; padding: 14px 16px; }
+.chat-mobile-overlay .chat-header-title { font-family: var(--font-sans); font-size: .86rem; }
+.chat-mobile-overlay .chat-status-badge { color: #b8d8bf; border-color: #3f5847; background: #2b3930; }
+.chat-mobile-overlay .chat-body, .chat-mobile-overlay .chat-chips-container, .chat-mobile-overlay .chat-footer { background: #191d1b; border-color: #333d36; }
+.chat-mobile-overlay .chat-message-row.assistant-row .chat-bubble { background: #252b27; border-color: #39443d; box-shadow: none; }
+.chat-mobile-overlay .chat-message-row.user-row .chat-bubble { background: #345b46; color: #f7fbf6; }
+.chat-mobile-overlay .chat-chip { background: #252c27; border-color: #3d4a40; box-shadow: none; }
+.chat-mobile-overlay .chat-chip:hover { border-color: #89b996; }
+.chat-mobile-overlay .chat-input-row { border-radius: 10px; background: #242a26; border-color: #48534b; }
+.chat-mobile-overlay .chat-send-btn { border-radius: 8px; }
+html.light-theme .chat-mobile-overlay .chat-card { background: #fcfbf7; border-color: #cbd8ce; box-shadow: 0 24px 70px rgba(22,59,42,.2); }
+html.light-theme .chat-mobile-overlay .chat-header { background: #eff3ee; border-bottom-color: #d5dfd7; }
+html.light-theme .chat-mobile-overlay .chat-body,
+html.light-theme .chat-mobile-overlay .chat-chips-container,
+html.light-theme .chat-mobile-overlay .chat-footer { background: #fcfbf7; border-color: #dce5dd; }
+html.light-theme .chat-mobile-overlay .chat-message-row.assistant-row .chat-bubble { background: #fff; border-color: #dae3db; color: #19392c; }
+html.light-theme .chat-mobile-overlay .chat-message-row.user-row .chat-bubble { background: #23543d; color: #fff; box-shadow: none; }
+html.light-theme .chat-mobile-overlay .chat-chip { background: #f3f7f1; border-color: #d5e1d7; color: #244733; box-shadow: none; }
+html.light-theme .chat-mobile-overlay .chat-input-row { background: #fff; border-color: #bdcfc2; }
+html.light-theme .chat-mobile-overlay .chat-status-badge { background: #e5f0e7; border-color: #c5d9c9; color: #27583d; }
+@media (max-width: 768px) {
+  .chat-launcher { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); width: 56px; height: 56px; padding: 0; justify-content: center; border-radius: 18px; }
+  .chat-launcher span { display: none; }
+  .chat-mobile-overlay { align-items: flex-end; justify-content: center; padding: 0; }
+  .chat-mobile-overlay .chat-card { width: 100%; height: min(82dvh, 700px); border-radius: 20px 20px 0 0; border-bottom: 0; }
+}

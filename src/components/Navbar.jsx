@@ -227,9 +227,8 @@ const Navbar = ({ onThemeChange }) => {
           {/* Logo / Brand */}
           <div className="navbar-brand-section">
             <a href="#home" className="navbar-logo interactive-tag" onClick={(e) => scrollToSection(e, 'Home')}>
-              <span className="logo-indicator" />
               <span className="logo-full">Atharav Narang</span>
-              <span className="logo-short">AN</span>
+              <span className="logo-short">Atharav</span>
             </a>
           </div>
 
@@ -317,7 +316,6 @@ const Navbar = ({ onThemeChange }) => {
               {/* Top Header Row with Brand & Dedicated Animated Close Button */}
               <div className="mobile-menu-header">
                 <div className="mobile-brand">
-                  <span className="logo-indicator" />
                   <span className="mobile-brand-title">ATHARAV NARANG</span>
                 </div>
                 <button

@@ -12,7 +12,7 @@ export default function CustomCursor() {
 
     const move = (event) => {
       if (!haloRef.current) return;
-      haloRef.current.style.transform = `translate3d(${event.clientX - 42}px, ${event.clientY - 42}px, 0)`;
+      haloRef.current.style.transform = `translate3d(${event.clientX - 23}px, ${event.clientY - 23}px, 0)`;
       haloRef.current.classList.add('is-visible');
     };
     const hide = () => haloRef.current?.classList.remove('is-visible');

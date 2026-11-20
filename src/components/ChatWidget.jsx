@@ -6,10 +6,8 @@ import { useModalFocus } from '../hooks/useModalFocus';
 import './ChatWidget.css';
 
 const SUGGESTED_QUESTIONS = [
-  "What are the projects he has built?",
-  "Tell me about his education & background.",
-  "What are his core technical skills?",
-  "How can I contact or hire Atharav?"
+  "Which projects best show Atharav's work?",
+  "What is Atharav building now?"
 ];
 
 const getOrCreateSessionId = () => {
@@ -106,26 +104,26 @@ const ChatWidget = () => {
     {
       id: 'welcome',
       sender: 'assistant',
-      text: "Hi! I'm Atharav's Portfolio Assistant. Ask me anything about Atharav — his background, projects, skills, or experience!",
+      text: "Hi, I'm Atharav's project assistant. Ask about his work, skills, or what he's building now.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
 
   const chatMessagesRef = useRef(null);
   const inputRef = useRef(null);
   const autoQuerySentRef = useRef(null);
   const mobileDialogRef = useRef(null);
-  useModalFocus(mobileDialogRef, isMobileExpanded, () => setIsMobileExpanded(false));
+  useModalFocus(mobileDialogRef, isOpen, () => setIsOpen(false));
 
   // Lock outer webpage scrolling and Lenis scroll when mobile fullscreen modal is open
   useEffect(() => {
     if (typeof document === 'undefined') return;
     const lenis = window.__lenis;
-    if (isMobileExpanded) {
+    if (isOpen) {
       if (lenis) lenis.stop();
       document.body.style.overflow = 'hidden';
     } else {
@@ -136,7 +134,7 @@ const ChatWidget = () => {
       if (lenis) lenis.start();
       document.body.style.overflow = '';
     };
-  }, [isMobileExpanded]);
+  }, [isOpen]);
 
   // Scroll internal messages container when new messages arrive or loading starts
   useEffect(() => {
@@ -262,7 +260,7 @@ const ChatWidget = () => {
       {
         id: generateId('welcome'),
         sender: 'assistant',
-        text: "Hi! I'm Atharav's Portfolio Assistant. Ask me anything about Atharav — his background, projects, skills, or experience!",
+        text: "Hi, I'm Atharav's project assistant. Ask about his work, skills, or what he's building now.",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ]);
@@ -282,16 +280,13 @@ const ChatWidget = () => {
   };
 
   const content = (
-    <div className={`chat-card ${isMobileExpanded ? 'mobile-fullscreen' : ''}`}>
+    <div className="chat-card">
       <div className="chat-header">
         <div className="chat-header-left">
-          <span className="console-dot red"></span>
-          <span className="console-dot yellow"></span>
-          <span className="console-dot green"></span>
           <div className="chat-header-title-wrap">
             <Bot size={16} className="chat-bot-icon" />
-            <span className="chat-header-title">Ask About Atharav AI</span>
-            <span className="chat-status-badge">Project Q&amp;A</span>
+            <span className="chat-header-title">Atharav / Assistant</span>
+            <span className="chat-status-badge">PROJECT Q&amp;A</span>
           </div>
         </div>
         <div className="chat-header-right">
@@ -307,10 +302,10 @@ const ChatWidget = () => {
               <span className="btn-label-desktop">Reset</span>
             </button>
           )}
-          {isMobileExpanded && (
+          {isOpen && (
             <button
               className="chat-close-btn"
-              onClick={() => setIsMobileExpanded(false)}
+              onClick={() => setIsOpen(false)}
               title="Close Assistant"
               aria-label="Close assistant"
               type="button"
@@ -429,33 +424,19 @@ const ChatWidget = () => {
     </div>
   );
 
-  return (
-    <div className="chat-widget-wrapper">
-      {/* Desktop & Expanded View */}
-      <div className="chat-desktop-view">{content}</div>
-
-      {/* Mobile Collapsed Pill */}
-      <div className="chat-mobile-pill-container">
-        <button
-          type="button"
-          className="chat-mobile-pill"
-          onClick={() => setIsMobileExpanded(true)}
-        >
-          <MessageSquareText size={18} />
-          <span>Ask me anything about Atharav →</span>
-        </button>
-      </div>
-
-      {/* Mobile Fullscreen Overlay Portal */}
-      {isMobileExpanded &&
-        typeof document !== 'undefined' &&
-        createPortal(
-          <div className="chat-mobile-overlay" ref={mobileDialogRef} role="dialog" aria-modal="true" aria-label="Portfolio assistant" tabIndex={-1}>
-            {content}
-          </div>,
-          document.body
-        )}
-    </div>
+  if (typeof document === 'undefined') return null;
+  return createPortal(
+    <>
+      <button type="button" className="chat-launcher" onClick={() => setIsOpen(true)} aria-label="Open Atharav's project assistant" aria-expanded={isOpen}>
+        <MessageSquareText size={19} /> <span>Ask Atharav AI</span>
+      </button>
+      {isOpen && (
+        <div className="chat-mobile-overlay" ref={mobileDialogRef} role="dialog" aria-modal="true" aria-label="Portfolio assistant" tabIndex={-1} onMouseDown={(event) => { if (event.target === event.currentTarget) setIsOpen(false); }}>
+          {content}
+        </div>
+      )}
+    </>,
+    document.body
   );
 };
 

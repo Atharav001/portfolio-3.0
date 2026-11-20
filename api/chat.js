@@ -46,6 +46,7 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
   * Two-pass AI pipeline: Pass 1 is an intelligent Topic Classifier guarding scope lock while allowing portfolio & tech stack questions. Pass 2 is an LLM synthesis engine grounded in vector context.
 
 3. KEY PROJECTS & REPOSITORIES:
+When asked generally what Atharav has built, lead with these three featured projects: Two-Step Claim Review, WhatsApp Message Router, and Agentic Deep Research. A fourth example may be AI Support Triage. Mention other repositories only briefly unless the visitor asks for more or asks about a specific one. These featured systems are Python/data pipelines, not graphical apps; do not describe invented user interfaces.
 - Portfolio 3.0 (Interactive Developer Experience):
   * Description: Flagship personal developer portfolio engineered with React 19, Vite, Framer Motion, Lenis Smooth Scroll, Three.js WebGL procedural cosmic background, and a Scope-Locked RAG AI assistant.
   * Repository: https://github.com/Atharav001/portfolio-3.0
@@ -86,6 +87,14 @@ ATHARAV NARANG - MASTER PERSONAL & TECHNICAL KNOWLEDGE BASE:
   * Description: Chromium extension auto-archiving idle tabs (2h idle timer, old tab archiving mode at 50+ tabs) while preserving scroll positions and group names.
   * Tech Stack: React 18, TypeScript, Vite 6, Dexie IndexedDB, Zustand, Manifest V3.
   * Repository: https://github.com/Atharav001/TabVault-Extension
+
+- Other public work (verified from Atharav's GitHub repository list, November 2026; provide details only when asked):
+  * Loopinn: offline-first macOS productivity app for tasks, planning, focus, and activity tracking. https://github.com/Atharav001/Loopinn
+  * Precipitation Forecast Comparison: compares ECMWF IFS and AIFS rainfall forecasts and exposes disagreement and uncertainty. https://github.com/Atharav001/precipitation-forecast-comparison
+  * Ghost Data Deletion Audit Agent: HackerRank Orchestrate October 2026 project. https://github.com/Atharav001/hackerrank-orchestrate-ghost-data-deletion
+  * Roadpulse: citizen road issue reporting with photo and GPS input, classification, deduplication, routing, and a public dashboard. https://github.com/Atharav001/roadpulse
+  * FocusFlow: productivity tracker with Gemini orchestration, Google Calendar sync, and procrastination analytics. https://github.com/Atharav001/FocusFlow
+  * Loopin Timesheet: planned versus logged time, local activity classification, on-device speech transcription, and Calendar sync. https://github.com/Atharav001/Loopin-Timesheet
 
 4. EDUCATION:
 - B.Tech in Computer Science at Manipal Institute of Technology (MAHE), Bengaluru (Second-year / 2nd-year undergraduate student). Focus on AI/ML pipeline engineering, data structures & algorithms, and system design.
@@ -135,6 +144,7 @@ CRITICAL INSTRUCTIONS FOR RESPONSE QUALITY:
    - Use simple Markdown formatting (e.g. bolding key terms, using inline code or simple bullet points when listing details) to keep answers clean and premium.
 2. DO NOT OVER-ANSWER THE QUESTION:
    - Answer ONLY the exact question asked by the user. Do NOT add extra unasked details, unasked tech stack lists, or unasked project specifications. Keep the focus narrow and deep on the queried topic.
+   - For a general projects question, name three featured projects (or four if useful) with a short explanation each. Offer to share more; list secondary repositories only on request. For "building now", distinguish recently updated public repositories from a confirmed active project; update time alone does not prove current activity.
 3. ACCURACY & CONTEXT GROUNDING: Only state facts present in CONTEXT. The CURRENT PORTFOLIO FACTS section takes precedence if older retrieved passages disagree. Include the evaluation set and limitations when quoting project metrics. Always accurately identify Atharav as a second-year student.
 4. TONE & VOICE: Professional, articulate, warm, and confident. Speak in third person ("Atharav built...", "He is a 2nd-year student...") or as his official portfolio assistant.
 5. SCOPE LOCK & OFF-TOPIC REFUSAL: If the question is completely off-topic or unrelated to Atharav, his portfolio, his projects, or his skills, respond with EXACTLY:
@@ -273,12 +283,18 @@ function getOfflineFallbackAnswer(userQuestion) {
   }
   
   if (
+    /more|other|additional|all|recent|latest|currently|now/.test(q) && /project|built|building|work|repo/.test(q)
+  ) {
+    return "Atharav's public GitHub also includes [Loopinn](https://github.com/Atharav001/Loopinn), [Precipitation Forecast Comparison](https://github.com/Atharav001/precipitation-forecast-comparison), a [Ghost Data Deletion Audit Agent](https://github.com/Atharav001/hackerrank-orchestrate-ghost-data-deletion), [Roadpulse](https://github.com/Atharav001/roadpulse), and [TabVault](https://github.com/Atharav001/TabVault-Extension). These are recent or additional repositories; a recent update does not necessarily mean each is currently active.";
+  }
+
+  if (
     q.includes('project') ||
     q.includes('built') ||
     q.includes('work') ||
     q.includes('repo')
   ) {
-    return "Atharav built projects like the **RAG-Agentic-Deep-Research** agent, **WhatsApp Message Notification Router**, **Two-Step De-Biased Multi-Modal Pipeline**, and **Aura macOS app**. Explore his code on [GitHub](https://github.com/Atharav001).";
+    return "Atharav's featured work includes **Two-Step Claim Review**, a two-stage damage-claim evaluation pipeline; **WhatsApp Message Router**, a multimodal notification routing system; and **Agentic Deep Research**, a local research agent with retrieval and citation checks. He has also built an **AI Support Triage** agent. Ask about any one for its design and results, or ask for more projects.";
   }
 
   if (
