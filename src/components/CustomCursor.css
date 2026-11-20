@@ -8,8 +8,20 @@
   border-radius: 50%;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(circle, rgba(23, 107, 86, .24) 0%, rgba(23, 107, 86, .13) 18%, rgba(23, 107, 86, .05) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(4, 91, 86, .42) 0%, rgba(0, 157, 138, .32) 13%, rgba(10, 192, 169, .19) 29%, rgba(14, 154, 135, .08) 47%, transparent 72%);
+  filter: drop-shadow(0 0 7px rgba(0, 139, 119, .3));
   transition: opacity 180ms ease;
+}
+.light-pointer-halo::after {
+  content: '';
+  position: absolute;
+  top: 31px;
+  left: 31px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #075b57;
+  box-shadow: 0 0 8px rgba(0, 141, 122, .8);
 }
 
 :root[data-theme="light"] .light-pointer-halo.is-visible { opacity: 1; }

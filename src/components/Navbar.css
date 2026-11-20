@@ -201,7 +201,7 @@ body.light-theme .navbar-links-section,
 }
 
 .theme-toggle-spinning .theme-toggle-icon {
-  animation: theme-toggle-spin 720ms cubic-bezier(.65, 0, 1, .78) both;
+  animation: theme-toggle-spin 900ms cubic-bezier(.45, 0, .3, 1) both;
 }
 
 @keyframes theme-toggle-spin {

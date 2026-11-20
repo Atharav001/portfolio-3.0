@@ -78,7 +78,7 @@ const Navbar = ({ onThemeChange }) => {
       themeSwitchingRef.current = false;
     };
 
-    window.setTimeout(async () => {
+    const runTransition = async () => {
       if (!document.startViewTransition) {
         applyTheme();
         finish();
@@ -97,7 +97,7 @@ const Navbar = ({ onThemeChange }) => {
             { clipPath: paintShape(x, y, endRadius * .58, 1.1), offset: .58 },
             { clipPath: paintShape(x, y, endRadius, 1.7), offset: 1 },
           ],
-          { duration: 1360, easing: 'cubic-bezier(.4,0,.35,1)', fill: 'both', pseudoElement: '::view-transition-new(root)' }
+          { duration: 900, easing: 'cubic-bezier(.25,.05,.25,1)', fill: 'both', pseudoElement: '::view-transition-new(root)' }
         ).finished;
         await transition.finished;
       } catch {
@@ -105,7 +105,8 @@ const Navbar = ({ onThemeChange }) => {
       } finally {
         finish();
       }
-    }, 720);
+    };
+    runTransition();
   };
 
   useEffect(() => {
