@@ -24,7 +24,7 @@ const showcase = {
     outcome: '65% claim-status accuracy on the published set; 20% severity accuracy',
   },
   'hybrid-multimodal-whatsapp-router': {
-    title: 'OmniRoute AI',
+    title: 'WhatsApp Message Router',
     source: 'Messaging / Applied AI',
     role: 'Student developer',
     scope: 'Text, image + voice routing',
