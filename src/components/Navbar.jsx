@@ -6,10 +6,10 @@ import LiveLocationClock from './LiveLocationClock';
 import './Navbar.css';
 import { useModalFocus } from '../hooks/useModalFocus';
 
-const paintShape = (x, y, radius, phase = 0) => `polygon(${Array.from({ length: 96 }, (_, index) => {
-  const angle = (index / 96) * Math.PI * 2;
-  const edge = 1 + .12 * Math.sin(angle * 5 + phase) + .06 * Math.cos(angle * 11 - phase * 1.3)
-    + .04 * Math.sin(angle * 23 + phase * .6) + .02 * Math.cos(angle * 41 - phase * 2);
+const paintShape = (x, y, radius, phase = 0) => `polygon(${Array.from({ length: 64 }, (_, index) => {
+  const angle = (index / 64) * Math.PI * 2;
+  const edge = 1 + .1 * Math.sin(angle * 5 + phase) + .04 * Math.cos(angle * 9 - phase * 1.3)
+    + .02 * Math.sin(angle * 15 + phase * .6);
   return `${x + Math.cos(angle) * radius * edge}px ${y + Math.sin(angle) * radius * edge}px`;
 }).join(',')})`;
 
@@ -66,7 +66,7 @@ const Navbar = ({ onThemeChange }) => {
     const button = toggleButton.getBoundingClientRect();
     const x = button.left + button.width / 2;
     const y = button.top + button.height / 2;
-    const endRadius = 1.7 * Math.hypot(
+    const endRadius = 1.5 * Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     );
@@ -91,13 +91,13 @@ const Navbar = ({ onThemeChange }) => {
         const transition = document.startViewTransition(applyTheme);
         await transition.ready;
         await document.documentElement.animate(
-          { clipPath: [
-            paintShape(x, y, 1),
-            paintShape(x, y, endRadius * .18, .5),
-            paintShape(x, y, endRadius * .58, 1.1),
-            paintShape(x, y, endRadius, 1.7),
-          ] },
-          { duration: 1150, easing: 'cubic-bezier(.2,.72,.25,1)', fill: 'both', pseudoElement: '::view-transition-new(root)' }
+          [
+            { clipPath: paintShape(x, y, 1), offset: 0 },
+            { clipPath: paintShape(x, y, endRadius * .18, .5), offset: .18 },
+            { clipPath: paintShape(x, y, endRadius * .58, 1.1), offset: .58 },
+            { clipPath: paintShape(x, y, endRadius, 1.7), offset: 1 },
+          ],
+          { duration: 1360, easing: 'cubic-bezier(.4,0,.35,1)', fill: 'both', pseudoElement: '::view-transition-new(root)' }
         ).finished;
         await transition.finished;
       } catch {
