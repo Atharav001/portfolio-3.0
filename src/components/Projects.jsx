@@ -83,7 +83,7 @@ const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
           <span>{detail.source}</span>
           <span>{String(index + 1).padStart(2, '0')} / 03</span>
         </div>
-        <h3>{detail.title}</h3>
+        <h3><a className="work-project-title-link" href={`/projects/${project.slug}.html`}>{detail.title}</a></h3>
         <p className="work-showcase-description">{project.description}</p>
         <dl className="work-showcase-facts">
           <div><dt>Role</dt><dd>{detail.role}</dd></div>
@@ -146,7 +146,7 @@ const BuildCard = ({ project, index, onCaseStudy }) => (
     </button>
     <div className="work-build-bottom">
       <div>
-        <h3>{buildTitles[project.slug] || project.title}</h3>
+        <h3><a className="work-project-title-link" href={`/projects/${project.slug}.html`}>{buildTitles[project.slug] || project.title}</a></h3>
         <p>{project.description}</p>
       </div>
       <button type="button" className="work-build-arrow" onClick={() => onCaseStudy(project)} aria-label={`Read ${project.title} case study`}>
