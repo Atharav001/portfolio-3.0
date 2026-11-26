@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ExternalLink, X } from 'lucide-react';
 import DOMPurify from 'dompurify';
+import WorkflowVisual from './WorkflowVisual';
 import { useModalFocus } from '../hooks/useModalFocus';
 import './CaseStudyViewer.css';
 
@@ -52,6 +53,7 @@ const CaseStudyViewer = ({ project, onClose }) => {
     const lenis = window.__lenis;
     if (lenis) lenis.stop();
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('case-study-open');
 
     const originalHash = window.location.hash;
     window.history.replaceState(null, '', `#project-${project.id}`);
@@ -59,6 +61,7 @@ const CaseStudyViewer = ({ project, onClose }) => {
     return () => {
       if (lenis) lenis.start();
       document.body.style.overflow = '';
+      document.body.classList.remove('case-study-open');
       window.history.replaceState(null, '', originalHash || '#projects');
     };
   }, [project]);
@@ -75,6 +78,7 @@ const CaseStudyViewer = ({ project, onClose }) => {
 
   const details = project.caseStudyDetails;
   const metricItems = details ? normalizeMetrics(details.metrics) : [];
+  const hasEvidenceVisual = ['debiased-multimodal-pipeline', 'hybrid-multimodal-whatsapp-router', 'deep-research'].includes(project.slug);
 
   const tocItems = details
     ? [
@@ -100,7 +104,7 @@ const CaseStudyViewer = ({ project, onClose }) => {
         <div className="case-study-backdrop" />
       </motion.div>
       <motion.div
-        className="case-study-overlay"
+        className={`case-study-overlay case-study-${project.slug}`}
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
@@ -136,27 +140,32 @@ const CaseStudyViewer = ({ project, onClose }) => {
             <header className="case-study-header">
               <span className="case-study-kicker">Case study <span>/{project.tabTag}</span></span>
               <h1 id="case-study-title" className="case-study-title">{project.title}</h1>
-              <p className="case-study-dek">{details?.problemLead || project.description}</p>
+              <p className="case-study-dek">{project.description}</p>
               <div className="case-study-meta">
-                <span>Designed & built by Atharav Narang</span>
+                <span>{details?.role || 'Built by Atharav Narang'}</span>
                 <span className="separator">/</span>
                 <span>{project.date}</span>
               </div>
             </header>
+
+            <figure className="case-study-hero-art">
+              {hasEvidenceVisual ? <WorkflowVisual slug={project.slug} /> : <img src={project.image} alt={`${project.title} interface preview`} />}
+              <figcaption>{hasEvidenceVisual ? 'Illustrative presentation of the project’s actual data flow and reported results. This project runs as a Python pipeline.' : 'Project interface shown from the portfolio asset.'}</figcaption>
+            </figure>
 
             <article className="case-study-article">
               {details ? (
                 <>
                   <SectionBlock id="overview" number="01" title="Overview">
                     <div className="case-study-overview-grid">
-                      {project.image && (
+                      {project.image && hasEvidenceVisual && (
                         <button
                           type="button"
                           className="overview-item image-overview-item interactive-tag"
                           onClick={() => setIsImgZoomed(true)}
                           aria-label={`Expand ${project.title} preview`}
                         >
-                          <span className="overview-label">Project Preview</span>
+                          <span className="overview-label">Original project artifact</span>
                           <span className="overview-image-wrapper">
                             <picture style={{ display: 'block', width: '100%', height: '100%' }}>
                               <source

@@ -71,19 +71,21 @@ function projectPage(project) {
 <title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(description)}">
 <meta name="robots" content="index,follow"><link rel="canonical" href="${url}">
 <meta name="theme-color" content="#0b1110"><link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script>try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light-theme')}catch(e){}</script>
 <link rel="stylesheet" href="/seo.css">
 <meta property="og:type" content="article"><meta property="og:site_name" content="Atharav Narang">
 <meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${url}"><meta property="og:image" content="${escapeHtml(image)}"><meta property="og:image:alt" content="${escapeHtml(project.title)} project preview">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeHtml(title)}"><meta name="twitter:description" content="${escapeHtml(description)}"><meta name="twitter:image" content="${escapeHtml(image)}">
 <script type="application/ld+json">${asJsonLd(schema)}</script>
-</head><body class="seo-article"><a class="skip" href="#content">Skip to content</a>
+</head><body class="seo-article project-${escapeHtml(project.slug)}"><a class="skip" href="#content">Skip to content</a>
 <header class="site-header"><a class="brand" href="/">Atharav Narang</a><nav aria-label="Main navigation"><a href="/#projects">All projects</a><a href="mailto:atharavnarang05@gmail.com">Contact</a></nav></header>
 <main id="content"><article>
 <header class="article-head"><p class="eyebrow">Project case study <span>/ ${escapeHtml(project.tabTag || 'Software')}</span></p><h1>${escapeHtml(project.title)}</h1>
-${paragraph(detail.problemLead || project.description)}<div class="article-meta"><span>Built by Atharav Narang</span>${project.date ? `<span>${escapeHtml(project.date)}</span>` : ''}</div>
+${paragraph(project.description)}<div class="article-meta"><span>Built by Atharav Narang</span>${project.date ? `<span>${escapeHtml(project.date)}</span>` : ''}</div>
+<dl class="project-facts"><div><dt>Role</dt><dd>${escapeHtml(detail.role || 'Developer')}</dd></div><div><dt>Platform</dt><dd>${escapeHtml(detail.platform || 'Software project')}</dd></div></dl>
 <div class="actions">${liveLink}<a class="action" href="${escapeHtml(codeUrl)}" target="_blank" rel="noopener noreferrer">View code on GitHub ↗</a></div></header>
-<figure class="hero-image"><img src="${escapeHtml(project.image)}" alt="${escapeHtml(project.title)} project preview" width="1200" height="750" fetchpriority="high" decoding="async"><figcaption>Project interface or illustrative artifact created for this portfolio.</figcaption></figure>
+<figure class="hero-image"><img src="${escapeHtml(project.image)}" alt="${escapeHtml(project.title)} project preview" width="1200" height="750" fetchpriority="high" decoding="async"><figcaption>${['debiased-multimodal-pipeline','hybrid-multimodal-whatsapp-router','deep-research'].includes(project.slug) ? 'Original architecture or evaluation artifact. This is a Python pipeline, not a graphical app.' : project.slug === 'precicast' ? 'Real Bengaluru forecast captured on 26 November 2026. Values in this image are a historical snapshot.' : 'Project interface or portfolio visual.'}</figcaption></figure>
 <div class="article-grid"><aside aria-label="Case study contents"><p>ON THIS PAGE</p><a href="#problem">The problem</a><a href="#solution">What I built</a><a href="#implementation">Implementation</a><a href="#results">Results and limits</a></aside>
 <div class="article-body"><section id="problem"><p class="eyebrow">01 / Problem</p><h2>${escapeHtml(detail.problemTitle || 'The problem')}</h2>${paragraph(detail.problemText)}</section>
 <section id="solution"><p class="eyebrow">02 / Approach</p><h2>${escapeHtml(detail.solutionTitle || 'What I built')}</h2>${paragraph(detail.solutionText)}${features}</section>
