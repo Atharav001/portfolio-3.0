@@ -167,7 +167,8 @@ html.light-theme .status-dot,
 /* Mobile Ambient Shield & Readability */
 @media (max-width: 768px) {
   .hero-section {
-    padding-top: 100px;
+    min-height: 0;
+    padding-top: clamp(120px, 18vh, 168px);
     padding-bottom: 2.5rem;
   }
 

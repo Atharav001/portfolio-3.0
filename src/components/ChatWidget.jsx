@@ -280,7 +280,7 @@ const ChatWidget = () => {
   };
 
   const content = (
-    <div className="chat-card">
+    <div className={`chat-card${messages.length === 1 && !isLoading ? ' is-welcome' : ''}`}>
       <div className="chat-header">
         <div className="chat-header-left">
           <div className="chat-header-title-wrap">
