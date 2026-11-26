@@ -139,7 +139,7 @@ export const projectsData = [
       problemTitle: 'Notification priority is contextual, not keyword-based',
       problemText: '<strong>Context.</strong> Message importance depends on sender, history, and content type (text, image, voice note).<br/><br/><strong>Problem.</strong> Static filters cannot handle multimodal input or per-user preferences. Scam and spam messages need deterministic blocking even when an LLM is involved.<br/><br/><strong>Goal.</strong> Build a hybrid router: rules for clear cases, LLM for ambiguous ones, and a final safety gate that cannot be prompt-injected.',
       solutionTitle: '5-Stage Hybrid Architecture & Post-LLM Deterministic Safety Gate',
-      solutionText: 'I engineered <strong>WhatsApp Message Router</strong>—a hybrid routing engine combining rule-based deterministic filtering, per-user profile caching, top-5 historical evidence retrieval, structured LLM reasoning (`gpt-5.4-mini`), and an unbypassable Stage 5 Safety Gate.<br/><br/>The key architectural breakthrough is strict boundary division: <em>Python handles deterministic facts, LLMs handle ambiguous subjective judgment, and Safety operates downstream of the LLM</em>. Hallucinations or prompt injections in incoming messages can never bypass the Safety Gate.<br/><br/><div style="margin: 1.5rem 0; padding: 1.5rem; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;"><h4 style="margin-top: 0; color: #a78bfa;">Data Flow & Pipeline Architecture (10 Steps)</h4><ol style="margin-bottom: 0; padding-left: 1.25rem; line-height: 1.7;"><li><strong>Multimodal Ingestion:</strong> Processes text, images (OCR), and audio (faster-whisper ASR), caching transcriptions by <code>media_id</code> into an <code>effective_text</code> payload.</li><li><strong>Context Enrichment:</strong> Joins sender trust tier, business verification, group mute status, DND settings, and user opt-out flags.</li><li><strong>Signal Extraction:</strong> Evaluates 7 named keyword severity tables + near-duplicate fuzzy matching.</li><li><strong>Cached Profile Lookup:</strong> Builds and caches per-user engagement styles and preference history.</li><li><strong>Evidence Retrieval:</strong> Searches top-5 similar past sender↔user messages (similarity score ≥ 35).</li><li><strong>Stage 3.5 Pre-LLM Rules:</strong> Immediate deterministic routing for clear-cut cases (scams, prompt injections, chain spam, @mentions).</li><li><strong>Stage 4 LLM Adjudication:</strong> Executes a single structured tool-use call (`gpt-5.4-mini`) for ambiguous cases only.</li><li><strong>Stage 5 Post-LLM Safety Gate:</strong> Validates outputs, strips ungrounded evidence IDs, forces mutes on safety violations, and calibrates confidence.</li><li><strong>Persistence:</strong> Outputs validated routing JSON/CSV containing action, category, reasoning, and evidence citations.</li></ol></div>',
+      solutionText: '<p>The Python pipeline extracts usable text from messages, screenshots, and voice notes. It joins sender history and user preferences, routes clear cases through deterministic rules, and sends ambiguous cases to a structured model call.</p><p>A downstream safety gate validates the model output before writing the final action to CSV. This keeps the rules, evidence, and generated judgment separate enough to inspect.</p>',
       features: [
         {
           title: 'Multimodal Perception Engine (Vision OCR + faster-whisper ASR)',
@@ -160,7 +160,7 @@ export const projectsData = [
           text: 'A deterministic Python safety layer running downstream of model generation. Even if a prompt injection attempts to override system prompts, the Safety Gate revokes the decision and enforces a mute action.'
         }
       ],
-      technicalText: 'The system was stress-tested across batch datasets containing text, image, and audio messages across diverse user profiles. The architecture separates fast deterministic filters from LLM judgment nodes to optimize cost and latency.<br/><br/><h3 style="margin-top: 2rem;">Quality & Benchmark Suite</h3><p>Evaluated on benchmark datasets with 100% action accuracy (30/30 labeled sample) and 86.7% message-type accuracy. Across a full 110-message batch test, the system executed 49 safety overrides with 0 violations and 100% evidence citation validity.</p><img src="/assets/optimized/omniroute_ai_mockup.jpg" alt="WhatsApp Message Notification Router Metrics & Pipeline" style="width: 100%; border-radius: 12px; margin: 1.5rem 0; border: 1px solid rgba(255, 255, 255, 0.08);" />',
+      technicalText: '<p>I evaluated the router on a 30-message labeled sample and a separate 110-message batch. It chose the correct routing action for all 30 labeled messages; message-type accuracy was 86.7%.</p><p>In the 110-row batch, the downstream safety gate made 49 overrides with no safety violations recorded in that batch. These are bounded test results, not production guarantees.</p>',
       techHighlights: [
         {
           title: '100% Action Accuracy Benchmark',
@@ -292,7 +292,7 @@ export const projectsData = [
       problemTitle: 'Local agentic RAG hits memory and latency limits',
       problemText: '<strong>Context.</strong> Synthesizing answers across hundreds of arXiv papers requires iterative retrieval, reflection, and citation checking—not one retrieval call.<br/><br/><strong>Problem.</strong> Sequential local LLM steps on consumer hardware can stall for hours or OOM. Single-pass RAG also misses evidence when queries are ambiguous.<br/><br/><strong>Goal.</strong> Design a local ReAct-style pipeline with hybrid retrieval, parallel workers, and citation guardrails that can run overnight without cloud APIs.',
       solutionTitle: 'Local ReAct Engine with 4x Parallel Query Pipelines',
-      solutionText: 'I engineered an edge-first deep research agent powered by Google\'s Gemma model via Ollama. The system executes a four-stage reasoning loop: Planner, Hybrid Retriever, Reflector, and NLI-backed Synthesizer. To overcome the speed limitations of sequential local inference, **I implemented 4x concurrent parallel query workers** to query chunk partitions. Under a strict zero-cost, no-credit-card deployment constraint, **the system ran continuously on a local workstation for 15 hours**, executing thousands of local model inferences to comprehensively map and synthesize the 439 arXiv paper corpus without a single dollar spent on cloud API keys.',
+      solutionText: 'I built a local deep research agent powered by Gemma via Ollama. It plans a question, retrieves papers through dense and lexical search, reflects on gaps, and synthesizes an answer with citation checks. Four parallel query workers help process document chunks. A benchmark ran locally for 15 hours over the 374-paper corpus without cloud API calls.',
       features: [
         {
           title: '4-Way Parallel Query Workers',
@@ -311,7 +311,7 @@ export const projectsData = [
           text: 'Performs Strict ID Boundary Checking. Every inline citation is cross-referenced against the retrieved evidence list, surgically removing sentences tied to absent arXiv IDs to ensure more reliable citation grounding.'
         }
       ],
-      technicalText: 'Built over a corpus of 439 arXiv papers, evaluated using a 30-question dataset and 7 ablation configurations. The inference backend runs entirely locally on Ollama (Gemma) with zero API dependency.',
+      technicalText: 'Built over a corpus of 374 papers and evaluated using a 30-question dataset and seven ablation configurations. Inference runs locally on Ollama with Gemma and no cloud API dependency.',
       techHighlights: [
         {
           title: '15-Hour Local Benchmark Run',
@@ -340,7 +340,7 @@ export const projectsData = [
         }
       ],
       metrics: [
-        { label: 'Corpus', value: '439 arXiv papers' },
+        { label: 'Corpus', value: '374 papers' },
         { label: 'API cost', value: '$0 (local Ollama)' },
         { label: 'Longest local run', value: '15-hour benchmark session' },
       ],
@@ -568,7 +568,7 @@ export const projectsData = [
     title: 'PreciCast — Comparing physics and AI rainfall forecasts',
     date: '2026',
     description: 'A deployed comparison of ECMWF IFS and AIFS seven-day rainfall forecasts, with separate ensemble ranges and historical context. In a 120 city-day retrospective against ERA5, an experimental weighted blend did not outperform AIFS alone.',
-    image: '/assets/optimized/precicast_mockup.jpg',
+    image: '/assets/optimized/precicast_forecast.jpg',
     readMore: '#',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Recharts', 'Leaflet', 'Open-Meteo', 'Vercel'],
     liveLink: 'https://precipitation-forecast.vercel.app/',
@@ -586,7 +586,7 @@ export const projectsData = [
       solutionTitle: 'A transparent seven-day comparison',
       solutionText: '<p>PreciCast lets users search for a city and compare seven daily precipitation totals from IFS and AIFS. It labels days when their difference crosses a documented threshold, shows each model’s ensemble range separately, adds seasonal context from ERA5 reanalysis, and marks the location on a map.</p><p>It compares existing forecasts; it does not train a weather model. The disagreement badge is a comparison cue, not a validated warning.</p>',
       features: [
-        { title: 'The models stay separate', text: 'The interface puts IFS and AIFS daily totals and ensemble ranges side by side so visitors can see what each model actually reports.', image: '/assets/optimized/precicast_mockup.jpg', caption: 'PreciCast’s deployed interface, shown from a real screenshot of the app.' },
+        { title: 'The models stay separate', text: 'The interface puts IFS and AIFS daily totals and ensemble ranges side by side so visitors can see what each model actually reports.', image: '/assets/optimized/precicast_forecast.jpg', caption: 'A real Bengaluru forecast captured on 26 November 2026. Forecast values shown here are a historical snapshot, not current conditions.' },
         { title: 'Data handling and failure states', text: 'Next.js Server Components fetch and validate forecast data. Checks cover missing model values, malformed dates and units, invalid coordinates, and upstream failures. A failed live point forecast produces a retry state instead of an expired snapshot.' },
         { title: 'Context with explicit limits', text: 'ERA5 adds seasonal context, but it is reanalysis rather than independent rain-gauge truth. The disagreement badge shows a threshold crossing; it does not establish forecast skill.' },
       ],
