@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, X } from 'lucide-react';
@@ -6,8 +6,6 @@ import { projectsData } from '../data/projects';
 import WorkflowVisual from './WorkflowVisual';
 import { useModalFocus } from '../hooks/useModalFocus';
 import './Projects.css';
-
-const CaseStudyViewer = lazy(() => import('./CaseStudyViewer'));
 
 const featuredSlugs = [
   'debiased-multimodal-pipeline',
@@ -71,7 +69,7 @@ const SectionHeading = ({ eyebrow, title, description, id }) => (
   </header>
 );
 
-const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
+const FeaturedCard = ({ project, index, onImage }) => {
   const detail = showcase[project.slug];
   return (
     <motion.article
@@ -83,7 +81,7 @@ const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
           <span>{detail.source}</span>
           <span>{String(index + 1).padStart(2, '0')} / 03</span>
         </div>
-        <h3><a className="work-project-title-link" href={`/projects/${project.slug}.html`} onClick={(event) => { event.preventDefault(); onCaseStudy(project); }}>{detail.title}</a></h3>
+        <h3><a className="work-project-title-link" href={`/projects/${project.slug}.html`}>{detail.title}</a></h3>
         <p className="work-showcase-description">{project.description}</p>
         <dl className="work-showcase-facts">
           <div><dt>Role</dt><dd>{detail.role}</dd></div>
@@ -91,10 +89,10 @@ const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
           <div className="work-fact-wide"><dt>Result</dt><dd>{detail.outcome}</dd></div>
         </dl>
         <div className="work-showcase-actions">
-          <button type="button" className="work-case-study-link" onClick={() => onCaseStudy(project)}>
+          <a className="work-case-study-link" href={`/projects/${project.slug}.html`}>
             <span className="work-round-arrow"><ArrowUpRight size={19} /></span>
             Read case study
-          </button>
+          </a>
           <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="work-repo-link">
             GitHub <ArrowUpRight size={15} />
           </a>
@@ -117,7 +115,7 @@ const FeaturedCard = ({ project, index, onCaseStudy, onImage }) => {
   );
 };
 
-const BuildCard = ({ project, index, onCaseStudy }) => (
+const BuildCard = ({ project, index }) => (
   <motion.article
     className={`work-build-card work-build-tone-${(index % 4) + 1} work-build-project-${project.slug}`}
     initial={{ opacity: 0, y: 24 }}
@@ -129,10 +127,9 @@ const BuildCard = ({ project, index, onCaseStudy }) => (
       <span>{project.tabTag}</span>
       <span className="work-build-status"><i aria-hidden="true" /> Built</span>
     </div>
-    <button
-      type="button"
+    <a
       className="work-build-visual"
-      onClick={() => onCaseStudy(project)}
+      href={`/projects/${project.slug}.html`}
       aria-label={`Read ${project.title} case study`}
     >
       <span className="work-project-window work-build-window">
@@ -143,15 +140,15 @@ const BuildCard = ({ project, index, onCaseStudy }) => (
         </span>
         <ProjectImage project={project} />
       </span>
-    </button>
+    </a>
     <div className="work-build-bottom">
       <div>
-        <h3><a className="work-project-title-link" href={`/projects/${project.slug}.html`} onClick={(event) => { event.preventDefault(); onCaseStudy(project); }}>{buildTitles[project.slug] || project.title}</a></h3>
+        <h3><a className="work-project-title-link" href={`/projects/${project.slug}.html`}>{buildTitles[project.slug] || project.title}</a></h3>
         <p>{project.description}</p>
       </div>
-      <button type="button" className="work-build-arrow" onClick={() => onCaseStudy(project)} aria-label={`Read ${project.title} case study`}>
+      <a className="work-build-arrow" href={`/projects/${project.slug}.html`} aria-label={`Read ${project.title} case study`}>
         <ArrowUpRight size={20} />
-      </button>
+      </a>
     </div>
     <div className="work-build-links">
       {project.repoLink && <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="work-build-repo">Live app <ArrowUpRight size={15} /></a>}
@@ -164,7 +161,6 @@ const BuildCard = ({ project, index, onCaseStudy }) => (
 
 export default function Projects() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
   const imageDialogRef = useRef(null);
   useModalFocus(imageDialogRef, Boolean(selectedImage), () => setSelectedImage(null));
 
@@ -186,7 +182,6 @@ export default function Projects() {
             key={project.id}
             project={project}
             index={index}
-            onCaseStudy={setSelectedCaseStudy}
             onImage={setSelectedImage}
           />
         ))}
@@ -201,7 +196,7 @@ export default function Projects() {
         />
         <div className="work-build-grid">
           {more.map((project, index) => (
-            <BuildCard key={project.id} project={project} index={index} onCaseStudy={setSelectedCaseStudy} />
+            <BuildCard key={project.id} project={project} index={index} />
           ))}
         </div>
       </div>
@@ -233,13 +228,6 @@ export default function Projects() {
         document.body
       )}
 
-      <AnimatePresence>
-        {selectedCaseStudy && (
-          <Suspense fallback={<div className="case-study-loading" role="status">Opening case study…</div>}>
-            <CaseStudyViewer project={selectedCaseStudy} onClose={() => setSelectedCaseStudy(null)} />
-          </Suspense>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
