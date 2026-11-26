@@ -78,7 +78,7 @@
   /* Text & Typography */
   --text-primary: #ffffff;
   --text-secondary: #9ea3ae;     /* Warm muted gray */
-  --text-muted: #656a76;         /* Subtle slate */
+  --text-muted: #858a94;         /* Readable slate on obsidian */
   --text-contrast: #000000;
 
   /* Borders & Dividers */
@@ -136,7 +136,7 @@ body.light-theme,
   /* Text & Typography - Deep High Contrast */
   --text-primary: #173b2d;
   --text-secondary: #40594d;
-  --text-muted: #718176;
+  --text-muted: #58695e;
   --text-contrast: #ffffff;
 
   /* Borders & Dividers */

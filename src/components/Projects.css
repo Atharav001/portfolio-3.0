@@ -29,7 +29,7 @@
   max-width: 900px;
   font-size: clamp(3.3rem, 7vw, 6.6rem);
   font-weight: 850;
-  letter-spacing: -0.09em;
+  letter-spacing: -0.065em;
   line-height: 0.91;
   text-wrap: balance;
 }
@@ -110,7 +110,7 @@
   color: var(--work-ink);
   font-size: clamp(2.7rem, 4.7vw, 5.4rem);
   font-weight: 780;
-  letter-spacing: -0.085em;
+  letter-spacing: -0.065em;
   line-height: 0.95;
   text-wrap: balance;
 }
@@ -654,7 +654,7 @@ html.light-theme .work-build-status i,
 /* Each card has its own color story, with the image stage in the same family. */
 :root[data-theme] .work-showcase-card.work-tone-1 { --work-ink: #f3fbfa; --work-muted: #bfd9df; --work-accent: #8ce6dd; --work-line: rgba(196,235,234,.25); background: #143448; }
 :root[data-theme] .work-showcase-card.work-tone-2 { --work-ink: #38251e; --work-muted: #694338; --work-accent: #864026; --work-line: rgba(81,43,30,.22); background: #f5ad7a; }
-:root[data-theme] .work-showcase-card.work-tone-3 { --work-ink: #292342; --work-muted: #5d537a; --work-accent: #51429a; --work-line: rgba(69,55,115,.22); background: #cfc2f3; }
+:root[data-theme] .work-showcase-card.work-tone-3 { --work-ink: #292342; --work-muted: #463c67; --work-accent: #51429a; --work-line: rgba(69,55,115,.22); background: #cfc2f3; }
 :root[data-theme] .work-showcase-card.work-tone-1 .work-showcase-visual { background: linear-gradient(135deg,#94d8dc,#a6b8e5 55%,#e1b5d4); }
 :root[data-theme] .work-showcase-card.work-tone-2 .work-showcase-visual { background: linear-gradient(135deg,#fbd4a9,#f5a6a0 55%,#b8d5b6); }
 :root[data-theme] .work-showcase-card.work-tone-3 .work-showcase-visual { background: linear-gradient(135deg,#e9dffc,#c6c3f1 55%,#abcfe8); }

@@ -275,7 +275,12 @@ html.light-theme .btn-primary:hover {
 
 html.light-theme :focus-visible {
   outline-color: var(--accent-lime);
-  box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 0 0 5px rgba(8, 122, 80, 0.18);
+}
+
+/* The hero keeps the full ambient canvas. Reading sections soften it behind text. */
+:where(.about-section, .experience-section, .projects-section, .outside-work-section, .contact-section) {
+  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
 }
 
 /* Skip link styling */

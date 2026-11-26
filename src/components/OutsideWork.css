@@ -26,7 +26,7 @@
 .outside-work-heading h2 {
   font-size: clamp(3.3rem, 7vw, 6.6rem);
   font-weight: 850;
-  letter-spacing: -0.09em;
+  letter-spacing: -0.065em;
   line-height: 0.91;
 }
 
